@@ -1,1 +1,417 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>날짜 계산기 - D-day, 기념일(100일·1주년), 날짜 더하기·빼기 계산</title>
+<meta name="description" content="D-day 남은 일수, 사귄 지 100일·200일·1주년 같은 기념일 날짜, 오늘부터 며칠 뒤 날짜를 바로 계산해 드립니다. 요일과 몇 개월 며칠 차이도 함께 알려 드립니다.">
+<meta name="color-scheme" content="light dark">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:title" content="날짜 계산기">
+<meta property="og:description" content="D-day, 기념일 날짜, 날짜 더하기·빼기를 한 곳에서 계산합니다.">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"날짜 계산기","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","inLanguage":"ko","offers":{"@type":"Offer","price":"0","priceCurrency":"KRW"}}
+</script>
+<!-- 애드센스 승인 후 이 위치에 AdSense 스크립트 코드를 삽입 -->
+<style>
+:root{
+  --ground:#f5f7fa; --surface:#ffffff; --ink:#172033; --muted:#5a6577;
+  --line:#dde3ec; --accent:#0e7c86; --accent-soft:#e3f3f4; --warn:#b42318;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --ground:#0e141b; --surface:#151d27; --ink:#e6ecf3; --muted:#9aa7b8;
+    --line:#263241; --accent:#4fd1c5; --accent-soft:#12303a; --warn:#ff8a7a;
+  }
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--ground); color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;
+  font-size:1rem; line-height:1.75;
+}
+.wrap{max-width:40rem; margin:0 auto; padding:1.75rem 1.25rem 4rem}
+.top{margin:0 0 1rem; font-size:.9rem}
+h1{font-size:1.75rem; line-height:1.3; margin:0 0 .5rem; font-weight:800; letter-spacing:-.01em}
+h2{font-size:1.3rem; line-height:1.4; margin:2.75rem 0 .75rem; font-weight:800}
+h3{font-size:1.05rem; line-height:1.5; margin:1.5rem 0 .25rem; font-weight:700}
+p{margin:.6rem 0}
+.lead{color:var(--muted); margin:0 0 1.5rem}
+a{color:var(--accent)}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--accent); outline-offset:2px}
+
+/* 입력 */
+label{display:block; font-weight:700; font-size:.95rem; margin-bottom:.3rem}
+.hint{font-weight:400; color:var(--muted); font-size:.85rem}
+input[type="date"],input[type="number"],select{
+  width:100%; font:inherit; font-size:1.1rem; padding:.65rem .8rem; min-height:3rem;
+  color:var(--ink); background:var(--surface); border:1.5px solid var(--line); border-radius:.5rem;
+}
+.grid2{display:grid; grid-template-columns:1fr; gap:.9rem}
+@media (min-width:30rem){ .grid2{grid-template-columns:1fr 1fr} }
+.grid3{display:grid; grid-template-columns:1fr 1fr; gap:.7rem}
+.grid3 .wide{grid-column:1 / -1}
+@media (min-width:30rem){ .grid3{grid-template-columns:1fr 1fr 1fr} .grid3 .wide{grid-column:auto} }
+.row{display:flex; gap:.5rem; margin-top:.6rem}
+button{
+  font:inherit; font-size:.9rem; padding:.45rem .8rem; min-height:2.5rem; cursor:pointer;
+  color:var(--ink); background:transparent; border:1.5px solid var(--line); border-radius:.5rem;
+}
+button:hover{border-color:var(--accent)}
+.err{color:var(--warn); font-size:.9rem; min-height:1.4rem; margin:.5rem 0 0}
+.check{display:flex; align-items:flex-start; gap:.5rem; margin:.9rem 0 0; font-size:.95rem; font-weight:400}
+.check input{width:1.15rem; height:1.15rem; margin-top:.3rem; accent-color:var(--accent)}
+
+/* 모드 전환 */
+.modes{display:flex; margin:1.25rem 0 1rem; border:1.5px solid var(--line); border-radius:.5rem; overflow:hidden; background:var(--surface)}
+.modes button{flex:1; border:0; border-radius:0; min-height:2.9rem; font-size:.95rem; font-weight:700; color:var(--muted)}
+.modes button + button{border-left:1.5px solid var(--line)}
+.modes button[aria-pressed="true"]{background:var(--accent-soft); color:var(--accent)}
+
+/* 결과 */
+.result{margin-top:1.25rem; padding-top:1.1rem; border-top:2px solid var(--ink)}
+.empty{color:var(--muted); margin:0}
+.big{font-size:3.4rem; line-height:1.1; font-weight:800; letter-spacing:-.02em; font-variant-numeric:tabular-nums; margin:0}
+.big.date{font-size:1.9rem; line-height:1.3}
+.sub{margin:.35rem 0 1.1rem; color:var(--muted)}
+.sub strong{color:var(--ink)}
+dl.more{margin:0}
+dl.more div{display:flex; justify-content:space-between; gap:1rem; padding:.55rem 0; border-bottom:1px solid var(--line)}
+dl.more dt{color:var(--muted); font-size:.95rem}
+dl.more dd{margin:0; text-align:right; font-weight:600; font-variant-numeric:tabular-nums}
+
+ol.miles{list-style:none; margin:1rem 0 0; padding:0}
+ol.miles li{display:grid; grid-template-columns:4.5rem 1fr auto; gap:.6rem; align-items:baseline; padding:.55rem .5rem; border-bottom:1px solid var(--line); margin:0; font-variant-numeric:tabular-nums}
+ol.miles .lbl{font-weight:800}
+ol.miles .st{font-size:.9rem; color:var(--muted); text-align:right}
+ol.miles li.past{color:var(--muted)}
+ol.miles li.past .lbl{font-weight:600}
+ol.miles li.next{background:var(--accent-soft); border-left:4px solid var(--accent)}
+ol.miles li.next .st{color:var(--accent); font-weight:800}
+
+/* 본문 */
+ul{padding-left:1.2rem; margin:.5rem 0}
+li{margin:.3rem 0}
+table{width:100%; border-collapse:collapse; margin:.75rem 0; font-size:.95rem; background:var(--surface)}
+th,td{border:1px solid var(--line); padding:.55rem .6rem; text-align:left; vertical-align:top}
+th{background:var(--accent-soft)}
+footer{margin-top:3rem; padding-top:1rem; border-top:1px solid var(--line); color:var(--muted); font-size:.85rem}
+</style>
+</head>
+<body>
+<main class="wrap">
+
+<nav class="top" aria-label="사이트 이동"><a href="../">생활 계산 도구 모음</a></nav>
+
+<h1>날짜 계산기</h1>
+<p class="lead">D-day, 기념일(100일·1주년 등), 며칠 뒤 날짜를 한 곳에서 계산해 드립니다. 입력한 날짜는 저장하거나 서버로 전송하지 않으며 이 기기 안에서만 계산됩니다.</p>
+
+<section aria-label="날짜 계산기">
+  <div class="grid2">
+    <div>
+      <label for="base">기준일 <span class="hint">기본값은 오늘</span></label>
+      <input id="base" type="date">
+    </div>
+    <div style="align-self:end">
+      <button type="button" id="today">기준일을 오늘로</button>
+    </div>
+  </div>
+  <p class="err" id="err" role="alert"></p>
+
+  <div class="modes" role="group" aria-label="계산 종류">
+    <button type="button" id="b-dday" aria-pressed="true">D-day</button>
+    <button type="button" id="b-anniv" aria-pressed="false">기념일</button>
+    <button type="button" id="b-add" aria-pressed="false">날짜 더하기</button>
+  </div>
+
+  <!-- D-day -->
+  <div id="s-dday">
+    <label for="target">목표일 <span class="hint">시험일, 여행 출발일 등</span></label>
+    <input id="target" type="date">
+    <div class="result" aria-live="polite">
+      <p class="empty" id="dd-empty">목표일을 선택하면 D-day가 바로 나옵니다.</p>
+      <div id="dd-out" hidden>
+        <p class="big" id="dd-big"></p>
+        <p class="sub" id="dd-sub"></p>
+        <dl class="more">
+          <div><dt>날짜 차이</dt><dd id="dd-days"></dd></div>
+          <div><dt>주 단위</dt><dd id="dd-weeks"></dd></div>
+          <div><dt>년·개월·일</dt><dd id="dd-ymd"></dd></div>
+          <div><dt>기준일 요일</dt><dd id="dd-wb"></dd></div>
+          <div><dt>목표일 요일</dt><dd id="dd-wt"></dd></div>
+        </dl>
+      </div>
+    </div>
+  </div>
+
+  <!-- 기념일 -->
+  <div id="s-anniv" hidden>
+    <label for="start">시작일 <span class="hint">사귄 날, 결혼일 등</span></label>
+    <input id="start" type="date">
+    <label class="check"><input type="checkbox" id="incl" checked><span>시작일을 1일째로 계산 (기본 방식)</span></label>
+    <div class="result" aria-live="polite">
+      <p class="empty" id="an-empty">시작일을 선택하면 기념일 날짜가 나옵니다.</p>
+      <div id="an-out" hidden>
+        <p class="big" id="an-big"></p>
+        <p class="sub" id="an-sub"></p>
+        <ol class="miles" id="an-list"></ol>
+      </div>
+    </div>
+  </div>
+
+  <!-- 날짜 더하기 -->
+  <div id="s-add" hidden>
+    <div class="grid3">
+      <div>
+        <label for="n">기간</label>
+        <input id="n" type="number" inputmode="numeric" min="0" step="1" value="100">
+      </div>
+      <div>
+        <label for="unit">단위</label>
+        <select id="unit">
+          <option value="day">일</option>
+          <option value="week">주</option>
+          <option value="month">개월</option>
+          <option value="year">년</option>
+        </select>
+      </div>
+      <div class="wide">
+        <label for="dir">방향</label>
+        <select id="dir">
+          <option value="after">이후</option>
+          <option value="before">이전</option>
+        </select>
+      </div>
+    </div>
+    <div class="result" aria-live="polite">
+      <p class="empty" id="ad-empty">기간을 입력하면 결과 날짜가 나옵니다.</p>
+      <div id="ad-out" hidden>
+        <p class="big date" id="ad-big"></p>
+        <p class="sub" id="ad-sub"></p>
+        <dl class="more">
+          <div><dt>기준일과의 날짜 차이</dt><dd id="ad-diff"></dd></div>
+          <div><dt>결과 날짜 요일</dt><dd id="ad-wd"></dd></div>
+        </dl>
+      </div>
+    </div>
+  </div>
+</section>
+
+<article>
+<h2>사용 방법</h2>
+<ul>
+  <li><strong>D-day</strong>: 목표일을 고르면 남은 일수 또는 지난 일수를 알려 드립니다. 몇 주, 몇 개월 며칠 차이인지도 함께 나옵니다.</li>
+  <li><strong>기념일</strong>: 시작일을 고르면 100일부터 1,000일까지 100일 단위 기념일과 1주년부터 10주년까지의 날짜를 요일과 함께 보여 드립니다.</li>
+  <li><strong>날짜 더하기</strong>: 기준일에서 며칠, 몇 주, 몇 개월, 몇 년 뒤(또는 전) 날짜를 계산합니다.</li>
+  <li>모든 계산은 위쪽 기준일을 기준으로 하며, 기본값은 오늘입니다.</li>
+</ul>
+
+<h2>D-day는 어떻게 계산하나요</h2>
+<p>목표일 당일은 D-Day, 하루 전은 D-1, 하루 뒤는 D+1로 표시합니다. 기준일과 목표일의 날짜 차이만 계산하며 시각은 고려하지 않습니다.</p>
+<table>
+  <thead><tr><th>표시</th><th>의미</th></tr></thead>
+  <tbody>
+    <tr><td>D-30</td><td>목표일까지 30일 남음</td></tr>
+    <tr><td>D-Day</td><td>오늘이 목표일</td></tr>
+    <tr><td>D+10</td><td>목표일로부터 10일 지남</td></tr>
+  </tbody>
+</table>
+
+<h2>기념일은 어떻게 세나요</h2>
+<p>우리나라에서는 시작일을 1일째로 세는 방식이 흔합니다. 이 방식에서는 100일째가 시작일로부터 99일 뒤입니다. "시작일을 1일째로 계산" 옵션을 끄면 시작일 당일을 0일째로 보고, 100일째가 시작일로부터 100일 뒤가 됩니다.</p>
+<p>1주년은 시작일과 같은 월·일로 계산합니다. 1년은 365일(윤년이 끼면 366일)이라서 365일째와 1주년 날짜는 하루 이상 차이가 날 수 있습니다.</p>
+
+<h2>자주 묻는 질문</h2>
+<h3>사귄 날을 1일로 세는 게 맞나요?</h3>
+<p>정해진 규칙은 없고 관습의 문제입니다. 많은 사람이 시작일을 1일째로 세기 때문에 기본값으로 두었고, 필요하면 옵션으로 바꿀 수 있습니다.</p>
+
+<h3>2월 29일은 어떻게 계산하나요?</h3>
+<p>2월 29일이 없는 해에는 2월 28일로 계산합니다. 1월 31일에서 한 달 뒤처럼 해당 일이 없는 달로 넘어갈 때도 그 달의 마지막 날로 맞춥니다.</p>
+
+<h3>몇 개월 며칠은 어떻게 계산하나요?</h3>
+<p>이른 날짜에서 한 달씩 더해 가며 늦은 날짜를 넘지 않는 가장 큰 개월 수를 구하고, 남은 날수를 일로 표시합니다.</p>
+
+<h3>주말이나 공휴일은 반영되나요?</h3>
+<p>반영하지 않습니다. 달력상의 날짜를 그대로 세는 계산기이며, 영업일 기준 계산은 지원하지 않습니다.</p>
+
+<h2>계산 방식</h2>
+<ul>
+  <li>날짜 차이는 두 날짜를 같은 시각으로 놓고 일 단위로 비교해 구합니다.</li>
+  <li>지원하는 날짜 범위는 1900년부터 2200년까지입니다.</li>
+  <li>이 계산기는 참고용입니다. 법적 기간이나 계약 기간은 해당 규정과 계약서를 따라 주시기 바랍니다.</li>
+</ul>
+</article>
+
+<footer>입력한 날짜는 저장되지 않으며 서버로 전송되지 않습니다.</footer>
+</main>
+
+<script>
+'use strict';
+// ==CORE START==
+const WEEK = ['일','월','화','수','목','금','토'];
+function isLeap(y){ return (y%4===0 && y%100!==0) || y%400===0; }
+function daysInMonth(y,m){ return [31,isLeap(y)?29:28,31,30,31,30,31,31,30,31,30,31][m-1]; }
+function validDate(y,m,d){
+  return Number.isInteger(y) && Number.isInteger(m) && Number.isInteger(d) &&
+         y>=1 && m>=1 && m<=12 && d>=1 && d<=daysInMonth(y,m);
+}
+function toUtc(dt){ const t = new Date(0); t.setUTCFullYear(dt.y, dt.m-1, dt.d); return t.getTime(); }
+function fromUtc(ms){ const t = new Date(ms); return {y:t.getUTCFullYear(), m:t.getUTCMonth()+1, d:t.getUTCDate()}; }
+function addDays(dt,n){ return fromUtc(toUtc(dt) + n*86400000); }
+function diffDays(a,b){ return Math.round((toUtc(b) - toUtc(a)) / 86400000); }
+function cmp(a,b){ return (a.y-b.y) || (a.m-b.m) || (a.d-b.d); }
+function addMonths(dt,n){
+  const total = dt.y*12 + (dt.m-1) + n;
+  const y = Math.floor(total/12);
+  const m = ((total%12)+12)%12 + 1;
+  return {y, m, d: Math.min(dt.d, daysInMonth(y,m))};
+}
+function weekday(dt){ return WEEK[new Date(toUtc(dt)).getUTCDay()]; }
+function ymd(a,b){
+  let total = (b.y-a.y)*12 + (b.m-a.m);
+  if(cmp(addMonths(a,total), b) > 0) total--;
+  return {years: Math.floor(total/12), months: total%12, days: diffDays(addMonths(a,total), b)};
+}
+function dday(base,target){
+  const diff = diffDays(base,target);
+  return {diff, label: diff>0 ? 'D-'+diff : diff<0 ? 'D+'+(-diff) : 'D-Day'};
+}
+function milestones(start, inclusive){
+  const items = [];
+  for(let n=100; n<=1000; n+=100) items.push({label:n+'일', date:addDays(start, inclusive ? n-1 : n)});
+  for(let y=1; y<=10; y++) items.push({label:y+'주년', date:addMonths(start, 12*y)});
+  items.sort((a,b) => cmp(a.date,b.date));
+  return items;
+}
+function addPeriod(base, n, unit, sign){
+  if(unit==='day') return addDays(base, sign*n);
+  if(unit==='week') return addDays(base, sign*n*7);
+  if(unit==='month') return addMonths(base, sign*n);
+  return addMonths(base, sign*12*n);
+}
+// ==CORE END==
+
+const $ = id => document.getElementById(id);
+const pad = n => String(n).padStart(2,'0');
+const fmt = dt => dt.y+'년 '+dt.m+'월 '+dt.d+'일';
+const fmtWd = dt => fmt(dt)+'('+weekday(dt)+'요일)';
+const fmtShort = dt => dt.y+'.'+dt.m+'.'+dt.d+'('+weekday(dt)+')';
+function fmtYmd(p){
+  const parts = [];
+  if(p.years) parts.push(p.years+'년');
+  if(p.months) parts.push(p.months+'개월');
+  if(p.days) parts.push(p.days+'일');
+  return parts.length ? parts.join(' ') : '0일';
+}
+const LIMIT = {min:1900, max:2200};
+let mode = 'dday';
+
+function todayObj(){ const t = new Date(); return {y:t.getFullYear(), m:t.getMonth()+1, d:t.getDate()}; }
+function setBaseToday(){ const t = todayObj(); $('base').value = t.y+'-'+pad(t.m)+'-'+pad(t.d); }
+function readDate(id){
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec($(id).value);
+  if(!m) return null;
+  const dt = {y:+m[1], m:+m[2], d:+m[3]};
+  if(!validDate(dt.y,dt.m,dt.d) || dt.y<LIMIT.min || dt.y>LIMIT.max) return null;
+  return dt;
+}
+function show(prefix, ok){ $(prefix+'-out').hidden = !ok; $(prefix+'-empty').hidden = ok; }
+
+function renderDday(base){
+  const target = readDate('target');
+  if(!target){ show('dd', false); return; }
+  const r = dday(base, target), abs = Math.abs(r.diff);
+  $('dd-big').textContent = r.label;
+  $('dd-sub').innerHTML = r.diff>0 ? '<strong>'+fmtWd(target)+'</strong>까지 '+r.diff+'일 남았습니다'
+    : r.diff<0 ? '<strong>'+fmtWd(target)+'</strong>로부터 '+abs+'일이 지났습니다'
+    : '<strong>오늘이 목표일입니다</strong>';
+  $('dd-days').textContent = abs.toLocaleString('ko-KR')+'일';
+  $('dd-weeks').textContent = Math.floor(abs/7)+'주 '+(abs%7)+'일';
+  const early = cmp(base,target)<=0 ? base : target, late = early===base ? target : base;
+  const p = ymd(early, late);
+  $('dd-ymd').textContent = fmtYmd(p);
+  $('dd-wb').textContent = weekday(base)+'요일';
+  $('dd-wt').textContent = weekday(target)+'요일';
+  show('dd', true);
+}
+function renderAnniv(base){
+  const start = readDate('start');
+  if(!start){ show('an', false); return; }
+  const inclusive = $('incl').checked;
+  const list = milestones(start, inclusive);
+  const since = diffDays(start, base) + (inclusive ? 1 : 0);
+  if(cmp(start, base) > 0){
+    $('an-big').textContent = 'D-'+diffDays(base, start);
+    $('an-sub').innerHTML = '<strong>'+fmtWd(start)+'</strong>부터 시작합니다';
+  } else {
+    $('an-big').textContent = since.toLocaleString('ko-KR')+'일째';
+    const nx = list.find(it => cmp(it.date, base) >= 0);
+    $('an-sub').innerHTML = nx
+      ? '다음 기념일은 <strong>'+nx.label+' ('+fmtWd(nx.date)+')</strong>, '+(diffDays(base,nx.date)===0 ? '오늘입니다' : diffDays(base,nx.date)+'일 남았습니다')
+      : '표시된 기념일이 모두 지났습니다';
+  }
+  const nextIdx = list.findIndex(it => cmp(it.date, base) >= 0);
+  $('an-list').innerHTML = list.map(function(it, i){
+    const d = diffDays(base, it.date);
+    const cls = d<0 ? 'past' : (i===nextIdx ? 'next' : '');
+    const st = d<0 ? '지남' : d===0 ? '오늘' : 'D-'+d;
+    return '<li class="'+cls+'"><span class="lbl">'+it.label+'</span><span>'+fmtShort(it.date)+'</span><span class="st">'+st+'</span></li>';
+  }).join('');
+  show('an', true);
+}
+function renderAdd(base){
+  const n = parseInt($('n').value, 10);
+  if(!(n >= 0) || n > 100000){ show('ad', false); return; }
+  const sign = $('dir').value === 'after' ? 1 : -1;
+  const unit = $('unit').value;
+  const res = addPeriod(base, n, unit, sign);
+  if(res.y < LIMIT.min || res.y > LIMIT.max){
+    show('ad', false);
+    $('ad-empty').textContent = '결과가 지원 범위('+LIMIT.min+'~'+LIMIT.max+'년)를 벗어납니다.';
+    return;
+  }
+  const names = {day:'일', week:'주', month:'개월', year:'년'};
+  $('ad-big').textContent = fmt(res);
+  $('ad-sub').innerHTML = fmtWd(base)+' 기준 <strong>'+n.toLocaleString('ko-KR')+names[unit]+' '+(sign>0 ? '이후' : '이전')+'</strong>';
+  const diff = diffDays(base, res);
+  $('ad-diff').textContent = Math.abs(diff).toLocaleString('ko-KR')+'일 '+(diff>=0 ? '뒤' : '전');
+  $('ad-wd').textContent = weekday(res)+'요일';
+  show('ad', true);
+}
+function render(){
+  $('err').textContent = '';
+  $('ad-empty').textContent = '기간을 입력하면 결과 날짜가 나옵니다.';
+  const base = readDate('base');
+  if(!base){
+    $('err').textContent = '기준일을 '+LIMIT.min+'~'+LIMIT.max+'년 사이 날짜로 선택해 주세요.';
+    show('dd', false); show('an', false); show('ad', false);
+    return;
+  }
+  if(mode==='dday') renderDday(base);
+  else if(mode==='anniv') renderAnniv(base);
+  else renderAdd(base);
+}
+function setMode(m){
+  mode = m;
+  ['dday','anniv','add'].forEach(function(k){
+    $('s-'+k).hidden = (k !== m);
+    $('b-'+k).setAttribute('aria-pressed', String(k === m));
+  });
+  render();
+}
+
+['base','target','start','n'].forEach(function(id){ $(id).addEventListener('input', render); $(id).addEventListener('change', render); });
+['incl','unit','dir'].forEach(function(id){ $(id).addEventListener('change', render); });
+$('today').addEventListener('click', function(){ setBaseToday(); render(); });
+$('b-dday').addEventListener('click', function(){ setMode('dday'); });
+$('b-anniv').addEventListener('click', function(){ setMode('anniv'); });
+$('b-add').addEventListener('click', function(){ setMode('add'); });
+
+setBaseToday();
+render();
+</script>
+</body>
+</html>
 
