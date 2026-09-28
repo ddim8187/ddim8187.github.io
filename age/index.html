@@ -33,6 +33,7 @@ body{
   font-size:1rem; line-height:1.75;
 }
 .wrap{max-width:40rem; margin:0 auto; padding:1.75rem 1.25rem 4rem}
+.top{margin:0 0 1rem; font-size:.9rem}
 h1{font-size:1.75rem; line-height:1.3; margin:0 0 .5rem; font-weight:800; letter-spacing:-.01em}
 h2{font-size:1.3rem; line-height:1.4; margin:2.75rem 0 .75rem; font-weight:800}
 h3{font-size:1.05rem; line-height:1.5; margin:1.5rem 0 .25rem; font-weight:700}
@@ -96,6 +97,8 @@ footer{margin-top:3rem; padding-top:1rem; border-top:1px solid var(--line); colo
 </head>
 <body>
 <main class="wrap">
+
+<nav class="top" aria-label="사이트 이동"><a href="../">생활 계산 도구 모음</a></nav>
 
 <h1>만 나이 계산기</h1>
 <p class="lead">생년월일만 입력하면 만 나이, 연 나이, 세는 나이를 한 번에 계산해 드립니다. 입력한 값은 서버로 전송되지 않으며 이 기기 안에서만 계산됩니다.</p>
@@ -341,4 +344,3 @@ render();
 </script>
 </body>
 </html>
-
