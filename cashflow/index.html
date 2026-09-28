@@ -1,0 +1,1570 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>CashFlow Tracker — 로그인 없이 쓰는 무료 가계부</title>
+<meta name="description" content="로그인이나 회원가입 없이 이 브라우저에만 저장되는 가계부입니다. 캘린더 지출입력, 대출 관리, 통계를 무료로 쓸 수 있고, 백업 파일로 내보내기·불러오기가 가능합니다.">
+<meta name="color-scheme" content="light">
+
+<!-- ============================================================
+  CashFlow Tracker — 로컬 저장(localStorage) 버전
+  ============================================================
+  이 파일은 로그인/회원가입, Firebase 연동이 전혀 없는 1인용 버전입니다.
+  모든 데이터는 이 기기의 브라우저(localStorage)에만 저장되며,
+  서버나 다른 기기와 어느 쪽으로도 전송되지 않습니다.
+  브라우저 저장소를 지우거나 다른 기기에서 열면 기록이 보이지 않으므로,
+  상단 "내보내기" 버튼으로 주기적으로 백업해두는 것을 권장합니다.
+
+  부부가 함께 쓰는 Firebase 연동 버전은 별도 파일로 유지되며, 이 파일과는 무관합니다.
+============================================================= -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
+
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+<style>
+:root{
+  --brand:#2B4C3F;
+  --brand-light:#3E6B58;
+  --brand-pale:#E4EBE5;
+  --paper:#F1F0E8;
+  --surface:#FFFFFF;
+  --ink:#23291F;
+  --ink-muted:#6E7566;
+  --line:#DEDACB;
+  --expense:#B0402A;
+  --expense-pale:#F7E6E1;
+  --income:#3D7EA6;
+  --income-pale:#E4EEF3;
+  --loan:#C08A2E;
+  --loan-pale:#F5EBD6;
+  --radius:10px;
+  --font-kr:'Pretendard',-apple-system,BlinkMacSystemFont,'Malgun Gothic',sans-serif;
+  --font-num:'Space Grotesk','Pretendard',sans-serif;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:var(--font-kr);
+  background:var(--paper);
+  color:var(--ink);
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+button{font-family:inherit;cursor:pointer;}
+input,select{font-family:inherit;}
+.hidden{display:none !important;}
+::selection{background:var(--brand-pale);}
+
+.top-back{
+  display:block;
+  padding:8px 20px;
+  font-size:12.5px;
+  color:var(--ink-muted);
+  background:var(--surface);
+  border-bottom:1px solid var(--line);
+  text-decoration:none;
+}
+.top-back:hover{color:var(--brand);}
+.file-label{
+  background:rgba(255,255,255,.14);
+  color:#fff;
+  border:none;
+  padding:7px 13px;
+  border-radius:7px;
+  font-size:13px;
+  cursor:pointer;
+  display:inline-block;
+}
+.file-label:hover{opacity:.85;}
+.intro-box{
+  max-width:900px;margin:0 auto;padding:18px 20px 4px;color:var(--ink-muted);font-size:13.5px;line-height:1.7;
+}
+.info-section{
+  max-width:900px;margin:8px auto 40px;padding:0 20px;color:var(--ink);font-size:14px;line-height:1.8;
+}
+.info-section h2{font-size:16.5px;margin:28px 0 8px;color:var(--ink);}
+.info-section h3{font-size:14.5px;margin:16px 0 4px;color:var(--ink);}
+.info-section ul{padding-left:1.2rem;margin:.4rem 0;}
+.info-section li{margin:.3rem 0;}
+.info-footer{
+  max-width:900px;margin:0 auto;padding:14px 20px 30px;color:var(--ink-muted);font-size:12.5px;border-top:1px solid var(--line);
+}
+.info-footer a{color:var(--brand);margin-right:14px;}
+
+/* ---------- App shell ---------- */
+#app-screen{min-height:100vh;}
+.topbar{
+  background:var(--brand);
+  color:#fff;
+  padding:14px 20px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:10px;
+}
+.topbar-left{display:flex;align-items:center;gap:22px;}
+.brand-mark{
+  font-family:var(--font-num);
+  font-weight:700;
+  font-size:17px;
+  letter-spacing:-0.02em;
+}
+.tabs{display:flex;gap:4px;}
+.tab-btn{
+  background:none;
+  border:none;
+  color:rgba(255,255,255,.7);
+  padding:7px 14px;
+  border-radius:7px;
+  font-size:14px;
+  font-weight:500;
+}
+.tab-btn.active{background:rgba(255,255,255,.16);color:#fff;}
+.topbar-right{display:flex;align-items:center;gap:14px;font-size:13px;color:rgba(255,255,255,.85);}
+.member-btn, .logout-btn{
+  background:rgba(255,255,255,.14);
+  color:#fff;
+  border:none;
+  padding:7px 13px;
+  border-radius:7px;
+  font-size:13px;
+}
+
+.view{max-width:920px;margin:0 auto;padding:22px 18px 60px;}
+
+/* ---------- Calendar ---------- */
+.month-nav{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:18px;
+  margin-bottom:16px;
+}
+.month-nav-btn{
+  background:var(--surface);
+  border:1px solid var(--line);
+  width:34px;height:34px;
+  border-radius:8px;
+  font-size:15px;
+  color:var(--brand);
+}
+.month-title{
+  font-family:var(--font-num);
+  font-size:19px;
+  font-weight:600;
+  min-width:130px;
+  text-align:center;
+}
+.month-summary{
+  display:flex;
+  gap:10px;
+  margin-bottom:16px;
+}
+.summary-chip{
+  flex:1;
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:13px 16px;
+}
+.summary-chip .label{font-size:12px;color:var(--ink-muted);margin-bottom:4px;}
+.summary-chip .value{font-family:var(--font-num);font-size:19px;font-weight:600;}
+.summary-chip.expense .value{color:var(--expense);}
+.summary-chip.income .value{color:var(--income);}
+.summary-chip.loan .value{color:var(--loan);}
+.summary-chip.fixed .value{color:var(--brand);}
+.summary-chip.card .value{color:var(--expense);}
+.summary-chip.salary .value{color:var(--loan);}
+.salary-add-btn{
+  display:inline-block;margin-top:6px;
+  background:var(--loan-pale);color:var(--loan);border:none;
+  padding:4px 8px;border-radius:6px;font-size:11px;font-weight:600;
+}
+
+.limit-box{
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:14px 16px;
+  margin-bottom:16px;
+}
+.limit-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:9px;
+}
+.limit-title{font-size:12.5px;color:var(--ink-muted);}
+.limit-edit-btn{
+  background:var(--paper);
+  border:1px solid var(--line);
+  color:var(--brand);
+  padding:4px 10px;
+  border-radius:6px;
+  font-size:11.5px;
+  font-weight:600;
+}
+.limit-bar-track{
+  height:10px;
+  background:var(--brand-pale);
+  border-radius:6px;
+  overflow:hidden;
+}
+.limit-bar-fill{
+  height:100%;
+  width:0%;
+  background:var(--income);
+  border-radius:6px;
+  transition:width .3s ease, background .3s ease;
+}
+.limit-bar-fill.warn{background:var(--loan);}
+.limit-bar-fill.danger{background:var(--expense);}
+.limit-info{
+  margin-top:7px;
+  font-size:12px;
+  font-family:var(--font-num);
+  color:var(--ink-muted);
+}
+
+.calendar{
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  overflow:hidden;
+}
+.weekday-row, .day-row{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+}
+.weekday-row div{
+  text-align:center;
+  font-size:12px;
+  color:var(--ink-muted);
+  padding:10px 0;
+  border-bottom:1px solid var(--line);
+}
+.day-cell{
+  min-height:74px;
+  border-right:1px solid var(--line);
+  border-bottom:1px solid var(--line);
+  padding:6px 6px;
+  cursor:pointer;
+  position:relative;
+  transition:background .1s;
+}
+.day-row > div:nth-child(7n){border-right:none;}
+.day-cell:hover{background:var(--brand-pale);}
+.day-cell.empty{cursor:default;background:#FAF9F4;}
+.day-cell.empty:hover{background:#FAF9F4;}
+.day-num{font-family:var(--font-num);font-size:13px;color:var(--ink-muted);}
+.day-cell.today .day-num{
+  color:#fff;background:var(--brand);
+  width:20px;height:20px;border-radius:50%;
+  display:inline-flex;align-items:center;justify-content:center;
+  font-size:11.5px;
+}
+.day-amounts{margin-top:4px;display:flex;flex-direction:column;gap:2px;}
+.day-amt{font-family:var(--font-num);font-size:11px;font-weight:600;line-height:1.3;}
+.day-amt.expense{color:var(--expense);}
+.day-amt.income{color:var(--income);}
+.day-amt.loan{color:var(--loan);}
+
+/* ---------- Loans ---------- */
+.section-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin:30px 0 12px;
+}
+.section-head h2{font-size:16px;margin:0;}
+.add-btn{
+  background:var(--brand);
+  color:#fff;
+  border:none;
+  padding:7px 13px;
+  border-radius:7px;
+  font-size:12.5px;
+  font-weight:600;
+}
+.loan-list{display:flex;flex-direction:column;gap:10px;}
+.loan-card{
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:15px 16px;
+}
+.loan-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;}
+.loan-name{font-weight:600;font-size:14.5px;}
+.loan-type{font-size:11.5px;color:var(--ink-muted);margin-top:2px;}
+.loan-actions button{
+  background:none;border:none;color:var(--ink-muted);font-size:12px;
+  padding:3px 6px;
+}
+.loan-actions button:hover{color:var(--brand);}
+.loan-stats{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+  margin-bottom:10px;
+}
+.loan-stat .label{font-size:11.5px;color:var(--ink-muted);}
+.loan-stat .value{font-family:var(--font-num);font-size:15.5px;font-weight:600;}
+.loan-bar-track{
+  height:6px;background:var(--loan-pale);border-radius:4px;overflow:hidden;
+}
+.loan-bar-fill{height:100%;background:var(--loan);}
+.loan-done-badge{
+  display:inline-block;margin-top:8px;font-size:11.5px;color:var(--income);
+  background:var(--income-pale);padding:3px 8px;border-radius:6px;
+}
+
+/* ---------- Stats view ---------- */
+.stat-cards{display:flex;gap:10px;margin-bottom:22px;flex-wrap:wrap;}
+.stat-card{
+  flex:1;min-width:140px;
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  padding:16px;
+}
+.stat-card .label{font-size:12px;color:var(--ink-muted);margin-bottom:6px;}
+.stat-card .value{font-family:var(--font-num);font-size:21px;font-weight:700;}
+
+.range-box{
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  padding:16px;margin-bottom:20px;
+}
+.range-box h3{margin:0 0 12px;font-size:14px;}
+.range-row{display:flex;gap:10px;align-items:end;flex-wrap:wrap;}
+.range-row .field{margin-bottom:0;flex:1;min-width:140px;}
+.range-result{
+  display:flex;gap:24px;margin-top:16px;padding-top:14px;border-top:1px solid var(--line);flex-wrap:wrap;
+}
+.range-result div .label{font-size:12px;color:var(--ink-muted);}
+.range-result div .value{font-family:var(--font-num);font-size:18px;font-weight:600;margin-top:2px;}
+
+.export-row{display:flex;justify-content:flex-end;margin-top:16px;}
+
+table.entry-table{width:100%;border-collapse:collapse;margin-top:6px;}
+table.entry-table th, table.entry-table td{
+  text-align:left;padding:9px 8px;font-size:13px;border-bottom:1px solid var(--line);
+}
+table.entry-table th{color:var(--ink-muted);font-weight:500;font-size:12px;}
+.pill{padding:2px 8px;border-radius:20px;font-size:11.5px;font-weight:600;}
+.pill.expense{background:var(--expense-pale);color:var(--expense);}
+.pill.income{background:var(--income-pale);color:var(--income);}
+
+/* ---------- Modal ---------- */
+.modal-backdrop{
+  position:fixed;inset:0;background:rgba(30,32,26,.45);
+  display:flex;align-items:center;justify-content:center;
+  padding:16px;z-index:50;
+}
+.modal{
+  background:var(--surface);
+  border-radius:14px;
+  width:100%;max-width:420px;
+  max-height:88vh;overflow-y:auto;
+  padding:24px;
+}
+.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;}
+.modal-head h3{margin:0;font-size:16px;}
+.modal-close{background:none;border:none;font-size:18px;color:var(--ink-muted);line-height:1;}
+.type-toggle{display:flex;gap:8px;margin-bottom:14px;}
+.type-toggle button{
+  flex:1;padding:9px;border-radius:8px;border:1px solid var(--line);background:var(--paper);
+  font-size:13.5px;font-weight:600;color:var(--ink-muted);
+}
+.type-toggle button.active.expense{background:var(--expense-pale);color:var(--expense);border-color:var(--expense-pale);}
+.type-toggle button.active.income{background:var(--income-pale);color:var(--income);border-color:var(--income-pale);}
+.entry-list{margin:14px 0;display:flex;flex-direction:column;gap:8px;}
+.entry-item{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:10px 12px;background:var(--paper);border-radius:8px;font-size:13.5px;
+}
+.entry-item .meta{color:var(--ink-muted);font-size:11.5px;}
+.entry-item .amt{font-family:var(--font-num);font-weight:600;}
+.entry-item .amt.expense{color:var(--expense);}
+.entry-item .amt.income{color:var(--income);}
+.entry-item .del{background:none;border:none;color:var(--ink-muted);font-size:13px;padding:2px 6px;}
+.empty-note{color:var(--ink-muted);font-size:13px;text-align:center;padding:10px 0;}
+.repay-toggle{display:flex;gap:8px;margin-bottom:14px;}
+.repay-toggle button{
+  flex:1;padding:9px 6px;border-radius:8px;border:1px solid var(--line);background:var(--paper);
+  font-size:12.5px;font-weight:600;color:var(--ink-muted);
+}
+.repay-toggle button.active{background:var(--brand-pale);color:var(--brand);border-color:var(--brand-pale);}
+
+@media (max-width:520px){
+  .day-cell{min-height:58px;padding:4px;}
+  .day-amt{font-size:9.5px;}
+  .loan-stats{grid-template-columns:repeat(3,1fr);gap:6px;}
+  .month-summary{flex-direction:column;}
+}
+</style>
+<link rel="icon" href="favicon.ico" type="image/x-icon">
+<link rel="apple-touch-icon" href="favicon.png">
+</head>
+<body>
+
+<!-- ================= APP SCREEN ================= -->
+<a class="top-back" href="../">← 생활 계산 도구 모음</a>
+<div id="app-screen">
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="brand-mark">CashFlow Tracker</div>
+      <div class="tabs">
+        <button class="tab-btn active" data-view="calendar">캘린더</button>
+        <button class="tab-btn" data-view="stats">통계</button>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <button class="member-btn" id="export-btn2">내보내기</button>
+      <label class="file-label" for="import-file">불러오기</label>
+      <input type="file" id="import-file" accept="application/json" class="hidden">
+      <button class="logout-btn" id="reset-btn">초기화</button>
+    </div>
+  </div>
+
+  <p class="intro-box">로그인이나 회원가입 없이 바로 쓸 수 있는 가계부입니다. 입력한 내용은 이 브라우저에만 저장되며 서버로 전송되지 않습니다. 다른 기기에서는 기록이 보이지 않으니, 상단 <strong>내보내기</strong>로 주기적으로 백업해주세요.</p>
+
+  <!-- ---- Calendar View ---- -->
+  <div class="view" id="view-calendar">
+    <div class="month-nav">
+      <button class="month-nav-btn" id="prev-month">‹</button>
+      <div class="month-title" id="month-title"></div>
+      <button class="month-nav-btn" id="next-month">›</button>
+    </div>
+
+    <div class="month-summary">
+      <div class="summary-chip loan">
+        <div class="label">이번 달 확정 고정비용 (대출+반복지출)</div>
+        <div class="value" id="confirmed-fixed-total">0원</div>
+      </div>
+      <div class="summary-chip fixed">
+        <div class="label">이번 달 추정 고정비용</div>
+        <div class="value" id="estimated-fixed-total">0원</div>
+      </div>
+    </div>
+
+    <div class="month-summary">
+      <div class="summary-chip expense">
+        <div class="label">이번 달 지출</div>
+        <div class="value" id="month-expense-total">0원</div>
+      </div>
+      <div class="summary-chip income">
+        <div class="label">이번 달 수입</div>
+        <div class="value" id="month-income-total">0원</div>
+      </div>
+      <div class="summary-chip salary">
+        <div class="label">이번 달 월급</div>
+        <div class="value" id="month-salary-total">0원</div>
+        <button class="salary-add-btn" id="salary-add-btn">+ 월급 입력</button>
+      </div>
+    </div>
+
+    <div class="month-summary">
+      <div class="summary-chip card">
+        <div class="label">다음달 예상 카드결제금액</div>
+        <div class="value" id="next-month-card-total">0원</div>
+      </div>
+    </div>
+
+    <div class="limit-box">
+      <div class="limit-head">
+        <span class="limit-title">이번 달 지출 한도</span>
+        <button class="limit-edit-btn" id="limit-edit-btn">한도 설정</button>
+      </div>
+      <div class="limit-bar-track"><div class="limit-bar-fill" id="limit-bar-fill"></div></div>
+      <div class="limit-info" id="limit-info">한도를 설정하면 이번 달 지출 진행률을 보여드려요.</div>
+    </div>
+
+    <div class="calendar">
+      <div class="weekday-row">
+        <div>일</div><div>월</div><div>화</div><div>수</div><div>목</div><div>금</div><div>토</div>
+      </div>
+      <div id="calendar-grid"></div>
+    </div>
+
+    <div class="section-head">
+      <h2>대출 현황</h2>
+      <button class="add-btn" id="add-loan-btn">+ 대출 추가</button>
+    </div>
+    <div class="loan-list" id="loan-list"></div>
+  </div>
+
+  <!-- ---- Stats View ---- -->
+  <div class="view hidden" id="view-stats">
+    <div class="stat-cards">
+      <div class="stat-card">
+        <div class="label">이번 달 사용 총금액</div>
+        <div class="value" id="stat-month-total" style="color:var(--expense);">0원</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">이번 달 총수입</div>
+        <div class="value" id="stat-month-income" style="color:var(--income);">0원</div>
+      </div>
+    </div>
+
+    <div class="range-box">
+      <h3 id="last-month-title">지난달 결산</h3>
+      <div class="range-result" style="margin-top:0;padding-top:0;border-top:none;">
+        <div>
+          <div class="label">지난달 총수입</div>
+          <div class="value" id="last-month-income" style="color:var(--income);">0원</div>
+        </div>
+        <div>
+          <div class="label">지난달 총지출</div>
+          <div class="value" id="last-month-expense" style="color:var(--expense);">0원</div>
+        </div>
+        <div>
+          <div class="label">남은 금액</div>
+          <div class="value" id="last-month-balance">0원</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="range-box">
+      <h3>기간별 조회</h3>
+      <div class="range-row">
+        <div class="field">
+          <label>시작일</label>
+          <input type="date" id="range-start">
+        </div>
+        <div class="field">
+          <label>종료일</label>
+          <input type="date" id="range-end">
+        </div>
+        <button class="btn btn-primary" id="range-search-btn">조회</button>
+      </div>
+      <div class="range-result">
+        <div>
+          <div class="label">총 지출</div>
+          <div class="value" id="range-total" style="color:var(--expense);">0원</div>
+        </div>
+        <div>
+          <div class="label">일 평균 지출</div>
+          <div class="value" id="range-avg">0원</div>
+        </div>
+        <div>
+          <div class="label">해당 건수</div>
+          <div class="value" id="range-count">0건</div>
+        </div>
+      </div>
+      <table class="entry-table" id="range-table" style="display:none;">
+        <thead><tr><th>날짜</th><th>구분</th><th>카테고리</th><th>금액</th><th>결제수단</th><th>메모</th></tr></thead>
+        <tbody id="range-table-body"></tbody>
+      </table>
+      <div class="export-row">
+        <button class="btn btn-ghost" id="export-btn">엑셀 다운로드</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= DAY DETAIL MODAL ================= -->
+<div class="modal-backdrop hidden" id="day-modal">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="day-modal-title">9월 11일</h3>
+      <button class="modal-close" id="day-modal-close">✕</button>
+    </div>
+    <div class="entry-list" id="day-entry-list"></div>
+
+    <div class="type-toggle">
+      <button class="active expense" id="type-expense-btn" data-type="expense">지출</button>
+      <button class="income" id="type-income-btn" data-type="income">수입</button>
+    </div>
+    <div class="field">
+      <label>카테고리</label>
+      <select id="entry-category"></select>
+    </div>
+    <div class="field">
+      <label>금액</label>
+      <input type="number" id="entry-amount" placeholder="0" inputmode="numeric">
+    </div>
+    <div class="field" id="installment-field-wrap">
+      <label>결제수단</label>
+      <select id="entry-installment">
+        <option value="cash">현금</option>
+        <option value="check">체크카드</option>
+        <option value="1">신용카드 일시불</option>
+        <option value="2">신용카드 2개월</option>
+        <option value="3">신용카드 3개월</option>
+        <option value="4">신용카드 4개월</option>
+        <option value="5">신용카드 5개월</option>
+        <option value="6">신용카드 6개월</option>
+        <option value="7">신용카드 7개월</option>
+        <option value="8">신용카드 8개월</option>
+        <option value="9">신용카드 9개월</option>
+        <option value="10">신용카드 10개월</option>
+        <option value="11">신용카드 11개월</option>
+        <option value="12">신용카드 12개월</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>메모 (선택)</label>
+      <input type="text" id="entry-memo" placeholder="메모를 입력하세요">
+    </div>
+    <div class="field" id="recurring-toggle-wrap">
+      <label class="checkbox-label">
+        <input type="checkbox" id="entry-recurring-check"> 매달 반복 (고정지출로 포함)
+      </label>
+    </div>
+    <div class="field hidden" id="recurring-end-wrap">
+      <label>반복 종료일 (기한)</label>
+      <input type="date" id="entry-recurring-end">
+    </div>
+    <button class="btn btn-primary btn-block" id="entry-save-btn">내역 추가</button>
+  </div>
+</div>
+
+<!-- ================= LOAN MODAL ================= -->
+<div class="modal-backdrop hidden" id="loan-modal">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="loan-modal-title">대출 추가</h3>
+      <button class="modal-close" id="loan-modal-close">✕</button>
+    </div>
+    <div class="field">
+      <label>대출명</label>
+      <input type="text" id="loan-name" placeholder="예: 전세자금대출">
+    </div>
+    <div class="field">
+      <label>빌린 금액 (원)</label>
+      <input type="number" id="loan-principal" placeholder="0" inputmode="numeric">
+    </div>
+    <div class="field">
+      <label>등록 시점까지 갚은 금액 (원)</label>
+      <input type="number" id="loan-paid" placeholder="0" inputmode="numeric">
+    </div>
+    <div class="field">
+      <label>시작년월일 (첫 출금일)</label>
+      <input type="date" id="loan-start">
+    </div>
+    <div class="field">
+      <label>마지막 출금일 (상환 종료일)</label>
+      <input type="date" id="loan-end">
+    </div>
+    <div class="field">
+      <label>금리 (연 %)</label>
+      <input type="number" step="0.01" id="loan-rate" placeholder="예: 4.5" inputmode="decimal">
+    </div>
+    <div class="field">
+      <label>상환방식</label>
+      <div class="repay-toggle">
+        <button class="active" data-repay="equal_payment">원리금균등상환</button>
+        <button data-repay="equal_principal">원금균등상환</button>
+      </div>
+    </div>
+    <p class="empty-note" style="margin:4px 0 0;">매달 출금일이 지나면 캘린더에 예상 상환액이 자동으로 표시돼요. 실제 금액이 다르면 캘린더에서 해당 날짜를 눌러 직접 수정할 수 있어요.</p>
+    <button class="btn btn-primary btn-block" id="loan-save-btn" style="margin-top:14px;">저장</button>
+    <button class="btn btn-ghost btn-block" id="loan-delete-btn" style="margin-top:8px;display:none;">이 대출 삭제</button>
+  </div>
+</div>
+
+<script>
+/* =========================================================
+   1. 로컬 저장소 (localStorage)
+   ========================================================= */
+const STORAGE_KEY = "cashflowTrackerLocal.v1";
+
+function loadState(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw) throw new Error("empty");
+    const data = JSON.parse(raw);
+    return {
+      spendingLimit: data.spendingLimit || null,
+      expenses: Array.isArray(data.expenses) ? data.expenses : [],
+      loans: Array.isArray(data.loans) ? data.loans : [],
+      loanPayments: Array.isArray(data.loanPayments) ? data.loanPayments : [],
+      recurringExpenses: Array.isArray(data.recurringExpenses) ? data.recurringExpenses : []
+    };
+  }catch(e){
+    return { spendingLimit: null, expenses: [], loans: [], loanPayments: [], recurringExpenses: [] };
+  }
+}
+
+let spendingLimit, expenses, loans, loanPayments, recurringExpenses;
+({ spendingLimit, expenses, loans, loanPayments, recurringExpenses } = loadState());
+
+function saveState(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({
+    spendingLimit, expenses, loans, loanPayments, recurringExpenses,
+    savedAt: new Date().toISOString()
+  }));
+}
+
+function uid(prefix){
+  return prefix + "_" + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+}
+
+// 상태가 바뀜 때마다: 반복지출/대출 자동생성 후 저장하고 화면을 다시 그립니다.
+function refreshAll(){
+  generateMissingRecurringExpenses();
+  generateMissingLoanPayments();
+  renderCalendar();
+  renderLoans();
+  renderStats();
+  saveState();
+}
+
+const EXPENSE_CATEGORIES = ["식비","교통","주거/관리비","통신","의료","교육","문화/여가","쇼핑","경조사","저축/투자","주유비","점심식대","하이패스","보험료","기타"];
+const INCOME_CATEGORIES = ["급여","부수입","용돈","환급/기타"];
+
+let viewMonth = new Date(); viewMonth.setDate(1);
+let selectedDate = null;   // 'YYYY-MM-DD' for day modal
+let entryType = "expense";
+let editingLoanId = null;
+let loanRepayType = "equal_payment";
+
+/* =========================================================
+   4. TABS/* =========================================================
+   4. TABS
+   ========================================================= */
+document.querySelectorAll(".tab-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    const v = btn.dataset.view;
+    document.getElementById("view-calendar").classList.toggle("hidden", v !== "calendar");
+    document.getElementById("view-stats").classList.toggle("hidden", v !== "stats");
+    if(v === "stats") renderStats();
+  });
+});
+
+/* =========================================================
+   5. CALENDAR
+   ========================================================= */
+function fmtDate(d){
+  const y = d.getFullYear(), m = String(d.getMonth()+1).padStart(2,"0"), day = String(d.getDate()).padStart(2,"0");
+  return `${y}-${m}-${day}`;
+}
+function todayStr(){ return fmtDate(new Date()); }
+function won(n){ return Math.round(n).toLocaleString("ko-KR") + "원"; }
+
+document.getElementById("prev-month").addEventListener("click", () => {
+  viewMonth.setMonth(viewMonth.getMonth()-1); renderCalendar();
+});
+document.getElementById("next-month").addEventListener("click", () => {
+  viewMonth.setMonth(viewMonth.getMonth()+1); renderCalendar();
+});
+
+function renderCalendar(){
+  document.getElementById("month-title").textContent =
+    `${viewMonth.getFullYear()}년 ${viewMonth.getMonth()+1}월`;
+
+  const year = viewMonth.getFullYear(), month = viewMonth.getMonth();
+  const firstDay = new Date(year, month, 1);
+  const startOffset = firstDay.getDay();
+  const daysInMonth = new Date(year, month+1, 0).getDate();
+
+  // group expenses by date for this month
+  const byDate = {};
+  let monthExpense = 0, monthIncome = 0, monthSalary = 0;
+  const monthPrefix = `${year}-${String(month+1).padStart(2,"0")}`;
+  expenses.forEach(e => {
+    if(e.date && e.date.startsWith(monthPrefix)){
+      byDate[e.date] = byDate[e.date] || {expense:0, income:0, loan:0};
+      byDate[e.date][e.type] += Number(e.amount)||0;
+      if(e.type === "expense"){
+        monthExpense += Number(e.amount)||0;
+      } else {
+        monthIncome += Number(e.amount)||0;
+        if(e.category === "급여") monthSalary += Number(e.amount)||0;
+      }
+    }
+  });
+  loanPayments.forEach(p => {
+    if(p.date && p.date.startsWith(monthPrefix)){
+      byDate[p.date] = byDate[p.date] || {expense:0, income:0, loan:0};
+      byDate[p.date].loan = (byDate[p.date].loan || 0) + (Number(p.amount)||0);
+    }
+  });
+  document.getElementById("month-expense-total").textContent = won(monthExpense);
+  document.getElementById("month-income-total").textContent = won(monthIncome);
+  document.getElementById("month-salary-total").textContent = won(monthSalary);
+
+  const grid = document.getElementById("calendar-grid");
+  grid.innerHTML = "";
+  grid.className = "day-row";
+  const totalCells = Math.ceil((startOffset + daysInMonth) / 7) * 7;
+
+  for(let i=0; i<totalCells; i++){
+    const dayNum = i - startOffset + 1;
+    const cell = document.createElement("div");
+    if(dayNum < 1 || dayNum > daysInMonth){
+      cell.className = "day-cell empty";
+    } else {
+      const dateStr = `${monthPrefix}-${String(dayNum).padStart(2,"0")}`;
+      cell.className = "day-cell" + (dateStr === todayStr() ? " today" : "");
+      const numEl = document.createElement("span");
+      numEl.className = "day-num";
+      numEl.textContent = dayNum;
+      cell.appendChild(numEl);
+
+      const amts = byDate[dateStr];
+      if(amts){
+        const wrap = document.createElement("div");
+        wrap.className = "day-amounts";
+        if(amts.expense) wrap.innerHTML += `<div class="day-amt expense">-${Math.round(amts.expense).toLocaleString("ko-KR")}</div>`;
+        if(amts.income) wrap.innerHTML += `<div class="day-amt income">+${Math.round(amts.income).toLocaleString("ko-KR")}</div>`;
+        if(amts.loan) wrap.innerHTML += `<div class="day-amt loan">대출 -${Math.round(amts.loan).toLocaleString("ko-KR")}</div>`;
+        cell.appendChild(wrap);
+      }
+      cell.addEventListener("click", () => openDayModal(dateStr));
+    }
+    grid.appendChild(cell);
+  }
+
+  renderFixedCosts();
+  renderSpendingLimit();
+  renderNextMonthCardTotal();
+}
+
+// 이번 달 확정 고정비용 = 대출 상환액 + 반복지출(매달 자동 생성되는 고정지출) 합계
+// + 전월 관리비/통신비/주유비/점심식대/하이패스/보험료 중 반복지출로 등록되지 않은 것으로 추정한 이번 달 고정비용
+const FIXED_COST_CATEGORIES = ["주거/관리비","통신","주유비","점심식대","하이패스","보험료"];
+
+function renderFixedCosts(){
+  const now = new Date();
+  const monthPrefix = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}`;
+
+  const loanFixedTotal = loans.reduce((sum, loan) => sum + computeLoanStatus(loan).currentPayment, 0);
+  const recurringFixedTotal = expenses
+    .filter(e => e.type === "expense" && e.isFixed && e.date.startsWith(monthPrefix))
+    .reduce((s,e) => s + Number(e.amount), 0);
+  document.getElementById("confirmed-fixed-total").textContent = won(loanFixedTotal + recurringFixedTotal);
+
+  const lastMonthDate = new Date(now.getFullYear(), now.getMonth()-1, 1);
+  const lastPrefix = `${lastMonthDate.getFullYear()}-${String(lastMonthDate.getMonth()+1).padStart(2,"0")}`;
+  const estimatedFixed = expenses
+    .filter(e => e.type === "expense" && !e.isFixed && e.date.startsWith(lastPrefix) && FIXED_COST_CATEGORIES.includes(e.category))
+    .reduce((s,e) => s + Number(e.amount), 0);
+  document.getElementById("estimated-fixed-total").textContent = won(estimatedFixed);
+}
+
+// 다음달 예상 카드결제금액: 신용카드 지출은 구매 다음달부터 청구가 시작되고,
+// 할부는 할부개월수만큼 나눠서 각 청구월에 (금액/할부개월) 만큼만 반영됨.
+// 그래서 몇 달 전에 할부로 긁은 카드값도, 아직 할부가 안 끝났으면 다음달 청구액에 포함됨.
+function renderNextMonthCardTotal(){
+  const now = new Date();
+  const targetIndex = now.getFullYear() * 12 + now.getMonth() + 1; // 다음달의 절대 월 인덱스
+
+  let total = 0;
+  expenses.forEach(e => {
+    if(e.type !== "expense" || e.paymentMethod !== "신용카드") return;
+    const d = new Date(e.date + "T00:00:00");
+    const purchaseIndex = d.getFullYear() * 12 + d.getMonth();
+    const n = (e.installmentMonths && e.installmentMonths > 1) ? e.installmentMonths : 1;
+    const billStart = purchaseIndex + 1; // 구매 다음달부터 청구 시작
+    const billEnd = billStart + n - 1;
+    if(targetIndex >= billStart && targetIndex <= billEnd){
+      total += Number(e.amount) / n;
+    }
+  });
+  document.getElementById("next-month-card-total").textContent = won(total);
+}
+
+/* ---- 이번 달 지출 한도 막대 (만원 단위 지정, 가까울수록 경고 색) ---- */
+document.getElementById("limit-edit-btn").addEventListener("click", () => {
+  const currentManwon = spendingLimit
+    ? Math.round(Number(spendingLimit) / 10000) : "";
+  const input = prompt("이번 달 지출 한도를 만원 단위로 입력하세요 (예: 200 → 200만원). 0을 입력하면 한도가 해제됩니다.", currentManwon);
+  if(input === null) return;
+  const manwon = Number(String(input).replace(/[^0-9]/g, ""));
+  if(input.trim() !== "" && isNaN(manwon)){ alert("올바른 숫자를 입력하세요."); return; }
+  spendingLimit = manwon > 0 ? manwon * 10000 : null;
+  refreshAll();
+});
+
+function renderSpendingLimit(){
+  const fill = document.getElementById("limit-bar-fill");
+  const info = document.getElementById("limit-info");
+  const limit = spendingLimit ? Number(spendingLimit) : 0;
+
+  const year = viewMonth.getFullYear(), month = viewMonth.getMonth();
+  const monthPrefix = `${year}-${String(month+1).padStart(2,"0")}`;
+  const monthExpense = expenses
+    .filter(e => e.type === "expense" && e.date.startsWith(monthPrefix))
+    .reduce((s,e) => s + Number(e.amount), 0);
+
+  if(!limit){
+    fill.style.width = "0%";
+    fill.className = "limit-bar-fill";
+    info.textContent = "한도를 설정하면 이번 달 지출 진행률을 보여드려요.";
+    info.style.color = "var(--ink-muted)";
+    return;
+  }
+
+  const pct = Math.min(100, (monthExpense / limit) * 100);
+  fill.style.width = pct.toFixed(1) + "%";
+  fill.className = "limit-bar-fill" + (pct >= 100 ? " danger" : pct >= 70 ? " warn" : "");
+
+  const over = monthExpense > limit;
+  info.textContent = `${won(monthExpense)} / ${won(limit)} (${Math.round(pct)}%)` + (over ? " · 한도 초과!" : "");
+  info.style.color = pct >= 100 ? "var(--expense)" : pct >= 70 ? "var(--loan)" : "var(--ink-muted)";
+}
+
+/* =========================================================
+   6. DAY MODAL — 지출/수입 입력
+   ========================================================= */
+function openDayModal(dateStr){
+  selectedDate = dateStr;
+  const d = new Date(dateStr + "T00:00:00");
+  document.getElementById("day-modal-title").textContent = `${d.getMonth()+1}월 ${d.getDate()}일`;
+  setEntryType("expense");
+  document.getElementById("entry-amount").value = "";
+  document.getElementById("entry-memo").value = "";
+  renderDayEntries();
+  document.getElementById("day-modal").classList.remove("hidden");
+}
+document.getElementById("day-modal-close").addEventListener("click", () => {
+  document.getElementById("day-modal").classList.add("hidden");
+});
+
+function setEntryType(type){
+  entryType = type;
+  document.getElementById("type-expense-btn").classList.toggle("active", type==="expense");
+  document.getElementById("type-income-btn").classList.toggle("active", type==="income");
+  const sel = document.getElementById("entry-category");
+  sel.innerHTML = "";
+  (type === "expense" ? EXPENSE_CATEGORIES : INCOME_CATEGORIES).forEach(c => {
+    const opt = document.createElement("option"); opt.value = c; opt.textContent = c;
+    sel.appendChild(opt);
+  });
+  document.getElementById("installment-field-wrap").style.display = type === "expense" ? "block" : "none";
+  document.getElementById("entry-installment").value = "1";
+  document.getElementById("recurring-toggle-wrap").style.display = type === "expense" ? "block" : "none";
+  document.getElementById("entry-recurring-check").checked = false;
+  document.getElementById("recurring-end-wrap").classList.add("hidden");
+  document.getElementById("entry-recurring-end").value = "";
+}
+document.getElementById("entry-recurring-check").addEventListener("change", (e) => {
+  document.getElementById("recurring-end-wrap").classList.toggle("hidden", !e.target.checked);
+});
+document.getElementById("type-expense-btn").addEventListener("click", () => setEntryType("expense"));
+document.getElementById("type-income-btn").addEventListener("click", () => setEntryType("income"));
+
+function renderDayEntries(){
+  const list = document.getElementById("day-entry-list");
+  const items = expenses.filter(e => e.date === selectedDate);
+  const loanItems = loanPayments.filter(p => p.date === selectedDate);
+
+  if(items.length === 0 && loanItems.length === 0){
+    list.innerHTML = `<div class="empty-note">등록된 내역이 없습니다.</div>`;
+    return;
+  }
+  list.innerHTML = "";
+
+  loanItems.forEach(p => {
+    const badge = p.isManual ? "대출 출금(수정됨)" : "대출 출금(자동)";
+    const row = document.createElement("div");
+    row.className = "entry-item";
+    row.innerHTML = `
+      <div>
+        <div>${p.loanName} <span class="pill" style="background:var(--loan-pale);color:var(--loan);">${badge}</span></div>
+        <div class="meta">${p.isManual ? "실제 출금액으로 직접 수정한 내역이에요." : "자동 계산된 예상 상환액이에요. 실제 금액이 다르면 수정하세요."}</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <div class="amt expense">-${Number(p.amount).toLocaleString("ko-KR")}원</div>
+        <button class="del" data-action="edit" data-id="${p.id}">수정</button>
+        <button class="del" data-action="del" data-id="${p.id}">삭제</button>
+      </div>`;
+    row.querySelector('[data-action="edit"]').addEventListener("click", () => editLoanPayment(p.id, p.amount));
+    row.querySelector('[data-action="del"]').addEventListener("click", () => deleteLoanPayment(p.id));
+    list.appendChild(row);
+  });
+
+  items.forEach(e => {
+    const paymentTag = paymentLabel(e);
+    const fixedTag = e.recurringId ? "고정지출(반복)" : "";
+    const metaParts = [e.memo, e.type === "expense" ? paymentTag : "", fixedTag].filter(Boolean).join(" · ");
+    const row = document.createElement("div");
+    row.className = "entry-item";
+    row.innerHTML = `
+      <div>
+        <div>${e.category}</div>
+        <div class="meta">${metaParts}</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div class="amt ${e.type}">${e.type==="expense"?"-":"+"}${Number(e.amount).toLocaleString("ko-KR")}원</div>
+        <button class="del" data-id="${e.id}">삭제</button>
+      </div>`;
+    row.querySelector(".del").addEventListener("click", () => deleteEntry(e.id));
+    list.appendChild(row);
+  });
+}
+
+function editLoanPayment(paymentId, currentAmount){
+  const input = prompt("실제 출금된 금액을 입력하세요 (원)", currentAmount);
+  if(input === null) return;
+  const amount = Number(String(input).replace(/[^0-9]/g, ""));
+  if(!amount || amount <= 0){ alert("올바른 금액을 입력하세요."); return; }
+  const p = loanPayments.find(x => x.id === paymentId);
+  if(!p) return;
+  p.amount = amount;
+  p.isManual = true;
+  refreshAll();
+  renderDayEntries();
+}
+
+function deleteLoanPayment(paymentId){
+  if(!confirm("이 대출 출금 내역을 삭제할까요?")) return;
+  loanPayments = loanPayments.filter(p => p.id !== paymentId);
+  refreshAll();
+  renderDayEntries();
+}
+
+document.getElementById("entry-save-btn").addEventListener("click", () => {
+  const amount = Number(document.getElementById("entry-amount").value);
+  const category = document.getElementById("entry-category").value;
+  const memo = document.getElementById("entry-memo").value.trim();
+  const installmentVal = document.getElementById("entry-installment").value;
+  const paymentMethod = entryType === "expense"
+    ? (installmentVal === "cash" ? "현금" : installmentVal === "check" ? "체크카드" : "신용카드")
+    : null;
+  const installmentMonths = (entryType === "expense" && installmentVal !== "cash" && installmentVal !== "check")
+    ? Number(installmentVal) : null;
+  const isRecurring = entryType === "expense" && document.getElementById("entry-recurring-check").checked;
+  const recurringEnd = document.getElementById("entry-recurring-end").value;
+
+  if(!amount || amount <= 0){ alert("금액을 올바르게 입력하세요."); return; }
+  if(isRecurring && !recurringEnd){ alert("반복 종료일(기한)을 입력하세요."); return; }
+  if(isRecurring && recurringEnd < selectedDate){ alert("반복 종료일은 선택한 날짜 이후여야 합니다."); return; }
+
+  if(isRecurring){
+    const recId = uid("rec");
+    recurringExpenses.push({
+      id: recId, category, amount, memo, paymentMethod, installmentMonths,
+      startDate: selectedDate, endDate: recurringEnd
+    });
+    const docId = `recur_${recId}_${selectedDate.slice(0,7)}`;
+    expenses.push({
+      id: docId, date: selectedDate, type: "expense", category, amount, memo, paymentMethod, installmentMonths,
+      recurringId: recId, isFixed: true
+    });
+  } else {
+    expenses.push({
+      id: uid("exp"), date: selectedDate, type: entryType, category, amount, memo, paymentMethod, installmentMonths
+    });
+  }
+  document.getElementById("entry-amount").value = "";
+  document.getElementById("entry-memo").value = "";
+  document.getElementById("entry-installment").value = "1";
+  document.getElementById("entry-recurring-check").checked = false;
+  document.getElementById("recurring-end-wrap").classList.add("hidden");
+  document.getElementById("entry-recurring-end").value = "";
+  refreshAll();
+  renderDayEntries();
+});
+
+function deleteEntry(id){
+  const entry = expenses.find(e => e.id === id);
+  if(!confirm("이 내역을 삭제할까요?")) return;
+  expenses = expenses.filter(e => e.id !== id);
+
+  if(entry && entry.recurringId){
+    const stopFuture = confirm("매달 반복되는 고정지출이에요. 앞으로 자동 생성되지 않게 반복을 중단할까요?");
+    if(stopFuture){
+      const rec = recurringExpenses.find(r => r.id === entry.recurringId);
+      if(rec) rec.endDate = fmtDate(new Date(new Date(entry.date + "T00:00:00").getTime() - 86400000));
+    }
+  }
+  refreshAll();
+  renderDayEntries();
+}
+
+/* ---- 월급 빠른 입력 ---- */
+document.getElementById("salary-add-btn").addEventListener("click", () => {
+  openDayModal(todayStr());
+  setEntryType("income");
+  document.getElementById("entry-category").value = "급여";
+});
+
+/* =========================================================
+   7. LOANS — 계산 로직
+   ========================================================= */
+function loanTermMonths(loan){
+  const start = new Date(loan.startDate + "T00:00:00");
+  const end = new Date(loan.endDate + "T00:00:00");
+  const n = (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth()) + 1;
+  return Math.max(1, n);
+}
+
+// index번째(0부터) 회차의 예상 상환액 — 원금균등은 회차가 지날수록 이자분이 줄어듦
+function expectedInstallmentAmount(loan, index){
+  const P = Number(loan.principal);
+  const n = loanTermMonths(loan);
+  const annualRate = Number(loan.annualRate) || 0;
+  const r = annualRate / 100 / 12;
+  if(loan.repaymentType === "equal_principal"){
+    const principalPerMonth = P / n;
+    const balanceBeforeThis = Math.max(0, P - principalPerMonth * index);
+    return principalPerMonth + balanceBeforeThis * r;
+  }
+  // equal_payment (원리금균등상환) — 매달 동일 금액
+  return r === 0 ? (P / n) : (P * r * Math.pow(1+r, n) / (Math.pow(1+r, n) - 1));
+}
+
+// 대출 출금일(시작일의 '일')을 기준으로 해당 연/월의 실제 출금일 계산 (말일 보정 포함)
+function scheduledDateForMonth(loan, year, month){
+  const start = new Date(loan.startDate + "T00:00:00");
+  const lastDayOfMonth = new Date(year, month+1, 0).getDate();
+  const day = Math.min(start.getDate(), lastDayOfMonth);
+  return fmtDate(new Date(year, month, day));
+}
+
+// 이번 달이 되었고 아직 이번 달 출금 내역이 없으면 자동으로 1건 생성 (과거 누락분은 소급 생성하지 않음)
+// 대출ID+연월을 고정 문서ID로 사용하고 트랜잭션으로 "이미 있으면 생성 안 함"을 보장해 중복 생성을 원천 차단
+function generateMissingLoanPayments(){
+  const now = new Date();
+  const todayS = todayStr();
+
+  loans.forEach(loan => {
+    if(!loan.startDate || !loan.endDate) return;
+    const loanStart = new Date(loan.startDate + "T00:00:00");
+    if(now < loanStart) return; // 아직 대출 시작 전
+
+    const n = loanTermMonths(loan);
+    const myPayments = loanPayments.filter(p => p.loanId === loan.id);
+    const recordedCount = myPayments.length;
+    if(recordedCount >= n) return; // 이미 전 회차 완료
+
+    const yearMonth = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}`;
+    const scheduledDate = scheduledDateForMonth(loan, now.getFullYear(), now.getMonth());
+    if(scheduledDate > todayS) return; // 이번 달 출금일이 아직 안 지남
+
+    const alreadyHasThisMonth = myPayments.some(p => p.date.slice(0,7) === yearMonth);
+    if(alreadyHasThisMonth) return;
+
+    const docId = `${loan.id}_${yearMonth}`;
+    if(loanPayments.some(p => p.id === docId)) return; // 이미 있으면 절대 덮어쓰지 않음 (사용자 수정값 보존)
+
+    const amount = Math.round(expectedInstallmentAmount(loan, recordedCount));
+    loanPayments.push({
+      id: docId, loanId: loan.id, loanName: loan.name, date: scheduledDate, amount, isManual: false
+    });
+  });
+}
+
+// 대출 정보(빌린금액/금리/상환방식/기간 등)를 수정했을 때, 사용자가 아직 손대지 않은
+// 이번 달 자동 항목이 있다면 새 정보로 다시 계산해서 갱신
+function syncCurrentMonthLoanPayment(loan){
+  const now = new Date();
+  const yearMonth = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}`;
+  const docId = `${loan.id}_${yearMonth}`;
+  const p = loanPayments.find(x => x.id === docId);
+  if(!p) return; // 아직 생성 전이면 다음 자동생성 때 새 정보로 만들어짐
+  if(p.isManual) return; // 사용자가 이미 직접 고친 값은 건드리지 않음
+  const recordedCount = loanPayments.filter(x => x.loanId === loan.id && x.id !== docId).length;
+  p.amount = Math.round(expectedInstallmentAmount(loan, recordedCount));
+  p.loanName = loan.name;
+}
+
+/* ---- 반복지출(고정지출) 자동생성 ---- */
+// 대출과 같은 방식: 대출ID 대신 반복지출 템플릿ID + 연월을 고정 문서ID로 사용해 중복을 원천 차단
+function scheduledDateForRecurring(rec, year, month){
+  const start = new Date(rec.startDate + "T00:00:00");
+  const lastDayOfMonth = new Date(year, month+1, 0).getDate();
+  const day = Math.min(start.getDate(), lastDayOfMonth);
+  return fmtDate(new Date(year, month, day));
+}
+
+function generateMissingRecurringExpenses(){
+  const now = new Date();
+  const todayS = todayStr();
+
+  recurringExpenses.forEach(rec => {
+    if(!rec.startDate || !rec.endDate) return;
+    if(rec.endDate < rec.startDate) return; // 잘못된 데이터 방어
+    const recStart = new Date(rec.startDate + "T00:00:00");
+    if(now < recStart) return; // 아직 시작 전
+
+    const yearMonth = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}`;
+    const scheduledDate = scheduledDateForRecurring(rec, now.getFullYear(), now.getMonth());
+    if(scheduledDate > todayS) return; // 이번 달 예정일이 아직 안 지남
+    if(scheduledDate > rec.endDate) return; // 반복 종료일을 지난 달은 생성 안 함
+
+    const alreadyExists = expenses.some(e => e.recurringId === rec.id && e.date.slice(0,7) === yearMonth);
+    if(alreadyExists) return;
+
+    const docId = `recur_${rec.id}_${yearMonth}`;
+    if(expenses.some(e => e.id === docId)) return; // 이미 있으면 절대 덮어쓰지 않음
+
+    expenses.push({
+      id: docId, date: scheduledDate, type: "expense", category: rec.category, amount: rec.amount,
+      memo: rec.memo || "", paymentMethod: rec.paymentMethod || "신용카드",
+      installmentMonths: rec.installmentMonths || null,
+      recurringId: rec.id, isFixed: true
+    });
+  });
+}
+
+// 대출 시작일부터 오늘까지 실제로 지난(=출금일이 이미 지난) 개월수
+function elapsedMonthsFromStart(loan){
+  const start = new Date(loan.startDate + "T00:00:00");
+  const now = new Date();
+  if(now < start) return 0;
+  let months = (now.getFullYear() - start.getFullYear()) * 12 + (now.getMonth() - start.getMonth());
+  const thisMonthScheduled = scheduledDateForMonth(loan, now.getFullYear(), now.getMonth());
+  if(thisMonthScheduled > todayStr()) months -= 1; // 이번 달 출금일이 아직 안 지났으면 이번 달은 미포함
+  return Math.max(0, months + 1);
+}
+
+function computeLoanStatus(loan){
+  const P = Number(loan.principal);
+  const n = loanTermMonths(loan);
+  const myPayments = loanPayments.filter(p => p.loanId === loan.id).sort((a,b)=>a.date.localeCompare(b.date));
+  const recordedCount = myPayments.length;
+  const initial = Number(loan.initialPaidAmount) || 0;
+  const recordedSum = myPayments.reduce((s,p) => s + Number(p.amount), 0);
+  const paid = initial + recordedSum;
+
+  const remainingBalance = Math.max(0, P - paid);
+  const elapsed = Math.min(elapsedMonthsFromStart(loan), n);
+  const remainingMonths = Math.max(0, n - elapsed);
+
+  const monthPrefix = todayStr().slice(0,7);
+  const thisMonthRecord = myPayments.find(p => p.date.startsWith(monthPrefix));
+  let currentPayment = 0;
+  if(thisMonthRecord){
+    currentPayment = Number(thisMonthRecord.amount);
+  } else if(remainingBalance > 0 && remainingMonths > 0){
+    currentPayment = expectedInstallmentAmount(loan, recordedCount); // 다음 회차 예상액
+  }
+
+  return {
+    remainingBalance,
+    remainingMonths,
+    currentPayment,
+    paid,
+    progress: P > 0 ? Math.min(100, Math.max(0, (paid / P) * 100)) : 0,
+    isPaidOff: remainingBalance <= 0
+  };
+}
+
+function renderLoans(){
+  const list = document.getElementById("loan-list");
+  if(loans.length === 0){
+    list.innerHTML = `<div class="empty-note">등록된 대출이 없습니다.</div>`;
+    return;
+  }
+  list.innerHTML = "";
+  loans.forEach(loan => {
+    const s = computeLoanStatus(loan);
+    const card = document.createElement("div");
+    card.className = "loan-card";
+    card.innerHTML = `
+      <div class="loan-top">
+        <div>
+          <div class="loan-name">${loan.name}</div>
+          <div class="loan-type">${loan.repaymentType === "equal_principal" ? "원금균등상환" : "원리금균등상환"} · 연 ${Number(loan.annualRate).toFixed(2)}%</div>
+        </div>
+        <div class="loan-actions">
+          <button class="edit-loan" data-id="${loan.id}">수정</button>
+        </div>
+      </div>
+      <div class="loan-stats">
+        <div class="loan-stat"><div class="label">남은 원금</div><div class="value">${won(s.remainingBalance)}</div></div>
+        <div class="loan-stat"><div class="label">남은 기간</div><div class="value">${s.remainingMonths}개월</div></div>
+        <div class="loan-stat"><div class="label">이번 달 납입금</div><div class="value">${won(s.currentPayment)}</div></div>
+      </div>
+      <div class="loan-type" style="margin-bottom:8px;">빌린 ${won(loan.principal)} · 갚은 ${won(s.paid)}</div>
+      <div class="loan-bar-track"><div class="loan-bar-fill" style="width:${s.progress.toFixed(1)}%"></div></div>
+      ${s.isPaidOff ? '<div class="loan-done-badge">상환 완료</div>' : ""}
+    `;
+    card.querySelector(".edit-loan").addEventListener("click", () => openLoanModal(loan.id));
+    list.appendChild(card);
+  });
+}
+
+/* =========================================================
+   8. LOAN MODAL
+   ========================================================= */
+document.getElementById("add-loan-btn").addEventListener("click", () => openLoanModal(null));
+document.getElementById("loan-modal-close").addEventListener("click", () => {
+  document.getElementById("loan-modal").classList.add("hidden");
+});
+
+document.querySelectorAll(".repay-toggle button").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".repay-toggle button").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    loanRepayType = btn.dataset.repay;
+  });
+});
+
+function openLoanModal(loanId){
+  editingLoanId = loanId;
+  const isEdit = !!loanId;
+  document.getElementById("loan-modal-title").textContent = isEdit ? "대출 수정" : "대출 추가";
+  document.getElementById("loan-delete-btn").style.display = isEdit ? "block" : "none";
+
+  if(isEdit){
+    const loan = loans.find(l => l.id === loanId);
+    document.getElementById("loan-name").value = loan.name;
+    document.getElementById("loan-principal").value = loan.principal;
+    document.getElementById("loan-paid").value = loan.initialPaidAmount || 0;
+    document.getElementById("loan-start").value = loan.startDate;
+    document.getElementById("loan-end").value = loan.endDate || "";
+    document.getElementById("loan-rate").value = loan.annualRate;
+    loanRepayType = loan.repaymentType || "equal_payment";
+  } else {
+    document.getElementById("loan-name").value = "";
+    document.getElementById("loan-principal").value = "";
+    document.getElementById("loan-paid").value = "0";
+    document.getElementById("loan-start").value = todayStr();
+    document.getElementById("loan-end").value = "";
+    document.getElementById("loan-rate").value = "";
+    loanRepayType = "equal_payment";
+  }
+  document.querySelectorAll(".repay-toggle button").forEach(b => {
+    b.classList.toggle("active", b.dataset.repay === loanRepayType);
+  });
+  document.getElementById("loan-modal").classList.remove("hidden");
+}
+
+document.getElementById("loan-save-btn").addEventListener("click", () => {
+  const name = document.getElementById("loan-name").value.trim();
+  const principal = Number(document.getElementById("loan-principal").value);
+  const initialPaidAmount = Number(document.getElementById("loan-paid").value) || 0;
+  const startDate = document.getElementById("loan-start").value;
+  const endDate = document.getElementById("loan-end").value;
+  const annualRate = Number(document.getElementById("loan-rate").value) || 0;
+
+  if(!name || !principal || !startDate || !endDate){
+    alert("대출명, 빌린 금액, 시작년월일, 마지막 출금일을 모두 입력하세요."); return;
+  }
+  if(new Date(endDate) < new Date(startDate)){
+    alert("마지막 출금일은 시작년월일보다 이후여야 합니다."); return;
+  }
+
+  const payload = {
+    name, principal, initialPaidAmount, startDate, endDate, annualRate,
+    repaymentType: loanRepayType
+  };
+
+  if(editingLoanId){
+    const loan = loans.find(l => l.id === editingLoanId);
+    Object.assign(loan, payload);
+    syncCurrentMonthLoanPayment(loan);
+  } else {
+    loans.push({ id: uid("loan"), ...payload });
+  }
+  refreshAll();
+  document.getElementById("loan-modal").classList.add("hidden");
+});
+
+document.getElementById("loan-delete-btn").addEventListener("click", () => {
+  if(!editingLoanId) return;
+  if(!confirm("이 대출을 삭제할까요?")) return;
+  loans = loans.filter(l => l.id !== editingLoanId);
+  refreshAll();
+  document.getElementById("loan-modal").classList.add("hidden");
+});
+
+/* =========================================================
+   9. STATS VIEW
+   ========================================================= */
+function renderStats(){
+  const now = new Date();
+  const monthPrefix = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}`;
+  const monthExpenseTotal = expenses
+    .filter(e => e.type === "expense" && e.date.startsWith(monthPrefix))
+    .reduce((s,e) => s + Number(e.amount), 0);
+  const monthIncomeTotal = expenses
+    .filter(e => e.type === "income" && e.date.startsWith(monthPrefix))
+    .reduce((s,e) => s + Number(e.amount), 0);
+  document.getElementById("stat-month-total").textContent = won(monthExpenseTotal);
+  document.getElementById("stat-month-income").textContent = won(monthIncomeTotal);
+
+  // 지난달 결산
+  const lastMonthDate = new Date(now.getFullYear(), now.getMonth()-1, 1);
+  const lastPrefix = `${lastMonthDate.getFullYear()}-${String(lastMonthDate.getMonth()+1).padStart(2,"0")}`;
+  const lastExpense = expenses
+    .filter(e => e.type === "expense" && e.date.startsWith(lastPrefix))
+    .reduce((s,e) => s + Number(e.amount), 0);
+  const lastIncome = expenses
+    .filter(e => e.type === "income" && e.date.startsWith(lastPrefix))
+    .reduce((s,e) => s + Number(e.amount), 0);
+  document.getElementById("last-month-title").textContent = `${lastMonthDate.getMonth()+1}월 결산`;
+  document.getElementById("last-month-income").textContent = won(lastIncome);
+  document.getElementById("last-month-expense").textContent = won(lastExpense);
+  const balance = lastIncome - lastExpense;
+  const balEl = document.getElementById("last-month-balance");
+  balEl.textContent = (balance < 0 ? "-" : "") + won(Math.abs(balance));
+  balEl.style.color = balance < 0 ? "var(--expense)" : "var(--income)";
+
+  if(!document.getElementById("range-start").value){
+    const first = new Date(now.getFullYear(), now.getMonth(), 1);
+    document.getElementById("range-start").value = fmtDate(first);
+    document.getElementById("range-end").value = fmtDate(now);
+  }
+}
+
+document.getElementById("range-search-btn").addEventListener("click", runRangeQuery);
+
+let lastRangeItems = [];
+
+function runRangeQuery(){
+  const start = document.getElementById("range-start").value;
+  const end = document.getElementById("range-end").value;
+  if(!start || !end){ alert("시작일과 종료일을 선택하세요."); return; }
+
+  const items = expenses.filter(e => e.type === "expense" && e.date >= start && e.date <= end);
+  lastRangeItems = items;
+  const total = items.reduce((s,e) => s + Number(e.amount), 0);
+  const dayCount = Math.max(1, Math.round((new Date(end) - new Date(start)) / 86400000) + 1);
+  const avg = total / dayCount;
+
+  document.getElementById("range-total").textContent = won(total);
+  document.getElementById("range-avg").textContent = won(avg);
+  document.getElementById("range-count").textContent = items.length + "건";
+
+  const tbl = document.getElementById("range-table");
+  const body = document.getElementById("range-table-body");
+  if(items.length === 0){
+    tbl.style.display = "none";
+  } else {
+    tbl.style.display = "table";
+    body.innerHTML = items.slice().reverse().map(e => `
+      <tr>
+        <td>${e.date}</td>
+        <td><span class="pill ${e.type}">${e.type==="expense"?"지출":"수입"}</span></td>
+        <td>${e.category}</td>
+        <td>${Number(e.amount).toLocaleString("ko-KR")}원</td>
+        <td>${paymentLabel(e)}</td>
+        <td>${e.memo || ""}</td>
+      </tr>
+    `).join("");
+  }
+}
+
+function paymentLabel(e){
+  if(e.type !== "expense") return "-";
+  if(e.paymentMethod === "현금") return "현금 지출";
+  if(e.paymentMethod === "체크카드") return "체크카드 출금";
+  if(e.installmentMonths && e.installmentMonths > 1) return `신용카드 ${e.installmentMonths}개월`;
+  return "신용카드 일시불";
+}
+
+document.getElementById("export-btn").addEventListener("click", () => {
+  const items = lastRangeItems.length ? lastRangeItems : expenses;
+  if(items.length === 0){ alert("내보낼 내역이 없습니다. 먼저 기간을 조회하세요."); return; }
+  const rows = items.map(e => ({
+    "날짜": e.date,
+    "구분": e.type === "expense" ? "지출" : "수입",
+    "카테고리": e.category,
+    "금액": Number(e.amount),
+    "결제수단": paymentLabel(e),
+    "메모": e.memo || ""
+  }));
+  const ws = XLSX.utils.json_to_sheet(rows);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, "가계부");
+  const start = document.getElementById("range-start").value || "all";
+  const end = document.getElementById("range-end").value || "all";
+  XLSX.writeFile(wb, `cashflow_${start}_${end}.xlsx`);
+});
+
+/* =========================================================
+   10. 백업 내보내기 / 불러오기 / 초기화
+   ========================================================= */
+document.getElementById("export-btn2").addEventListener("click", () => {
+  const payload = {
+    app: "cashflow-tracker-local",
+    version: 1,
+    exportedAt: new Date().toISOString(),
+    spendingLimit, expenses, loans, loanPayments, recurringExpenses
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `cashflow_backup_${todayStr()}.json`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+});
+
+document.getElementById("import-file").addEventListener("change", (e) => {
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    let data;
+    try{ data = JSON.parse(reader.result); }
+    catch(err){ alert("파일을 읽지 못했습니다. 올바른 백업 파일인지 확인하세요."); e.target.value = ""; return; }
+    if(!Array.isArray(data.expenses) || !Array.isArray(data.loans)){
+      alert("이 파일은 CashFlow Tracker 백업 파일 형식이 아닙니다.");
+      e.target.value = "";
+      return;
+    }
+    if(!confirm("불러오기를 하면 현재 기기에 있던 기록이 이 파일의 내용으로 모두 교체됩니다. 계속할까요?")){
+      e.target.value = "";
+      return;
+    }
+    spendingLimit = data.spendingLimit || null;
+    expenses = data.expenses || [];
+    loans = data.loans || [];
+    loanPayments = Array.isArray(data.loanPayments) ? data.loanPayments : [];
+    recurringExpenses = Array.isArray(data.recurringExpenses) ? data.recurringExpenses : [];
+    refreshAll();
+    alert("불러오기를 완료했습니다.");
+    e.target.value = "";
+  };
+  reader.readAsText(file);
+});
+
+document.getElementById("reset-btn").addEventListener("click", () => {
+  if(!confirm("이 기기에 저장된 모든 가계부 기록을 삭제할까요? 이 작업은 되돌릴 수 없습니다.")) return;
+  if(!confirm("정말로 초기화할까요? 미리 내보내기로 백업하지 않았다면 기록을 복구할 수 없습니다.")) return;
+  spendingLimit = null;
+  expenses = []; loans = []; loanPayments = []; recurringExpenses = [];
+  document.getElementById("range-start").value = "";
+  document.getElementById("range-end").value = "";
+  lastRangeItems = [];
+  refreshAll();
+});
+
+/* init */
+refreshAll();
+</script>
+
+<section class="info-section">
+  <h2>이 가계부는 이렇게 작동해요</h2>
+  <ul>
+    <li>모든 기록은 회원가입이나 로그인 없이, 이 브라우저의 저장공간(localStorage)에만 남습니다.</li>
+    <li>다른 휴대폰·PC나 다른 브라우저에서는 같은 기록이 보이지 않습니다. 기기를 바꾸거나 여러 기기에서 같이 쓰려면 내보내기로 백업한 파일을 다른 기기에서 불러오면 됩니다.</li>
+    <li>브라우저 기록(사이트 데이터)을 지우거나 시크릿 모드로 열면 기록이 사라집니다. <strong>주기적인 백업을 권장</strong>합니다.</li>
+    <li>부부가 같이 쓰는 동기화 기능은 없습니다. 함께 쓰려면 한 대의 기기를 둘이 같이 쓰거나, 백업 파일을 서로 주고받아 수동으로 맞춰야 합니다.</li>
+  </ul>
+
+  <h2>내보내기·불러오기 사용법</h2>
+  <h3>백업(내보내기)</h3>
+  <p>상단 오른쪽의 <strong>내보내기</strong> 버튼을 누르면 지출·수입, 대출, 한도 등 모든 데이터가 하나의 JSON 파일로 다운로드됩니다. 이 파일을 클라우드 저장소나 메일로 보관해두면 기기가 바뀌거나 고장나더라도 데이터를 지킬 수 있습니다.</p>
+  <h3>복원(불러오기)</h3>
+  <p><strong>불러오기</strong>를 누르고 백업해둔 JSON 파일을 선택하면 됩니다. 불러오기를 하면 <strong>현재 기기에 있던 기록은 모두 데이터 파일의 내용으로 교체</strong>됩니다. 기존 기록과 합치는 기능은 아니므로, 필요하면 미리 내보내기로 현재 기록을 따로 저장해두세요.</p>
+
+  <h2>자주 묻는 질문</h2>
+  <h3>앱을 삭제하거나 브라우저 데이터를 지우면 기록도 사라지나요?</h3>
+  <p>네. 데이터가 이 브라우저에만 저장되므로, 사이트 데이터를 지우거나 시크릿/개인정보 보호 모드로 사용하면 기록이 사라집니다. 중요한 기록은 미리 내보내기로 백업해주세요.</p>
+  <h3>여러 기기에서 동시에 쓸 수 있나요?</h3>
+  <p>실시간으로 동기화되지는 않습니다. 한 기기에서 입력한 뒤 내보내기로 파일을 만들고, 다른 기기에서 불러오기로 그 파일을 열어야 같은 내용을 볼 수 있습니다. 부부가 함께, 수시로 쓰려면 로그인을 지원하는 별도 공유형 버전을 이용하셔야 합니다.</p>
+  <h3>대출 상환액은 어떻게 계산되나요?</h3>
+  <p>원리금균등상환과 원금균등상환 두 방식을 지원합니다. 대출 시작일의 '일'을 기준으로 매달 출금일을 계산하며, 해당 월에 그 날짜가 없으면 말일로 보정합니다. 철저히 계산기 용도이므로, 실제 출금액은 은행에서 받은 안내를 기준으로 해주세요.</p>
+</section>
+
+<div class="info-footer">
+  <span>이 도구는 입력값을 서버로 전송하거나 저장하지 않습니다.</span>
+  <a href="../privacy/">개인정보처리방침</a>
+  <a href="../contact/">문의</a>
+</div>
+</body>
+</html>
