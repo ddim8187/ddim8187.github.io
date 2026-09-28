@@ -1,1 +1,344 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>만 나이 계산기 - 생년월일로 만 나이·연 나이·세는 나이 계산</title>
+<meta name="description" content="생년월일만 입력하면 만 나이, 연 나이, 세는 나이, 다음 생일까지 남은 일수를 바로 계산해 드립니다. 만 나이 통일법과 예외 기준도 함께 정리했습니다.">
+<meta name="color-scheme" content="light dark">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:title" content="만 나이 계산기">
+<meta property="og:description" content="생년월일로 만 나이, 연 나이, 세는 나이, 다음 생일까지 남은 일수를 한 번에 계산해 드립니다.">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"만 나이 계산기","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","inLanguage":"ko","offers":{"@type":"Offer","price":"0","priceCurrency":"KRW"}}
+</script>
+<!-- 애드센스 승인 후 이 위치에 AdSense 스크립트 코드를 삽입 -->
+<style>
+:root{
+  --ground:#f5f7fa; --surface:#ffffff; --ink:#172033; --muted:#5a6577;
+  --line:#dde3ec; --accent:#0e7c86; --accent-soft:#e3f3f4; --warn:#b42318;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --ground:#0e141b; --surface:#151d27; --ink:#e6ecf3; --muted:#9aa7b8;
+    --line:#263241; --accent:#4fd1c5; --accent-soft:#12303a; --warn:#ff8a7a;
+  }
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--ground); color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;
+  font-size:1rem; line-height:1.75;
+}
+.wrap{max-width:40rem; margin:0 auto; padding:1.75rem 1.25rem 4rem}
+h1{font-size:1.75rem; line-height:1.3; margin:0 0 .5rem; font-weight:800; letter-spacing:-.01em}
+h2{font-size:1.3rem; line-height:1.4; margin:2.75rem 0 .75rem; font-weight:800}
+h3{font-size:1.05rem; line-height:1.5; margin:1.5rem 0 .25rem; font-weight:700}
+p{margin:.6rem 0}
+.lead{color:var(--muted); margin:0 0 1.5rem}
+a{color:var(--accent)}
+
+/* 입력 */
+.fields{display:grid; grid-template-columns:1fr; gap:.9rem}
+@media (min-width:30rem){ .fields{grid-template-columns:1fr 1fr} }
+label{display:block; font-weight:700; font-size:.95rem; margin-bottom:.3rem}
+.hint{font-weight:400; color:var(--muted); font-size:.85rem}
+input{
+  width:100%; font:inherit; font-size:1.15rem; padding:.7rem .85rem; min-height:3rem;
+  color:var(--ink); background:var(--surface); border:1.5px solid var(--line); border-radius:.5rem;
+}
+input:focus-visible,button:focus-visible{outline:3px solid var(--accent); outline-offset:2px}
+.row{display:flex; gap:.5rem; align-items:center; margin-top:.6rem}
+button{
+  font:inherit; font-size:.9rem; padding:.45rem .8rem; min-height:2.5rem; cursor:pointer;
+  color:var(--ink); background:transparent; border:1.5px solid var(--line); border-radius:.5rem;
+}
+button:hover{border-color:var(--accent)}
+.err{color:var(--warn); font-size:.9rem; min-height:1.4rem; margin:.5rem 0 0}
+
+/* 결과 */
+.result{margin-top:1.25rem; padding:1.25rem 0 0; border-top:2px solid var(--ink)}
+.empty{color:var(--muted); margin:0}
+.big{font-size:3.4rem; line-height:1.1; font-weight:800; letter-spacing:-.02em; font-variant-numeric:tabular-nums; margin:0}
+.sub{margin:.35rem 0 1.1rem; color:var(--muted)}
+.sub strong{color:var(--ink)}
+
+.cycle{margin:0 0 1.5rem}
+.track{height:.6rem; background:var(--accent-soft); border-radius:.3rem; overflow:hidden}
+.fill{height:100%; width:0; background:var(--accent)}
+@media (prefers-reduced-motion:no-preference){ .fill{transition:width .35s ease-out} }
+.ends{display:flex; justify-content:space-between; gap:1rem; font-size:.8rem; color:var(--muted); margin-top:.35rem; font-variant-numeric:tabular-nums}
+
+.three{display:grid; grid-template-columns:repeat(3,1fr); border:1.5px solid var(--line); border-radius:.5rem; background:var(--surface); margin:0 0 1.5rem}
+.three div{padding:.7rem .5rem; text-align:center}
+.three div + div{border-left:1.5px solid var(--line)}
+.three dt{font-size:.8rem; color:var(--muted)}
+.three dd{margin:0; font-size:1.35rem; font-weight:800; font-variant-numeric:tabular-nums}
+.three .main dd{color:var(--accent)}
+
+dl.more{margin:0}
+dl.more div{display:flex; justify-content:space-between; gap:1rem; padding:.55rem 0; border-bottom:1px solid var(--line)}
+dl.more dt{color:var(--muted); font-size:.95rem}
+dl.more dd{margin:0; text-align:right; font-weight:600; font-variant-numeric:tabular-nums}
+
+/* 본문 */
+table{width:100%; border-collapse:collapse; margin:.75rem 0; font-size:.95rem; background:var(--surface)}
+caption{text-align:left; color:var(--muted); font-size:.85rem; padding-bottom:.35rem}
+th,td{border:1px solid var(--line); padding:.55rem .6rem; text-align:left; vertical-align:top}
+th{background:var(--accent-soft)}
+ul{padding-left:1.2rem; margin:.5rem 0}
+li{margin:.3rem 0}
+.note{color:var(--muted); font-size:.9rem}
+footer{margin-top:3rem; padding-top:1rem; border-top:1px solid var(--line); color:var(--muted); font-size:.85rem}
+</style>
+</head>
+<body>
+<main class="wrap">
+
+<h1>만 나이 계산기</h1>
+<p class="lead">생년월일만 입력하면 만 나이, 연 나이, 세는 나이를 한 번에 계산해 드립니다. 입력한 값은 서버로 전송되지 않으며 이 기기 안에서만 계산됩니다.</p>
+
+<section aria-label="계산기">
+  <div class="fields">
+    <div>
+      <label for="birth">생년월일 <span class="hint">숫자 8자리</span></label>
+      <input id="birth" type="text" inputmode="numeric" autocomplete="off" maxlength="10" placeholder="예: 19900515">
+    </div>
+    <div>
+      <label for="base">기준일 <span class="hint">기본값은 오늘</span></label>
+      <input id="base" type="date">
+    </div>
+  </div>
+  <div class="row">
+    <button type="button" id="today">기준일을 오늘로</button>
+    <button type="button" id="copy" hidden>결과 복사</button>
+  </div>
+  <p class="err" id="err" role="alert"></p>
+
+  <div class="result" id="result" aria-live="polite">
+    <p class="empty" id="empty">생년월일 8자리를 입력하면 결과가 바로 표시됩니다.</p>
+    <div id="out" hidden>
+      <p class="big" id="man"></p>
+      <p class="sub" id="sub"></p>
+
+      <div class="cycle">
+        <div class="track" role="progressbar" aria-label="이번 생일 주기 진행률" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="bar"><div class="fill" id="fill"></div></div>
+        <div class="ends"><span id="lastBd"></span><span id="nextBd"></span></div>
+      </div>
+
+      <dl class="three">
+        <div class="main"><dt>만 나이</dt><dd id="a-man"></dd></div>
+        <div><dt>연 나이</dt><dd id="a-yeon"></dd></div>
+        <div><dt>세는 나이</dt><dd id="a-sean"></dd></div>
+      </dl>
+
+      <dl class="more">
+        <div><dt>태어난 요일</dt><dd id="d-week"></dd></div>
+        <div><dt>띠 (양력 출생연도 기준)</dt><dd id="d-zodiac"></dd></div>
+        <div><dt>태어난 지</dt><dd id="d-days"></dd></div>
+        <div><dt>만 19세 생일 (민법상 성년)</dt><dd id="d-adult"></dd></div>
+        <div><dt>술·담배 구매 가능 시작일</dt><dd id="d-alcohol"></dd></div>
+        <div><dt>초등학교 입학</dt><dd id="d-school"></dd></div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<article>
+<h2>만 나이란</h2>
+<p>만 나이는 태어난 날을 0살로 시작해서 생일이 지날 때마다 1살씩 늘어나는 나이 계산법입니다. 2023년 6월 28일부터 만 나이 통일법(민법·행정기본법 개정)이 시행되면서, 법령·계약·공문서에 적힌 나이는 특별한 규정이 없으면 만 나이로 봅니다.</p>
+
+<h2>만 나이 계산 공식</h2>
+<ul>
+  <li>올해 생일이 지났으면: 기준 연도 − 출생 연도</li>
+  <li>올해 생일이 아직이면: 기준 연도 − 출생 연도 − 1</li>
+</ul>
+<p>예를 들어 2000년 8월 15일생은 2026년 9월 28일 기준으로 생일이 지났으므로 2026 − 2000 = 만 26세입니다.</p>
+
+<h2>만 나이·연 나이·세는 나이 차이</h2>
+<table>
+  <caption>2000년 12월 31일생, 2026년 9월 28일 기준 예시</caption>
+  <thead><tr><th>구분</th><th>계산 방법</th><th>결과</th></tr></thead>
+  <tbody>
+    <tr><td>만 나이</td><td>태어난 날 0살, 생일마다 1살 추가</td><td>25세</td></tr>
+    <tr><td>연 나이</td><td>기준 연도 − 출생 연도</td><td>26세</td></tr>
+    <tr><td>세는 나이</td><td>기준 연도 − 출생 연도 + 1</td><td>27세</td></tr>
+  </tbody>
+</table>
+<p>연 나이와 세는 나이는 1월 1일에 바뀌고, 만 나이는 생일에만 바뀝니다. 그래서 생일이 늦은 사람일수록 만 나이가 더 어리게 나옵니다.</p>
+
+<h2>어디에 어떤 나이를 쓰나</h2>
+<ul>
+  <li><strong>만 나이</strong>: 민법·행정기본법을 따르는 법령, 계약, 공문서가 해당됩니다. 국민연금·기초연금 수급, 대중교통 경로우대(만 65세 이상) 등도 만 나이 기준입니다.</li>
+  <li><strong>연 나이(예외)</strong>: 병역법과 청소년보호법은 연 나이를 사용합니다. 술·담배 구매는 만 19세 생일이 아니라 19세가 되는 해의 1월 1일부터 가능합니다.</li>
+  <li><strong>취학</strong>: 초등학교 입학은 출생연도를 기준으로 하므로, 출생연도에 7을 더한 해의 3월에 입학합니다. 예를 들어 2019년생은 2026년 3월에 입학합니다.</li>
+</ul>
+<p>세는 나이는 법적 기준이 아니라 일상 대화에서 남아 있는 방식입니다.</p>
+
+<h2>자주 묻는 질문</h2>
+<h3>생일이 지나지 않았으면 몇 살로 계산하나요?</h3>
+<p>기준 연도에서 출생 연도를 빼고 1을 더 뺍니다. 2000년 12월 31일생은 2026년 9월 28일 기준 2026 − 2000 − 1 = 만 25세입니다.</p>
+
+<h3>12월 31일생은 1월 1일에 만 나이도 바뀌나요?</h3>
+<p>바뀌지 않습니다. 만 나이는 생일에만 늘어나고, 연 나이와 세는 나이만 1월 1일에 늘어납니다.</p>
+
+<h3>2월 29일생은 언제 나이를 먹나요?</h3>
+<p>윤년에는 2월 29일, 평년에는 3월 1일에 만 나이가 늘어나는 것으로 계산합니다. 이 계산기도 같은 방식으로 계산합니다.</p>
+
+<h3>세는 나이를 만 나이로 바꾸려면 어떻게 하나요?</h3>
+<p>세는 나이에서 1살을 빼고, 올해 생일이 아직 지나지 않았다면 1살을 더 뺍니다. 그래서 1~2살 어려집니다.</p>
+
+<h3>만 나이 통일법은 언제부터 시행되었나요?</h3>
+<p>2023년 6월 28일부터 시행되었습니다. 실생활에서 크게 달라진 것은 없으며, 나이를 해석하는 기본 기준이 만 나이로 정리된 것이 핵심입니다.</p>
+
+<h2>계산 방식과 유의사항</h2>
+<ul>
+  <li>태어난 날을 0살로 보고 매년 생일에 1살씩 더합니다.</li>
+  <li>띠는 양력 출생연도를 기준으로 표시합니다. 1~2월 초에 태어났다면 음력 설 기준으로 띠가 다를 수 있습니다.</li>
+  <li>이 계산기는 참고용입니다. 공식 서류, 계약, 병역·학사 관련 기준은 해당 기관에 확인하시기 바랍니다.</li>
+  <li>법령 관련 정보는 법제처 발표 자료를 참고했습니다. 원문은 <a href="https://www.moleg.go.kr" target="_blank" rel="noopener">법제처 누리집</a>에서 확인할 수 있습니다.</li>
+</ul>
+</article>
+
+<footer>입력한 생년월일은 저장되지 않으며 서버로 전송되지 않습니다.</footer>
+</main>
+
+<script>
+'use strict';
+// ==CORE START==
+const ZODIAC = ['쥐','소','호랑이','토끼','용','뱀','말','양','원숭이','닭','개','돼지'];
+const WEEK = ['일','월','화','수','목','금','토'];
+function isLeap(y){ return (y%4===0 && y%100!==0) || y%400===0; }
+function daysInMonth(y,m){ return [31,isLeap(y)?29:28,31,30,31,30,31,31,30,31,30,31][m-1]; }
+function validDate(y,m,d){
+  return Number.isInteger(y) && Number.isInteger(m) && Number.isInteger(d) &&
+         y>=1 && m>=1 && m<=12 && d>=1 && d<=daysInMonth(y,m);
+}
+function utc(dt){ return Date.UTC(dt.y, dt.m-1, dt.d); }
+function diffDays(a,b){ return Math.round((utc(b)-utc(a))/86400000); }
+function cmp(a,b){ return (a.y-b.y) || (a.m-b.m) || (a.d-b.d); }
+function birthdayIn(birth, year){
+  if(birth.m===2 && birth.d===29 && !isLeap(year)) return {y:year,m:3,d:1};
+  return {y:year,m:birth.m,d:birth.d};
+}
+function calc(birth, base){
+  if(cmp(birth,base)>0) return {error:'생년월일이 기준일보다 늦습니다'};
+  const thisYear = birthdayIn(birth, base.y);
+  const passed = cmp(thisYear, base) <= 0;
+  const man = base.y - birth.y - (passed ? 0 : 1);
+  const yeon = base.y - birth.y;
+  const sean = yeon + 1;
+  const last = passed ? thisYear : birthdayIn(birth, base.y-1);
+  const upcoming = passed ? birthdayIn(birth, base.y+1) : thisYear;
+  const isToday = cmp(thisYear, base) === 0;
+  const next = isToday ? base : upcoming;
+  const span = diffDays(last, upcoming);
+  const ratio = span>0 ? diffDays(last, base)/span : 0;
+  return {
+    man, yeon, sean, last, upcoming, next, isToday,
+    dday: diffDays(base, next),
+    ratio: Math.min(1, Math.max(0, ratio)),
+    weekday: WEEK[new Date(utc(birth)).getUTCDay()],
+    zodiac: ZODIAC[(((birth.y-4)%12)+12)%12],
+    livedDays: diffDays(birth, base) + 1,
+    adult: birthdayIn(birth, birth.y+19),
+    alcohol: {y:birth.y+19, m:1, d:1},
+    schoolYear: birth.y + 7
+  };
+}
+function fmt(dt){ return dt.y+'년 '+dt.m+'월 '+dt.d+'일'; }
+function fmtShort(dt){ return dt.y+'.'+dt.m+'.'+dt.d; }
+function parseBirth(text){
+  const digits = text.replace(/\D/g,'');
+  if(digits.length===0) return {state:'empty'};
+  if(digits.length!==8) return {state:'partial'};
+  const y=+digits.slice(0,4), m=+digits.slice(4,6), d=+digits.slice(6,8);
+  if(y<1900) return {state:'error', msg:'1900년 이후 날짜로 입력해 주세요'};
+  if(!validDate(y,m,d)) return {state:'error', msg:'존재하지 않는 날짜입니다. 월·일을 확인해 주세요'};
+  return {state:'ok', date:{y,m,d}};
+}
+// ==CORE END==
+
+const $ = id => document.getElementById(id);
+const pad = n => String(n).padStart(2,'0');
+let lastCopyText = '';
+
+function todayObj(){
+  const t = new Date();
+  return {y:t.getFullYear(), m:t.getMonth()+1, d:t.getDate()};
+}
+function setBaseToday(){
+  const t = todayObj();
+  $('base').value = t.y+'-'+pad(t.m)+'-'+pad(t.d);
+}
+function readBase(){
+  const v = $('base').value;
+  if(!v) return todayObj();
+  const p = v.split('-').map(Number);
+  return validDate(p[0],p[1],p[2]) ? {y:p[0],m:p[1],d:p[2]} : todayObj();
+}
+function showEmpty(msg){
+  $('out').hidden = true;
+  $('empty').hidden = false;
+  $('empty').textContent = msg;
+  $('copy').hidden = true;
+}
+function render(){
+  const parsed = parseBirth($('birth').value);
+  $('err').textContent = '';
+  if(parsed.state==='empty'){ showEmpty('생년월일 8자리를 입력하면 결과가 바로 표시됩니다.'); return; }
+  if(parsed.state==='partial'){ showEmpty('숫자 8자리로 입력해 주세요 (예: 19900515)'); return; }
+  if(parsed.state==='error'){ showEmpty('생년월일 8자리를 입력하면 결과가 바로 표시됩니다.'); $('err').textContent = parsed.msg; return; }
+
+  const base = readBase();
+  const r = calc(parsed.date, base);
+  if(r.error){ showEmpty('생년월일 8자리를 입력하면 결과가 바로 표시됩니다.'); $('err').textContent = r.error; return; }
+
+  $('empty').hidden = true;
+  $('out').hidden = false;
+  $('man').textContent = '만 '+r.man+'세';
+  $('sub').innerHTML = r.isToday
+    ? '<strong>오늘이 생일입니다.</strong> 오늘 만 '+r.man+'세가 됩니다'
+    : '<strong>'+fmt(r.next)+'</strong>에 만 '+(r.man+1)+'세가 됩니다 ('+r.dday+'일 남았습니다)';
+  const pct = Math.round(r.ratio*100);
+  $('fill').style.width = pct+'%';
+  $('bar').setAttribute('aria-valuenow', String(pct));
+  $('lastBd').textContent = '지난 생일 '+fmtShort(r.last);
+  $('nextBd').textContent = '다음 생일 '+fmtShort(r.upcoming);
+  $('a-man').textContent = r.man+'세';
+  $('a-yeon').textContent = r.yeon+'세';
+  $('a-sean').textContent = r.sean+'세';
+  $('d-week').textContent = r.weekday+'요일';
+  $('d-zodiac').textContent = r.zodiac+'띠';
+  $('d-days').textContent = r.livedDays.toLocaleString('ko-KR')+'일째';
+  $('d-adult').textContent = fmt(r.adult);
+  $('d-alcohol').textContent = fmt(r.alcohol);
+  $('d-school').textContent = r.schoolYear+'년 3월';
+  if(r.man>120) $('err').textContent = '나이가 120세를 넘습니다. 생년월일을 확인해 주세요';
+  lastCopyText = fmt(base)+' 기준 만 '+r.man+'세 (연 나이 '+r.yeon+'세, 세는 나이 '+r.sean+'세)';
+  $('copy').hidden = false;
+}
+
+$('birth').addEventListener('input', render);
+$('base').addEventListener('change', render);
+$('today').addEventListener('click', function(){ setBaseToday(); render(); });
+$('copy').addEventListener('click', function(){
+  const btn = $('copy');
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(lastCopyText).then(function(){
+      btn.textContent = '복사됨';
+      setTimeout(function(){ btn.textContent = '결과 복사'; }, 1500);
+    }, function(){ btn.textContent = '복사 실패'; });
+  } else {
+    btn.textContent = '이 브라우저에서는 복사를 지원하지 않습니다';
+  }
+});
+
+setBaseToday();
+render();
+</script>
+</body>
+</html>
 
