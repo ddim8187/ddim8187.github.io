@@ -1,1 +1,299 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>글자수 세기 - 공백 포함·제외 글자 수와 바이트 수 계산</title>
+<meta name="description" content="글을 붙여넣으면 공백 포함·제외 글자 수와 바이트 수를 실시간으로 세어 드립니다. 글자 수 제한까지 남은 분량도 바로 확인할 수 있어 자기소개서, 블로그, SNS 글 작성에 편리합니다.">
+<meta name="color-scheme" content="light dark">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:title" content="글자수 세기">
+<meta property="og:description" content="공백 포함·제외 글자 수와 바이트 수를 실시간으로 세고, 글자 수 제한까지 남은 분량을 보여 드립니다.">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"글자수 세기","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","inLanguage":"ko","offers":{"@type":"Offer","price":"0","priceCurrency":"KRW"}}
+</script>
+<!-- 애드센스 승인 후 이 위치에 AdSense 스크립트 코드를 삽입 -->
+<style>
+:root{
+  --ground:#f5f7fa; --surface:#ffffff; --ink:#172033; --muted:#5a6577;
+  --line:#dde3ec; --accent:#0e7c86; --accent-soft:#e3f3f4; --warn:#b42318;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --ground:#0e141b; --surface:#151d27; --ink:#e6ecf3; --muted:#9aa7b8;
+    --line:#263241; --accent:#4fd1c5; --accent-soft:#12303a; --warn:#ff8a7a;
+  }
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--ground); color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;
+  font-size:1rem; line-height:1.75;
+}
+.wrap{max-width:40rem; margin:0 auto; padding:1.75rem 1.25rem 4rem}
+.top{margin:0 0 1rem; font-size:.9rem}
+h1{font-size:1.75rem; line-height:1.3; margin:0 0 .5rem; font-weight:800; letter-spacing:-.01em}
+h2{font-size:1.3rem; line-height:1.4; margin:2.75rem 0 .75rem; font-weight:800}
+h3{font-size:1.05rem; line-height:1.5; margin:1.5rem 0 .25rem; font-weight:700}
+p{margin:.6rem 0}
+.lead{color:var(--muted); margin:0 0 1.25rem}
+a{color:var(--accent)}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--accent); outline-offset:2px}
+
+/* 상단 고정 요약 */
+.live{position:sticky; top:0; z-index:2; background:var(--ground); padding:.6rem 0 .7rem; border-bottom:2px solid var(--ink); margin-bottom:1rem}
+.nums{display:grid; grid-template-columns:repeat(3,1fr); gap:.25rem}
+.nums div{min-width:0}
+.nums dt{font-size:.78rem; color:var(--muted); white-space:nowrap}
+.nums dd{margin:0; font-size:1.7rem; line-height:1.2; font-weight:800; font-variant-numeric:tabular-nums}
+.nums .main dd{color:var(--accent)}
+.gauge{margin-top:.55rem}
+.gauge-text{font-size:.9rem; color:var(--muted); min-height:1.4rem}
+.gauge-text strong{color:var(--ink)}
+.gauge-text.over strong{color:var(--warn)}
+.track{height:.5rem; background:var(--accent-soft); border-radius:.25rem; overflow:hidden; margin-top:.25rem}
+.fill{height:100%; width:0; background:var(--accent)}
+.fill.over{background:var(--warn)}
+@media (prefers-reduced-motion:no-preference){ .fill{transition:width .2s ease-out} }
+
+/* 입력 */
+.controls{display:grid; grid-template-columns:1fr 7.5rem; gap:.7rem; margin-bottom:.8rem}
+label{display:block; font-weight:700; font-size:.9rem; margin-bottom:.25rem}
+select,input[type="number"]{
+  width:100%; font:inherit; font-size:1rem; padding:.55rem .65rem; min-height:2.75rem;
+  color:var(--ink); background:var(--surface); border:1.5px solid var(--line); border-radius:.5rem;
+}
+textarea{
+  width:100%; min-height:13rem; resize:vertical; font:inherit; font-size:1.05rem; line-height:1.7; padding:.8rem .9rem;
+  color:var(--ink); background:var(--surface); border:1.5px solid var(--line); border-radius:.5rem;
+}
+.check{display:flex; align-items:flex-start; gap:.5rem; margin:.8rem 0 0; font-size:.95rem}
+.check input{width:1.15rem; height:1.15rem; margin-top:.3rem; accent-color:var(--accent)}
+.row{display:flex; gap:.5rem; margin-top:.8rem}
+button{
+  font:inherit; font-size:.9rem; padding:.45rem .8rem; min-height:2.5rem; cursor:pointer;
+  color:var(--ink); background:transparent; border:1.5px solid var(--line); border-radius:.5rem;
+}
+button:hover{border-color:var(--accent)}
+
+/* 상세 */
+dl.more{margin:1.5rem 0 0}
+dl.more div{display:flex; justify-content:space-between; gap:1rem; padding:.55rem 0; border-bottom:1px solid var(--line)}
+dl.more dt{color:var(--muted); font-size:.95rem}
+dl.more dd{margin:0; text-align:right; font-weight:600; font-variant-numeric:tabular-nums}
+
+/* 본문 */
+table{width:100%; border-collapse:collapse; margin:.75rem 0; font-size:.95rem; background:var(--surface)}
+caption{text-align:left; color:var(--muted); font-size:.85rem; padding-bottom:.35rem}
+th,td{border:1px solid var(--line); padding:.55rem .6rem; text-align:left; vertical-align:top}
+th{background:var(--accent-soft)}
+ul{padding-left:1.2rem; margin:.5rem 0}
+li{margin:.3rem 0}
+footer{margin-top:3rem; padding-top:1rem; border-top:1px solid var(--line); color:var(--muted); font-size:.85rem}
+</style>
+</head>
+<body>
+<main class="wrap">
+
+<nav class="top" aria-label="사이트 이동"><a href="../">생활 계산 도구 모음</a></nav>
+
+<h1>글자수 세기</h1>
+<p class="lead">글을 입력하거나 붙여넣으면 공백 포함·제외 글자 수와 바이트 수를 실시간으로 세어 드립니다. 입력한 글은 저장하거나 서버로 전송하지 않으며 이 기기 안에서만 처리됩니다.</p>
+
+<section aria-label="글자수 세기 도구">
+  <div class="live" aria-live="polite">
+    <dl class="nums">
+      <div class="main"><dt>글자 수(공백 포함)</dt><dd id="n-with">0</dd></div>
+      <div><dt>글자 수(공백 제외)</dt><dd id="n-no">0</dd></div>
+      <div><dt>바이트(한글 2바이트)</dt><dd id="n-dbcs">0</dd></div>
+    </dl>
+    <div class="gauge">
+      <div class="gauge-text" id="gtext">제한 글자 수를 입력하면 남은 분량을 알려 드립니다.</div>
+      <div class="track" role="progressbar" aria-label="글자 수 제한 대비 사용량" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="bar"><div class="fill" id="fill"></div></div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <div>
+      <label for="basis">제한 기준</label>
+      <select id="basis">
+        <option value="with">글자 수(공백 포함)</option>
+        <option value="no">글자 수(공백 제외)</option>
+        <option value="dbcs">바이트(한글 2바이트)</option>
+        <option value="utf8">바이트(UTF-8, 한글 3바이트)</option>
+      </select>
+    </div>
+    <div>
+      <label for="limit">제한</label>
+      <input id="limit" type="number" inputmode="numeric" min="1" step="1" placeholder="예: 600">
+    </div>
+  </div>
+
+  <label for="text">글 입력</label>
+  <textarea id="text" spellcheck="false" autocomplete="off" autocapitalize="off" placeholder="여기에 글을 입력하거나 붙여넣으세요."></textarea>
+
+  <label class="check"><input type="checkbox" id="nl" checked><span>줄바꿈을 글자 수와 바이트에 포함 (공백 제외 글자 수에는 항상 제외)</span></label>
+
+  <div class="row">
+    <button type="button" id="clear">지우기</button>
+    <button type="button" id="copy">결과 복사</button>
+  </div>
+
+  <dl class="more">
+    <div><dt>바이트(UTF-8, 한글 3바이트)</dt><dd id="n-utf8">0</dd></div>
+    <div><dt>단어(어절) 수</dt><dd id="n-words">0</dd></div>
+    <div><dt>줄 수</dt><dd id="n-lines">0</dd></div>
+    <div><dt>문단 수 (빈 줄 기준)</dt><dd id="n-paras">0</dd></div>
+    <div><dt>원고지 매수 (200자 기준)</dt><dd id="n-ms">0매</dd></div>
+  </dl>
+</section>
+
+<article>
+<h2>사용 방법</h2>
+<ul>
+  <li>입력창에 글을 쓰거나 다른 곳에서 복사한 글을 붙여넣으면 위쪽 숫자가 바로 바뀝니다.</li>
+  <li>제출해야 하는 글자 수 제한이 있다면 제한 기준을 고르고 숫자를 입력하세요. 남은 분량과 초과 여부가 표시됩니다.</li>
+  <li>화면을 아래로 내려도 위쪽 요약은 고정되어 있어서, 긴 글을 쓰면서도 현재 분량을 볼 수 있습니다.</li>
+</ul>
+
+<h2>공백 포함과 공백 제외, 무엇을 기준으로 해야 하나요</h2>
+<p>공고나 입력 화면에 "공백 포함" 또는 "공백 제외"라고 적혀 있다면 그 기준을 따르면 됩니다. 별도 표시가 없을 때는 공백을 포함해서 세는 경우가 많지만, 회사와 서비스마다 다르므로 안내 문구와 실제 입력 화면의 글자 수 표시를 함께 확인하는 것이 안전합니다.</p>
+<p>이 계산기의 "공백 제외"는 띄어쓰기, 탭, 줄바꿈을 모두 뺀 글자 수입니다.</p>
+
+<h2>바이트로 제한하는 경우</h2>
+<p>일부 입력창은 글자 수가 아니라 바이트로 분량을 제한합니다. 같은 글이라도 계산 방식에 따라 바이트 수가 달라집니다.</p>
+<table>
+  <caption>문자별 바이트 수 비교</caption>
+  <thead><tr><th>문자</th><th>한글 2바이트 기준</th><th>UTF-8</th></tr></thead>
+  <tbody>
+    <tr><td>영문, 숫자, 띄어쓰기</td><td>1바이트</td><td>1바이트</td></tr>
+    <tr><td>한글 한 글자</td><td>2바이트</td><td>3바이트</td></tr>
+    <tr><td>이모지 등 특수 문자</td><td>2바이트로 계산</td><td>보통 4바이트</td></tr>
+  </tbody>
+</table>
+<p>예를 들어 한글 100자는 한글 2바이트 기준으로 200바이트, UTF-8 기준으로 300바이트입니다. 어느 방식을 쓰는지는 서비스마다 다르므로, 실제 입력 화면의 카운터를 최종 기준으로 삼으시기 바랍니다.</p>
+
+<h2>줄바꿈과 특수문자는 어떻게 세나요</h2>
+<ul>
+  <li>줄바꿈은 기본적으로 1자(1바이트)로 계산합니다. 옵션을 끄면 줄바꿈을 제외하고 셉니다.</li>
+  <li>일부 사이트는 줄바꿈을 2바이트로 계산하기도 합니다. 줄바꿈이 많은 글이라면 그만큼 여유를 두는 것이 좋습니다.</li>
+  <li>이모지처럼 여러 바이트로 이루어진 문자도 글자 수로는 1자로 셉니다. 다만 바이트 수는 표에 있는 방식대로 다르게 계산됩니다.</li>
+</ul>
+
+<h2>자주 묻는 질문</h2>
+<h3>다른 사이트의 글자 수와 다르게 나올 수 있나요?</h3>
+<p>그럴 수 있습니다. 줄바꿈 처리, 공백 처리, 특수문자, 바이트 계산 방식이 서비스마다 조금씩 다르기 때문입니다. 제출 직전에는 실제 입력 화면의 글자 수 표시로 한 번 더 확인해 주세요.</p>
+
+<h3>입력한 글이 저장되거나 전송되나요?</h3>
+<p>아니요. 모든 계산은 이용하시는 기기의 브라우저 안에서만 이루어지며, 입력한 글은 저장하거나 서버로 전송하지 않습니다. 이 페이지를 닫으면 입력한 내용은 사라집니다.</p>
+
+<h3>원고지 매수는 어떻게 계산하나요?</h3>
+<p>공백을 포함한 글자 수를 200으로 나눈 값입니다. 실제 원고지 작성 규칙(문단 첫 칸 들여쓰기, 문장부호 칸 배치 등)과는 차이가 있을 수 있어 대략적인 분량을 가늠하는 용도로 활용해 주세요.</p>
+
+<h3>글자 수 제한은 꼭 맞춰야 하나요?</h3>
+<p>제한을 넘기지 않는 것이 우선입니다. 넘기면 입력이 잘리거나 제출이 되지 않는 경우가 있습니다. 그 이하에서 얼마나 채울지는 내용의 충실도를 기준으로 판단하시면 됩니다.</p>
+
+<h2>계산 방식</h2>
+<ul>
+  <li>글자 수는 유니코드 문자 기준으로 세며, 입력된 한글은 완성형(NFC)으로 통일해서 계산합니다.</li>
+  <li>단어(어절) 수는 띄어쓰기와 줄바꿈으로 나뉜 덩어리의 개수입니다.</li>
+  <li>문단 수는 빈 줄로 구분된 덩어리의 개수입니다.</li>
+  <li>이 계산기는 참고용입니다. 제출 기준은 해당 서비스의 안내를 따라 주시기 바랍니다.</li>
+</ul>
+</article>
+
+<footer>입력한 글은 저장되지 않으며 서버로 전송되지 않습니다.</footer>
+</main>
+
+<script>
+'use strict';
+// ==CORE START==
+function analyze(raw, includeNewline){
+  const text = String(raw).replace(/\r\n?/g,'\n').normalize('NFC');
+  const chars = Array.from(text);
+  const kept = includeNewline ? chars : chars.filter(c => c !== '\n');
+  const withSpace = kept.length;
+  const noSpace = chars.filter(c => !/\s/.test(c)).length;
+  const dbcs = kept.reduce((n,c) => n + (c.codePointAt(0) <= 0x7f ? 1 : 2), 0);
+  const utf8 = new TextEncoder().encode(kept.join('')).length;
+  const trimmed = text.trim();
+  return {
+    withSpace, noSpace, dbcs, utf8,
+    words: trimmed ? trimmed.split(/\s+/).length : 0,
+    lines: text === '' ? 0 : text.split('\n').length,
+    paras: text.split(/\n\s*\n/).filter(s => s.trim() !== '').length,
+    manuscript: Math.round(withSpace / 200 * 10) / 10
+  };
+}
+function gauge(value, limit, unit){
+  if(!(limit > 0)) return {state:'none'};
+  const diff = limit - value;
+  return {
+    state: diff >= 0 ? 'ok' : 'over',
+    amount: Math.abs(diff),
+    ratio: Math.min(1, value / limit),
+    text: diff >= 0 ? diff + unit + ' 남았습니다' : (-diff) + unit + ' 초과했습니다'
+  };
+}
+// ==CORE END==
+
+const $ = id => document.getElementById(id);
+const fmt = n => n.toLocaleString('ko-KR');
+let summary = '';
+
+function render(){
+  const a = analyze($('text').value, $('nl').checked);
+  $('n-with').textContent = fmt(a.withSpace);
+  $('n-no').textContent = fmt(a.noSpace);
+  $('n-dbcs').textContent = fmt(a.dbcs);
+  $('n-utf8').textContent = fmt(a.utf8);
+  $('n-words').textContent = fmt(a.words);
+  $('n-lines').textContent = fmt(a.lines);
+  $('n-paras').textContent = fmt(a.paras);
+  $('n-ms').textContent = a.manuscript + '매';
+
+  const basis = $('basis').value;
+  const value = {with:a.withSpace, no:a.noSpace, dbcs:a.dbcs, utf8:a.utf8}[basis];
+  const unit = (basis === 'dbcs' || basis === 'utf8') ? '바이트' : '자';
+  const limit = parseInt($('limit').value, 10);
+  const g = gauge(value, limit, unit);
+  const gt = $('gtext'), fill = $('fill');
+  if(g.state === 'none'){
+    gt.className = 'gauge-text';
+    gt.textContent = '제한 글자 수를 입력하면 남은 분량을 알려 드립니다.';
+    fill.style.width = '0%';
+    fill.className = 'fill';
+    $('bar').setAttribute('aria-valuenow','0');
+  } else {
+    gt.className = 'gauge-text' + (g.state === 'over' ? ' over' : '');
+    gt.innerHTML = '<strong>' + fmt(limit) + unit + ' 제한</strong> 중 ' + fmt(value) + unit + ' 사용, <strong>' + fmt(g.amount) + unit + (g.state === 'over' ? ' 초과했습니다' : ' 남았습니다') + '</strong>';
+    const pct = Math.round(g.ratio * 100);
+    fill.style.width = pct + '%';
+    fill.className = 'fill' + (g.state === 'over' ? ' over' : '');
+    $('bar').setAttribute('aria-valuenow', String(pct));
+  }
+  summary = '글자 수(공백 포함) ' + fmt(a.withSpace) + '자 / 공백 제외 ' + fmt(a.noSpace) + '자 / 바이트(한글 2바이트) ' + fmt(a.dbcs) + ' / 바이트(UTF-8) ' + fmt(a.utf8);
+}
+
+['input'].forEach(ev => { $('text').addEventListener(ev, render); $('limit').addEventListener(ev, render); });
+$('basis').addEventListener('change', render);
+$('nl').addEventListener('change', render);
+$('clear').addEventListener('click', function(){ $('text').value = ''; render(); $('text').focus(); });
+$('copy').addEventListener('click', function(){
+  const btn = $('copy');
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(summary).then(function(){
+      btn.textContent = '복사됨';
+      setTimeout(function(){ btn.textContent = '결과 복사'; }, 1500);
+    }, function(){ btn.textContent = '복사 실패'; });
+  } else {
+    btn.textContent = '이 브라우저에서는 복사를 지원하지 않습니다';
+  }
+});
+render();
+</script>
+</body>
+</html>
 
