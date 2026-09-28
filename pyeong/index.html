@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>평수 계산기 - 평 ㎡ 변환, 전용면적 평수와 평당 가격 계산</title>
+<meta name="description" content="평을 제곱미터(㎡)로, 제곱미터를 평으로 바로 바꿔 드립니다. 아파트 전용면적 59㎡·84㎡가 몇 평인지, 평당 가격은 얼마인지도 계산할 수 있습니다.">
+<meta name="color-scheme" content="light dark">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:title" content="평수 계산기">
+<meta property="og:description" content="평을 제곱미터(㎡)로, 제곱미터를 평으로 바로 바꿔 드립니다. 아파트 전용면적 59㎡·84㎡가 몇 평인지, 평당 가격은 얼마인지도 계산할 수 있습니다.">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"평수 계산기","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","inLanguage":"ko","offers":{"@type":"Offer","price":"0","priceCurrency":"KRW"}}
+</script>
+<!-- 애드센스 승인 후 이 위치에 AdSense 스크립트 코드를 삽입 -->
+<style>
+:root{
+  --ground:#f5f7fa; --surface:#ffffff; --ink:#172033; --muted:#5a6577;
+  --line:#dde3ec; --accent:#0e7c86; --accent-soft:#e3f3f4; --warn:#b42318;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --ground:#0e141b; --surface:#151d27; --ink:#e6ecf3; --muted:#9aa7b8;
+    --line:#263241; --accent:#4fd1c5; --accent-soft:#12303a; --warn:#ff8a7a;
+  }
+}
+*{box-sizing:border-box}
+[hidden]{display:none !important}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--ground); color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;
+  font-size:1rem; line-height:1.75;
+}
+.wrap{max-width:40rem; margin:0 auto; padding:1.75rem 1.25rem 4rem}
+.top{margin:0 0 1rem; font-size:.9rem}
+h1{font-size:1.75rem; line-height:1.3; margin:0 0 .5rem; font-weight:800; letter-spacing:-.01em}
+h2{font-size:1.3rem; line-height:1.4; margin:2.75rem 0 .75rem; font-weight:800}
+h3{font-size:1.05rem; line-height:1.5; margin:1.5rem 0 .25rem; font-weight:700}
+p{margin:.6rem 0}
+.lead{color:var(--muted); margin:0 0 1.25rem}
+a{color:var(--accent)}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid var(--accent); outline-offset:2px}
+label{display:block; font-weight:700; font-size:.95rem; margin-bottom:.3rem}
+.hint{font-weight:400; color:var(--muted); font-size:.85rem}
+input[type="text"],input[type="date"],select{
+  width:100%; font:inherit; font-size:1.1rem; padding:.65rem .8rem; min-height:3rem;
+  color:var(--ink); background:var(--surface); border:1.5px solid var(--line); border-radius:.5rem;
+}
+.field{margin-bottom:.9rem}
+.read{font-size:.85rem; color:var(--muted); min-height:1.3rem; margin:.2rem 0 0}
+.grid2{display:grid; grid-template-columns:1fr; gap:0 .9rem}
+@media (min-width:30rem){ .grid2{grid-template-columns:1fr 1fr} }
+.chips{display:flex; flex-wrap:wrap; gap:.4rem; margin:.2rem 0 .9rem}
+button{
+  font:inherit; font-size:.9rem; padding:.45rem .8rem; min-height:2.5rem; cursor:pointer;
+  color:var(--ink); background:transparent; border:1.5px solid var(--line); border-radius:.5rem;
+}
+button:hover{border-color:var(--accent)}
+.row{display:flex; flex-wrap:wrap; gap:.5rem; margin-top:.6rem}
+.err{color:var(--warn); font-size:.9rem; min-height:1.4rem; margin:.3rem 0 0}
+.modes{display:flex; margin:0 0 1.1rem; border:1.5px solid var(--line); border-radius:.5rem; overflow:hidden; background:var(--surface)}
+.modes button{flex:1; border:0; border-radius:0; min-height:2.9rem; font-size:.95rem; font-weight:700; color:var(--muted)}
+.modes button + button{border-left:1.5px solid var(--line)}
+.modes button[aria-pressed="true"]{background:var(--accent-soft); color:var(--accent)}
+.result{margin-top:.6rem; padding-top:1.1rem; border-top:2px solid var(--ink)}
+.empty{color:var(--muted); margin:0}
+.big{font-size:2.6rem; line-height:1.15; font-weight:800; letter-spacing:-.02em; font-variant-numeric:tabular-nums; margin:0; word-break:keep-all}
+.sub{margin:.35rem 0 1.1rem; color:var(--muted)}
+.sub strong{color:var(--ink)}
+.bad{color:var(--warn)}
+dl.more{margin:0}
+dl.more div{display:flex; justify-content:space-between; gap:1rem; padding:.55rem 0; border-bottom:1px solid var(--line)}
+dl.more dt{color:var(--muted); font-size:.95rem}
+dl.more dd{margin:0; text-align:right; font-weight:600; font-variant-numeric:tabular-nums}
+dl.more div.total dt{color:var(--ink); font-weight:700}
+dl.more div.total dd{font-weight:800; color:var(--accent)}
+details{margin-top:1.1rem}
+summary{cursor:pointer; font-weight:700; padding:.4rem 0}
+.scroll{overflow-x:auto}
+table{width:100%; border-collapse:collapse; margin:.75rem 0; font-size:.95rem; background:var(--surface)}
+caption{text-align:left; color:var(--muted); font-size:.85rem; padding-bottom:.35rem}
+th,td{border:1px solid var(--line); padding:.5rem .6rem; text-align:left; vertical-align:top}
+th{background:var(--accent-soft)}
+td.n,th.n{text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap}
+ul,ol{padding-left:1.2rem; margin:.5rem 0}
+li{margin:.3rem 0}
+.formula{background:var(--surface); border:1.5px solid var(--line); border-radius:.5rem; padding:.7rem .9rem; margin:.75rem 0; font-variant-numeric:tabular-nums}
+footer{margin-top:3rem; padding-top:1rem; border-top:1px solid var(--line); color:var(--muted); font-size:.85rem}
+footer p{margin:.3rem 0}
+.fl a{margin-right:1rem}
+</style>
+</head>
+<body>
+<main class="wrap">
+
+<nav class="top" aria-label="사이트 이동"><a href="../">생활 계산 도구 모음</a></nav>
+
+<h1>평수 계산기</h1>
+<p class="lead">평과 제곱미터(㎡)를 서로 바꾸고, 면적 기준 평당 가격까지 계산해 드립니다. 입력한 값은 저장하거나 서버로 전송하지 않으며 이 기기 안에서만 계산됩니다.</p>
+
+<section aria-label="평수 계산기">
+<div class="grid2">
+  <div class="field">
+    <label for="py">평</label>
+    <input id="py" type="text" inputmode="decimal" autocomplete="off" placeholder="예: 34">
+  </div>
+  <div class="field">
+    <label for="m2">제곱미터(㎡)</label>
+    <input id="m2" type="text" inputmode="decimal" autocomplete="off" placeholder="예: 84">
+  </div>
+</div>
+<p class="hint" style="margin:-.4rem 0 .5rem">어느 칸에 입력해도 다른 칸이 자동으로 바뀝니다.</p>
+<div class="chips" aria-label="자주 찾는 면적">
+  <button type="button" data-m2="59">59㎡</button>
+  <button type="button" data-m2="74">74㎡</button>
+  <button type="button" data-m2="84">84㎡</button>
+  <button type="button" data-m2="114">114㎡</button>
+  <button type="button" data-py="10">10평</button>
+  <button type="button" data-py="20">20평</button>
+  <button type="button" data-py="30">30평</button>
+</div>
+<p class="err" id="err" role="alert"></p>
+
+<div class="result" aria-live="polite">
+  <p class="empty" id="empty">평 또는 제곱미터를 입력하면 결과가 바로 나옵니다.</p>
+  <div id="out" hidden>
+    <p class="big" id="big"></p>
+    <p class="sub" id="sub"></p>
+    <div class="field">
+      <label for="price">가격 <span class="hint">선택, 매매가·전세가 등을 원 단위로</span></label>
+      <input id="price" type="text" inputmode="numeric" autocomplete="off" placeholder="예: 850000000" data-money="price-read">
+      <p class="read" id="price-read"></p>
+    </div>
+    <dl class="more" id="unit-price" hidden>
+      <div><dt>평당 가격</dt><dd id="per-py"></dd></div>
+      <div><dt>㎡당 가격</dt><dd id="per-m2"></dd></div>
+    </dl>
+  </div>
+</div>
+</section>
+
+<article>
+<h2>평과 제곱미터 변환 공식</h2>
+<p>1평은 사방 6자(약 1.818m) 크기의 정사각형 넓이로, 정확히는 400/121㎡입니다.</p>
+<div class="formula">1평 = 400 ÷ 121 ≈ 3.3058㎡<br>1㎡ = 121 ÷ 400 = 0.3025평</div>
+<ul>
+  <li>평을 ㎡로 바꾸려면 평 × 3.3058을 하면 됩니다. 예를 들어 34평은 약 112.40㎡입니다.</li>
+  <li>㎡를 평으로 바꾸려면 ㎡ × 0.3025를 하면 됩니다. 예를 들어 84㎡는 25.41평입니다.</li>
+</ul>
+
+<h2>아파트 전용면적별 평수</h2>
+<div class="scroll">
+<table>
+  <caption>전용면적을 평으로 환산한 값 (소수 둘째 자리 반올림)</caption>
+  <thead><tr><th>전용면적</th><th class="n">평</th></tr></thead>
+  <tbody id="size-table"></tbody>
+</table>
+</div>
+<p>분양 광고에서 흔히 말하는 "25평형", "34평형"은 전용면적이 아니라 공급면적을 기준으로 부른 이름입니다. 그래서 전용 59㎡는 흔히 25평형, 전용 84㎡는 34평형으로 불리지만, 실제 전용면적을 평으로 바꾸면 각각 약 17.85평, 25.41평입니다. 공급면적은 단지마다 달라서 같은 전용면적이라도 평형 이름이 조금씩 다를 수 있습니다.</p>
+
+<h2>전용면적, 공급면적, 계약면적의 차이</h2>
+<ul>
+  <li><strong>전용면적</strong>: 현관문 안쪽에서 세대가 단독으로 쓰는 공간입니다. 방, 거실, 주방, 욕실 등이 해당하며 발코니는 포함하지 않습니다.</li>
+  <li><strong>주거공용면적</strong>: 계단, 복도, 엘리베이터처럼 다른 세대와 함께 쓰는 공간입니다.</li>
+  <li><strong>공급면적</strong>: 전용면적과 주거공용면적을 더한 면적입니다.</li>
+  <li><strong>계약면적</strong>: 공급면적에 지하주차장, 관리사무소 같은 기타공용면적을 더한 면적입니다.</li>
+  <li><strong>서비스면적</strong>: 발코니처럼 면적 계산에 들어가지 않지만 실제로 쓸 수 있는 공간입니다.</li>
+</ul>
+
+<h2>평당 가격은 어떻게 계산하나요</h2>
+<p>가격을 면적(평)으로 나눈 값입니다. 예를 들어 8억 5천만원인 전용 84㎡(25.41평) 아파트의 전용면적 기준 평당 가격은 약 3,345만원입니다. 기사나 시세 자료는 공급면적 기준으로 평당 가격을 계산하는 경우가 많아서, 비교할 때는 어떤 면적 기준인지 확인해야 합니다.</p>
+
+<h2>자주 묻는 질문</h2>
+<h3>왜 공식 문서에는 평 대신 ㎡를 쓰나요?</h3>
+<p>평은 전통 단위이고, 공식 문서와 부동산 광고에서는 법정 계량단위인 제곱미터를 씁니다. 다만 일상에서는 여전히 평이 익숙해서 두 단위를 함께 확인하는 경우가 많습니다.</p>
+<h3>계산 결과가 다른 사이트와 조금 다른 이유는?</h3>
+<p>1평을 3.3㎡나 3.305㎡처럼 반올림한 값으로 계산하면 차이가 생깁니다. 이 계산기는 정확한 값(400/121㎡)으로 계산한 뒤 소수 둘째 자리에서 반올림해 표시합니다.</p>
+
+<h2>계산 방식과 유의사항</h2>
+<ul>
+  <li>면적은 소수 둘째 자리, 가격은 원 단위에서 반올림해 표시합니다.</li>
+  <li>이 계산기는 참고용입니다. 실제 면적은 등기부등본, 건축물대장, 분양계약서를 기준으로 확인해 주시기 바랍니다.</li>
+</ul>
+</article>
+
+<footer>
+<p>입력한 값은 저장되지 않으며 서버로 전송되지 않습니다.</p>
+<p class="fl"><a href="../privacy/">개인정보처리방침</a><a href="../contact/">문의</a></p>
+</footer>
+</main>
+
+<script>
+'use strict';
+// ==CORE START==
+function krUnit(n){
+  n = Math.round(n);
+  if(n === 0) return '0원';
+  const parts = [];
+  let r = n;
+  [['조',1e12],['억',1e8],['만',1e4]].forEach(function(u){
+    const q = Math.floor(r / u[1]);
+    if(q > 0){ parts.push(q.toLocaleString('ko-KR') + u[0]); r -= q * u[1]; }
+  });
+  if(r > 0) parts.push(r.toLocaleString('ko-KR'));
+  return parts.join(' ') + '원';
+}
+function pyToM2(py){ return py * 400 / 121; }
+function m2ToPy(m2){ return m2 * 121 / 400; }
+function round2(x){ return Math.round(x * 100) / 100; }
+function unitPrice(price, py){ return {perPy: price / py, perM2: price / pyToM2(py)}; }
+// ==CORE END==
+const $ = id => document.getElementById(id);
+function parseNum(v){
+  const s = String(v).replace(/[,\s원%]/g,'');
+  if(s === '' || s === '.' ) return NaN;
+  const n = Number(s);
+  return Number.isFinite(n) ? n : NaN;
+}
+function num(id){ return parseNum($(id).value); }
+function fmt(n, d){ return n.toLocaleString('ko-KR', {maximumFractionDigits: d || 0}); }
+function won(n){ return fmt(Math.round(n)) + '원'; }
+document.querySelectorAll('input[data-money]').forEach(function(el){
+  const out = $(el.dataset.money);
+  function upd(){ const n = parseNum(el.value); out.textContent = (n > 0) ? krUnit(n) : ''; }
+  el.addEventListener('input', upd);
+  el.addEventListener('blur', function(){ const n = parseNum(el.value); if(n >= 0) el.value = fmt(Math.round(n)); upd(); });
+  upd();
+});
+function setMode(group, m){
+  group.forEach(function(k){
+    $('s-'+k).hidden = (k !== m);
+    $('b-'+k).setAttribute('aria-pressed', String(k === m));
+  });
+}
+let lastPy = NaN;
+function show(ok){ $('out').hidden = !ok; $('empty').hidden = ok; }
+function renderPrice(){
+  const price = num('price');
+  if(!(price > 0) || !(lastPy > 0)){ $('unit-price').hidden = true; return; }
+  const u = unitPrice(price, lastPy);
+  $('per-py').textContent = won(u.perPy) + ' (' + krUnit(u.perPy) + ')';
+  $('per-m2').textContent = won(u.perM2);
+  $('unit-price').hidden = false;
+}
+function render(py){
+  $('err').textContent = '';
+  if(!(py > 0)){
+    lastPy = NaN; show(false);
+    return;
+  }
+  if(py > 1e7){ $('err').textContent = '너무 큰 값입니다. 숫자를 확인해 주세요.'; show(false); return; }
+  lastPy = py;
+  const m2 = pyToM2(py);
+  $('big').textContent = fmt(round2(py), 2) + '평 = ' + fmt(round2(m2), 2) + '㎡';
+  $('sub').innerHTML = '<strong>1평 = 3.3058㎡</strong>, 1㎡ = 0.3025평 기준';
+  show(true);
+  renderPrice();
+}
+function fromPy(){
+  const py = num('py');
+  $('m2').value = py > 0 ? String(round2(pyToM2(py))) : '';
+  render(py);
+}
+function fromM2(){
+  const m2 = num('m2');
+  const py = m2 > 0 ? m2ToPy(m2) : NaN;
+  $('py').value = py > 0 ? String(round2(py)) : '';
+  render(py);
+}
+$('py').addEventListener('input', fromPy);
+$('m2').addEventListener('input', fromM2);
+$('price').addEventListener('input', renderPrice);
+document.querySelectorAll('.chips button').forEach(function(b){
+  b.addEventListener('click', function(){
+    if(b.dataset.m2){ $('m2').value = b.dataset.m2; fromM2(); }
+    else { $('py').value = b.dataset.py; fromPy(); }
+  });
+});
+$('size-table').innerHTML = [40,49,59,74,84,99,114,135].map(function(a){
+  return '<tr><td>' + a + '㎡</td><td class="n">' + fmt(round2(m2ToPy(a)), 2) + '평</td></tr>';
+}).join('');
+render(NaN);
+</script>
+</body>
+</html>
