@@ -212,7 +212,7 @@ footer p{margin:.3rem 0}
   <div class="meter-scale"><span>-60</span><span>-40</span><span>-20</span><span>-12</span><span>-6</span><span>-3</span><span>0</span></div>
 </div>
 
-<div id="controls" hidden>
+<div id="controls">
 
   <details class="module" open>
     <summary>
@@ -297,7 +297,7 @@ footer p{margin:.3rem 0}
 
   <div class="err" id="export-err" role="alert"></div>
   <div class="download-row">
-    <button type="button" class="btn primary" id="export-btn">마스터링된 WAV 다운로드</button>
+    <button type="button" class="btn primary" id="export-btn" disabled>마스터링된 WAV 다운로드</button>
   </div>
 </div>
 
@@ -587,7 +587,7 @@ function disconnectAllExceptSource(){
 function resetUIForNewFile(){
   $('transport').classList.add('show');
   $('meter-box').hidden = false;
-  $('controls').hidden = false;
+  $('export-btn').disabled = false;
   $('err').textContent = '';
 }
 
@@ -700,7 +700,7 @@ function initUI(){
     originalBuffer = null;
     $('transport').classList.remove('show');
     $('meter-box').hidden = true;
-    $('controls').hidden = true;
+    $('export-btn').disabled = true;
     $('file-input').value = '';
   });
 
@@ -716,7 +716,7 @@ function initUI(){
 }
 
 async function exportMastered(){
-  if(!originalBuffer){ return; }
+  if(!originalBuffer){ $('export-err').textContent = '먼저 음원 파일을 업로드해 주세요.'; return; }
   $('export-err').textContent = '';
   const btn = $('export-btn');
   const original = btn.textContent;
