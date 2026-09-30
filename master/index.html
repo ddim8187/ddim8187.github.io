@@ -106,8 +106,20 @@ button{font:inherit; cursor:pointer}
 .module{background:var(--panel); border:1px solid var(--line); border-radius:.75rem; padding:1.1rem 1.25rem; margin:0 0 1.1rem}
 .module summary{list-style:none; cursor:pointer; display:flex; align-items:center; justify-content:space-between}
 .module summary::-webkit-details-marker{display:none}
-.module-title{font-weight:700; font-size:.95rem; color:#fff; display:flex; align-items:center; gap:.5rem}
+.module-title{font-weight:700; font-size:.95rem; color:#fff; display:flex; align-items:center; gap:.6rem}
 .module-title .dot{width:.5rem; height:.5rem; border-radius:50%; background:var(--teal); display:inline-block}
+.num{
+  display:inline-flex; align-items:center; justify-content:center; width:1.5rem; height:1.5rem;
+  border-radius:50%; background:var(--amber); color:#1a1206; font-family:var(--mono); font-weight:700;
+  font-size:.78rem; flex:0 0 auto;
+}
+.step-eyebrow{
+  display:flex; align-items:center; gap:.6rem; font-weight:700; color:#fff; font-size:.95rem; margin:1.5rem 0 0;
+}
+.select{
+  width:100%; background:var(--panel-raised); color:var(--ink); border:1px solid var(--line); border-radius:.5rem;
+  padding:.6rem .7rem; font:inherit; font-size:.92rem;
+}
 .chev{color:var(--ink-dim); transition:transform .15s}
 details[open] .chev{transform:rotate(180deg)}
 .module-body{padding-top:1rem}
@@ -120,6 +132,7 @@ details[open] .chev{transform:rotate(180deg)}
   accent-color:var(--amber); background:transparent;
 }
 .eq-val{font-family:var(--mono); font-size:.72rem; color:var(--ink-dim); font-variant-numeric:tabular-nums}
+.eq-name{font-size:.66rem; color:var(--ink-dim); font-weight:600; letter-spacing:.02em}
 .eq-freq{font-size:.68rem; color:var(--ink-dim)}
 .presets{display:flex; gap:.5rem; flex-wrap:wrap; margin-top:1rem}
 .presets .btn{padding:.4rem .75rem; font-size:.82rem; font-weight:500}
@@ -172,6 +185,8 @@ footer p{margin:.3rem 0}
   <p class="lead">음원 파일을 업로드하면 이 브라우저 안에서만 처리됩니다. 서버로 전송되거나 저장되지 않으며, 파일을 닫는 순간 사라집니다.</p>
 </header>
 
+<p class="step-eyebrow"><span class="num">1</span>음원 업로드 &amp; 실시간 듣기</p>
+
 <div class="drop" id="drop" tabindex="0" role="button" aria-label="음원 파일 선택">
   <strong>여기를 누르거나 파일을 끌어다 놓으세요</strong>
   <span>MP3, WAV, M4A 등 이 브라우저가 재생할 수 있는 오디오 파일</span>
@@ -194,30 +209,34 @@ footer p{margin:.3rem 0}
     <span class="meter-value" id="meter-value">-∞</span>
   </div>
   <div class="meter-track"><div class="meter-fill" id="meter-fill"></div></div>
-  <div class="meter-scale"><span>-60</span><span>-40</span><span>-20</span><span>-6</span><span>0</span></div>
+  <div class="meter-scale"><span>-60</span><span>-40</span><span>-20</span><span>-12</span><span>-6</span><span>-3</span><span>0</span></div>
 </div>
 
 <div id="controls" hidden>
 
   <details class="module" open>
     <summary>
-      <span class="module-title"><span class="dot"></span>EQ — 7밴드</span>
+      <span class="module-title"><span class="num">2</span>EQ — 7밴드 보정</span>
       <span class="chev">▾</span>
     </summary>
     <div class="module-body">
       <div class="eq-grid" id="eq-grid"></div>
-      <div class="presets">
-        <button type="button" class="btn" data-preset="flat">평탄하게</button>
-        <button type="button" class="btn" data-preset="warm">따뜻하게</button>
-        <button type="button" class="btn" data-preset="bright">선명하게</button>
-        <button type="button" class="btn" data-preset="loud">두껍게(EDM향)</button>
+      <div class="hrow" style="margin-top:1.1rem">
+        <div class="hrow-top"><span class="lbl">음색 성향 (Character)</span></div>
+        <select id="character-select" class="select">
+          <option value="flat">Standard (기본 밸런스)</option>
+          <option value="warm">Warm (따뜻하게)</option>
+          <option value="bright">Bright (선명하게)</option>
+          <option value="loud">Thick (두껍게, EDM향)</option>
+        </select>
+        <p class="hint">시작점을 잡아주는 프리셋입니다. 고른 뒤에도 위 슬라이더로 세부 조정할 수 있습니다.</p>
       </div>
     </div>
   </details>
 
   <details class="module">
     <summary>
-      <span class="module-title"><span class="dot"></span>드라이브 (새추레이션)</span>
+      <span class="module-title"><span class="num">3</span>드라이브 (새추레이션)</span>
       <span class="chev">▾</span>
     </summary>
     <div class="module-body">
@@ -231,7 +250,21 @@ footer p{margin:.3rem 0}
 
   <details class="module">
     <summary>
-      <span class="module-title"><span class="dot"></span>스테레오 폭</span>
+      <span class="module-title"><span class="num">4</span>날카로운 고음 다듬기 (De-harsh)</span>
+      <span class="chev">▾</span>
+    </summary>
+    <div class="module-body">
+      <div class="hrow">
+        <div class="hrow-top"><span class="lbl">다듬기 강도</span><span class="val" id="deharsh-val">0</span></div>
+        <input type="range" id="deharsh-slider" min="0" max="100" step="1" value="0">
+        <p class="hint">3~5kHz 부근의 귀에 거슬리는 날카로운 소리를 눌러줍니다. 보컬이나 하이햇이 따갑게 느껴질 때 올려보세요. 0이면 선명함을 그대로 유지합니다.</p>
+      </div>
+    </div>
+  </details>
+
+  <details class="module">
+    <summary>
+      <span class="module-title"><span class="num">5</span>스테레오 폭</span>
       <span class="chev">▾</span>
     </summary>
     <div class="module-body">
@@ -245,18 +278,19 @@ footer p{margin:.3rem 0}
 
   <details class="module">
     <summary>
-      <span class="module-title"><span class="dot"></span>리미터</span>
+      <span class="module-title"><span class="num">6</span>라우드니스 조절 (Maximizer)</span>
       <span class="chev">▾</span>
     </summary>
     <div class="module-body">
       <div class="hrow">
-        <div class="hrow-top"><span class="lbl">천장(최대 출력)</span><span class="val" id="ceiling-val">-1.0 dB</span></div>
-        <input type="range" id="ceiling-slider" min="-6" max="0" step="0.1" value="-1">
+        <div class="hrow-top"><span class="lbl">얼마나 크게 올릴지</span><span class="val" id="push-val">0 dB</span></div>
+        <input type="range" id="push-slider" min="0" max="18" step="0.5" value="0">
+        <p class="hint">전체 볼륨을 얼마나 끌어올릴지 정합니다. 올릴수록 더 크고 압축된 소리가 되지만, 지나치면 다이내믹이 눌려 답답해질 수 있습니다.</p>
       </div>
       <div class="hrow">
-        <div class="hrow-top"><span class="lbl">드라이브(밀어넣기)</span><span class="val" id="push-val">0 dB</span></div>
-        <input type="range" id="push-slider" min="0" max="18" step="0.5" value="0">
-        <p class="hint">소리를 리미터 쪽으로 얼마나 세게 밀어넣을지 정합니다. 올릴수록 더 크고 압축된 소리가 되지만, 지나치면 다이내믹이 눌려 답답해질 수 있습니다.</p>
+        <div class="hrow-top"><span class="lbl">천장(클리핑 방지 상한)</span><span class="val" id="ceiling-val">-1.0 dB</span></div>
+        <input type="range" id="ceiling-slider" min="-6" max="0" step="0.1" value="-1">
+        <p class="hint">이 값을 넘지 않도록 순간적으로 소리를 눌러줍니다. 보통 -1dB 안팎이 안전합니다.</p>
       </div>
     </div>
   </details>
@@ -269,17 +303,19 @@ footer p{margin:.3rem 0}
 
 <article>
 <h2>이 도구가 하는 일</h2>
-<p>음원을 EQ, 드라이브(새추레이션), 스테레오 폭, 리미터를 거쳐 한 번에 다듬고, 처리된 결과를 WAV 파일로 내려받을 수 있습니다. 모든 처리는 브라우저 안(Web Audio API)에서 이루어지며 파일을 서버로 보내지 않습니다.</p>
+<p>음원을 EQ, 드라이브(새추레이션), 디하시, 스테레오 폭, 라우드니스 조절(리미터)을 거쳐 한 번에 다듬고, 처리된 결과를 WAV 파일로 내려받을 수 있습니다. 모든 처리는 브라우저 안(Web Audio API)에서 이루어지며 파일을 서버로 보내지 않습니다.</p>
 
-<h2>각 모듈은 무엇을 하나요</h2>
-<h3>EQ 7밴드</h3>
-<p>60Hz(저음의 무게감)부터 12kHz(공기감·선명도)까지 7개 대역을 올리거나 내려 톤을 조정합니다. 프리셋을 눌러 시작점을 잡고 세부 조정하는 것을 추천합니다.</p>
+<h2>각 단계는 무엇을 하나요</h2>
+<h3>EQ 7밴드 (Sub·Bass·L-Mid·Mid·H-Mid·Pres·Air)</h3>
+<p>60Hz(저음의 무게감)부터 12kHz(공기감·선명도)까지 7개 대역을 올리거나 내려 톤을 조정합니다. '음색 성향' 드롭다운으로 시작점을 잡고 세부 조정하는 것을 추천합니다.</p>
 <h3>드라이브(새추레이션)</h3>
 <p>신호를 살짝 비선형으로 왜곡시켜 아날로그 장비 특유의 따뜻한 배음을 더합니다. 과하게 걸면 음이 거칠어지니 조금씩 올려보며 확인하세요.</p>
+<h3>De-harsh</h3>
+<p>3.8kHz 부근을 살짝 눌러 귀에 거슬리는 날카로운 소리를 다듬습니다. 보컬 치찰음이나 하이햇이 따갑게 느껴질 때 사용해보세요.</p>
 <h3>스테레오 폭</h3>
 <p>좌우 채널의 차이(사이드 성분)를 늘리거나 줄여 스테레오감을 조정합니다. 100%가 원본이고, 낮추면 모노에 가까워지며 중앙이 또렷해집니다.</p>
-<h3>리미터</h3>
-<p>설정한 천장(dB)을 넘지 않도록 순간적으로 소리를 눌러 전체 음량을 높이는 역할을 합니다. '드라이브(밀어넣기)'로 얼마나 세게 압축할지 정합니다.</p>
+<h3>라우드니스 조절 (Maximizer)</h3>
+<p>설정한 천장(dB)을 넘지 않도록 순간적으로 소리를 눌러 전체 음량을 높이는 역할을 합니다. '얼마나 크게 올릴지'로 세기를 정합니다.</p>
 
 <h2>레벨미터에 대해 정직하게 말씀드리면</h2>
 <p>화면의 미터는 방송·유통사에서 쓰는 정식 LUFS 표준(K-weighting과 게이팅을 포함하는 ITU-R BS.1770)이 아니라, <strong>단순 RMS를 dBFS로 환산한 참고용 수치</strong>입니다. 정확한 유통용 라우드니스 값이 필요하다면 별도의 라우드니스 측정 프로그램으로 최종 확인하시길 권장합니다.</p>
@@ -369,13 +405,13 @@ function bufferToWaveBlob(abuffer){
 }
 
 const EQ_BANDS = [
-  { freq: 60,    type: 'lowshelf' },
-  { freq: 150,   type: 'peaking' },
-  { freq: 400,   type: 'peaking' },
-  { freq: 1000,  type: 'peaking' },
-  { freq: 2500,  type: 'peaking' },
-  { freq: 6000,  type: 'peaking' },
-  { freq: 12000, type: 'highshelf' }
+  { freq: 60,    type: 'lowshelf',  name: 'Sub' },
+  { freq: 150,   type: 'peaking',   name: 'Bass' },
+  { freq: 400,   type: 'peaking',   name: 'L-Mid' },
+  { freq: 1000,  type: 'peaking',   name: 'Mid' },
+  { freq: 2500,  type: 'peaking',   name: 'H-Mid' },
+  { freq: 6000,  type: 'peaking',   name: 'Pres' },
+  { freq: 12000, type: 'highshelf', name: 'Air' }
 ];
 
 const EQ_PRESETS = {
@@ -407,6 +443,15 @@ function buildMasterChain(ctx, source, params){
   shaper.oversample = '2x';
   node.connect(shaper);
   node = shaper;
+
+  // --- De-harsh: 3.8kHz 부근을 다듬는 필터 ---
+  const deharsh = ctx.createBiquadFilter();
+  deharsh.type = 'peaking';
+  deharsh.frequency.value = 3800;
+  deharsh.Q.value = 1.4;
+  deharsh.gain.value = -((params.deharsh || 0) / 100) * 9;
+  node.connect(deharsh);
+  node = deharsh;
 
   // --- 스테레오 폭 (Mid-Side) ---
   const splitter = ctx.createChannelSplitter(2);
@@ -469,6 +514,7 @@ let fileNameBase = 'mastered';
 const state = {
   eqGains: EQ_PRESETS.flat.slice(),
   drive: 0,
+  deharsh: 0,
   width: 100,
   ceilingDb: -1,
   pushDb: 0
@@ -485,6 +531,9 @@ function buildEqUI(){
   EQ_BANDS.forEach((b, i) => {
     const col = document.createElement('div');
     col.className = 'eq-band';
+    const nameLbl = document.createElement('span');
+    nameLbl.className = 'eq-name';
+    nameLbl.textContent = b.name;
     const val = document.createElement('span');
     val.className = 'eq-val';
     val.id = 'eqv-' + i;
@@ -502,7 +551,7 @@ function buildEqUI(){
     const freqLbl = document.createElement('span');
     freqLbl.className = 'eq-freq';
     freqLbl.textContent = b.freq >= 1000 ? (b.freq/1000) + 'k' : String(b.freq);
-    col.appendChild(val); col.appendChild(slider); col.appendChild(freqLbl);
+    col.appendChild(nameLbl); col.appendChild(val); col.appendChild(slider); col.appendChild(freqLbl);
     grid.appendChild(col);
   });
 }
@@ -631,11 +680,10 @@ function bindSliderPair(sliderId, labelId, fmt, onChange){
 function initUI(){
   buildEqUI();
 
-  document.querySelectorAll('[data-preset]').forEach(btn => {
-    btn.addEventListener('click', () => applyEqPreset(btn.dataset.preset));
-  });
+  document.getElementById('character-select').addEventListener('change', (e) => applyEqPreset(e.target.value));
 
   bindSliderPair('drive-slider', 'drive-val', v => String(v), v => { state.drive = v; });
+  bindSliderPair('deharsh-slider', 'deharsh-val', v => String(v), v => { state.deharsh = v; });
   bindSliderPair('width-slider', 'width-val', v => v + '%', v => { state.width = v; });
   bindSliderPair('ceiling-slider', 'ceiling-val', v => v.toFixed(1) + ' dB', v => { state.ceilingDb = v; });
   bindSliderPair('push-slider', 'push-val', v => v.toFixed(1) + ' dB', v => { state.pushDb = v; });
