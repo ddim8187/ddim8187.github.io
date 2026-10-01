@@ -64,6 +64,7 @@
 *{box-sizing:border-box}
 [hidden]{display:none !important}
 html{-webkit-text-size-adjust:100%}
+html,body{max-width:100%; overflow-x:hidden}
 body{
   margin:0; background:var(--bg); color:var(--ink);
   font-family:var(--sans); font-size:1rem; line-height:1.7;
@@ -161,15 +162,14 @@ details[open] .chev{transform:rotate(180deg)}
 .module-body{padding-top:1rem}
 
 /* EQ */
-.eq-grid{display:grid; grid-template-columns:repeat(7,1fr); gap:.4rem; align-items:end}
-.eq-band{display:flex; flex-direction:column; align-items:center; gap:.4rem}
-.eq-slider{
-  writing-mode:vertical-lr; direction:rtl; width:1.4rem; height:6.5rem;
-  accent-color:var(--amber); background:transparent;
-}
-.eq-val{font-family:var(--mono); font-size:.72rem; color:var(--ink-dim); font-variant-numeric:tabular-nums}
-.eq-name{font-size:.66rem; color:var(--ink-dim); font-weight:600; letter-spacing:.02em}
-.eq-freq{font-size:.68rem; color:var(--ink-dim)}
+/* 세로 슬라이더는 iOS에서 폭 계산이 깨져 화면 밖으로 넘치므로, 밴드마다 가로 한 줄로 배치 */
+.eq-grid{display:flex; flex-direction:column; gap:.35rem}
+.eq-band{display:grid; grid-template-columns:3.6rem minmax(0,1fr) 3rem; align-items:center; gap:.7rem; min-width:0}
+.eq-label{display:flex; flex-direction:column; line-height:1.25}
+.eq-name{font-size:.82rem; color:var(--ink); font-weight:700}
+.eq-freq{font-size:.7rem; color:var(--ink-dim); font-family:var(--mono)}
+input[type="range"].eq-slider{width:100%; min-width:0; margin:0}
+.eq-val{font-family:var(--mono); font-size:.8rem; color:var(--amber); text-align:right; font-variant-numeric:tabular-nums}
 .presets{display:flex; gap:.5rem; flex-wrap:wrap; margin-top:1rem}
 .presets .btn{padding:.4rem .75rem; font-size:.82rem; font-weight:500}
 
@@ -606,7 +606,7 @@ function buildEqUI(){
     const val = document.createElement('span');
     val.className = 'eq-val';
     val.id = 'eqv-' + i;
-    val.textContent = '0';
+    val.textContent = '0 dB';
     const slider = document.createElement('input');
     slider.type = 'range';
     slider.className = 'eq-slider';
@@ -614,13 +614,16 @@ function buildEqUI(){
     slider.id = 'eq-' + i;
     slider.addEventListener('input', () => {
       state.eqGains[i] = parseFloat(slider.value);
-      val.textContent = (state.eqGains[i] > 0 ? '+' : '') + state.eqGains[i];
+      val.textContent = (state.eqGains[i] > 0 ? '+' : '') + state.eqGains[i] + ' dB';
       rebuildLiveChain();
     });
     const freqLbl = document.createElement('span');
     freqLbl.className = 'eq-freq';
     freqLbl.textContent = b.freq >= 1000 ? (b.freq/1000) + 'k' : String(b.freq);
-    col.appendChild(nameLbl); col.appendChild(val); col.appendChild(slider); col.appendChild(freqLbl);
+    const label = document.createElement('div');
+    label.className = 'eq-label';
+    label.appendChild(nameLbl); label.appendChild(freqLbl);
+    col.appendChild(label); col.appendChild(slider); col.appendChild(val);
     grid.appendChild(col);
   });
 }
@@ -630,7 +633,7 @@ function applyEqPreset(name){
   state.eqGains = g.slice();
   g.forEach((v, i) => {
     $('eq-' + i).value = v;
-    $('eqv-' + i).textContent = (v > 0 ? '+' : '') + v;
+    $('eqv-' + i).textContent = (v > 0 ? '+' : '') + v + ' dB';
   });
   rebuildLiveChain();
 }
