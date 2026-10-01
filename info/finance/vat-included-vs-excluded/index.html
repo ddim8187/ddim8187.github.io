@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>부가세 포함·별도 금액 계산 방법 (합계 ÷ 11) - 생활정보 - 생활 계산 도구 모음</title>
+<meta name="description" content="부가세 포함 금액에서 부가세는 합계 ÷ 11, 공급가액은 합계 ÷ 1.1입니다. VAT 포함·별도의 뜻과 흔한 계산 실수를 예시로 정리했습니다.">
+<meta name="color-scheme" content="light dark">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:title" content="부가세 포함·별도 금액 계산 방법 (합계 ÷ 11)">
+<meta property="og:description" content="부가세 포함 금액에서 부가세는 합계 ÷ 11, 공급가액은 합계 ÷ 1.1입니다. VAT 포함·별도의 뜻과 흔한 계산 실수를 예시로 정리했습니다.">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3950528589828430"
+     crossorigin="anonymous"></script>
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
+<link rel="apple-touch-icon" href="/favicon.png">
+<meta name="google-site-verification" content="zwCpUdfCWwRBVa0vwLoOv7jPIo5nC3mv9Im_DfojCVM" />
+<meta name="naver-site-verification" content="c75f1f11dca6d41ed47e83a590778bcf2aa8247b" />
+<style>
+:root{
+  --ground:#f5f7fa; --surface:#ffffff; --ink:#172033; --muted:#5a6577;
+  --line:#dde3ec; --accent:#0e7c86; --accent-soft:#e3f3f4;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --ground:#0e141b; --surface:#151d27; --ink:#e6ecf3; --muted:#9aa7b8;
+    --line:#263241; --accent:#4fd1c5; --accent-soft:#12303a;
+  }
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--ground); color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;
+  font-size:1rem; line-height:1.8;
+}
+.wrap{max-width:40rem; margin:0 auto; padding:1.75rem 1.25rem 4rem}
+.top{margin:0 0 .8rem; font-size:.85rem; color:var(--muted)}
+.top a{color:var(--muted); text-decoration:none}
+.top a:hover{color:var(--accent); text-decoration:underline}
+.top span{margin:0 .35rem}
+h1{font-size:1.6rem; line-height:1.35; margin:.2rem 0 .4rem; font-weight:800; letter-spacing:-.01em}
+.meta{color:var(--muted); font-size:.85rem; margin:0 0 1rem}
+.lead{color:var(--ink); font-size:1.05rem; margin:0 0 1.5rem; padding-bottom:1.25rem; border-bottom:1px solid var(--line)}
+h2{font-size:1.3rem; line-height:1.4; margin:2.25rem 0 .75rem; font-weight:800; scroll-margin-top:1rem}
+h3{font-size:1.08rem; line-height:1.5; margin:1.4rem 0 .4rem; font-weight:700}
+p{margin:.65rem 0}
+a{color:var(--accent)}
+a:focus-visible{outline:3px solid var(--accent); outline-offset:2px}
+ul,ol{padding-left:1.2rem; margin:.5rem 0}
+li{margin:.35rem 0}
+table{width:100%; border-collapse:collapse; margin:.75rem 0; font-size:.95rem; background:var(--surface)}
+th,td{border:1px solid var(--line); padding:.55rem .6rem; text-align:left; vertical-align:top}
+th{background:var(--accent-soft)}
+
+.toc{
+  background:var(--surface); border:1.5px solid var(--line); border-radius:.6rem;
+  padding:1rem 1.25rem; margin:0 0 1.75rem;
+}
+.toc-title{font-weight:800; font-size:.95rem; margin-bottom:.5rem}
+.toc ol{margin:0; padding-left:1.1rem}
+.toc li{margin:.3rem 0}
+.toc a{text-decoration:none}
+.toc a:hover{text-decoration:underline}
+
+.related-tools{
+  margin:1.75rem 0; padding:1.1rem 1.25rem; background:var(--accent-soft);
+  border-radius:.6rem; font-size:.95rem;
+}
+.related-tools .rt-title{font-weight:800; margin-bottom:.5rem; display:block}
+.related-tools ul{margin:0; padding-left:1.1rem}
+.related-tools a{font-weight:700}
+
+.disclaimer{
+  margin-top:2rem; padding:1rem 1.1rem; border:1px dashed var(--line); border-radius:.5rem;
+  color:var(--muted); font-size:.88rem;
+}
+
+footer{margin-top:3rem; padding-top:1rem; border-top:1px solid var(--line); color:var(--muted); font-size:.85rem}
+footer p{margin:.3rem 0}
+.fl a{margin-right:1rem}
+</style>
+</head>
+<body>
+<main class="wrap">
+
+<nav class="top" aria-label="사이트 이동">
+  <a href="../../../">생활 계산 도구 모음</a><span>/</span><a href="../../">생활정보</a><span>/</span><a href="../">돈·금융</a>
+</nav>
+
+<h1>부가세 포함·별도 금액 계산 방법 (합계 ÷ 11)</h1>
+<p class="meta">최종 수정일 2026-10-01</p>
+<p class="lead">부가세 포함 금액에서 부가세만 구하려면 11로 나누면 됩니다. 110만원이면 부가세 10만원, 공급가액 100만원입니다.</p>
+
+<nav class="toc" aria-label="목차">
+  <div class="toc-title">목차</div>
+  <ol>
+    <li><a href="#sec-VAT-포함과-VAT-별도의-뜻">VAT 포함과 VAT 별도의 뜻</a></li>
+    <li><a href="#sec-포함-금액에서-거꾸로-계산하는-공식">포함 금액에서 거꾸로 계산하는 공식</a></li>
+    <li><a href="#sec-가장-흔한-계산-실수-10를-빼기">가장 흔한 계산 실수: 10%를 빼기</a></li>
+    <li><a href="#sec-계산기로-바로-확인하기">계산기로 바로 확인하기</a></li>
+  </ol>
+</nav>
+
+<h2 id="sec-VAT-포함과-VAT-별도의-뜻">VAT 포함과 VAT 별도의 뜻</h2>
+
+<ul>
+<li><strong>VAT 별도</strong>: 적힌 금액이 공급가액이라는 뜻입니다. 여기에 10%를 더 내야 합니다. 견적 100만원(VAT 별도)이면 실제로 110만원을 냅니다.</li>
+<li><strong>VAT 포함</strong>: 적힌 금액 안에 부가세가 이미 들어 있다는 뜻입니다. 110만원(VAT 포함)이면 그대로 110만원을 냅니다.</li>
+</ul>
+
+
+<h2 id="sec-포함-금액에서-거꾸로-계산하는-공식">포함 금액에서 거꾸로 계산하는 공식</h2>
+
+<div class="formula" style="background:var(--surface);border:1.5px solid var(--line);border-radius:.5rem;padding:.8rem 1rem;margin:.8rem 0">부가세 = 합계금액 ÷ 11<br>공급가액 = 합계금액 ÷ 1.1 (또는 합계금액 − 부가세)</div>
+<table>
+<thead><tr><th>합계금액(VAT 포함)</th><th>공급가액</th><th>부가세</th></tr></thead>
+<tbody>
+<tr><td>33,000원</td><td>30,000원</td><td>3,000원</td></tr>
+<tr><td>55,000원</td><td>50,000원</td><td>5,000원</td></tr>
+<tr><td>1,100,000원</td><td>1,000,000원</td><td>100,000원</td></tr>
+<tr><td>1,000,000원</td><td>909,091원</td><td>90,909원</td></tr>
+</tbody>
+</table>
+<p>마지막 줄처럼 합계가 11로 나누어떨어지지 않으면 원 미만을 반올림하거나 버려서 맞춥니다.</p>
+
+
+<h2 id="sec-가장-흔한-계산-실수-10를-빼기">가장 흔한 계산 실수: 10%를 빼기</h2>
+
+<p>110만원에서 10%(11만원)를 빼면 99만원이 나옵니다. 하지만 실제 공급가액은 100만원입니다. 부가세는 <strong>공급가액</strong>의 10%이지 합계금액의 10%가 아니기 때문에, 포함 금액에서는 반드시 11로 나눠야 정확합니다.</p>
+
+
+<h2 id="sec-계산기로-바로-확인하기">계산기로 바로 확인하기</h2>
+
+<p>부가세 계산기의 '합계금액에서 나누기' 모드에 금액을 넣으면 공급가액과 부가세가 바로 나뉘어 표시됩니다.</p>
+
+
+<div class="related-tools">
+  <span class="rt-title">이 글과 함께 보면 좋은 도구</span>
+  <ul><li><a href="../../../vat/">부가세 계산기</a></li></ul>
+</div>
+
+<div class="disclaimer">이 글은 일반적인 정보 제공을 목적으로 하며, 개인의 상황에 따라 결과가 달라질 수 있습니다. 중요한 결정은 관련 기관의 공식 안내나 전문가 상담을 통해 확인해 주시기 바랍니다.</div>
+
+<footer>
+<p>생활 계산 도구 모음</p>
+<p class="fl"><a href="../../../about/">소개</a><a href="../../../privacy/">개인정보처리방침</a><a href="../../../contact/">문의</a></p>
+</footer>
+</main>
+</body>
+</html>
