@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>한글은 몇 바이트일까? (2바이트 vs 3바이트 차이) - 생활정보 - 생활 계산 도구 모음</title>
+<meta name="description" content="한글 한 글자는 EUC-KR 방식에서 2바이트, UTF-8 방식에서 3바이트입니다. 영문·숫자·이모지 바이트 수와 계산 예시, 바이트 제한 입력창 대처법을 정리했습니다.">
+<meta name="color-scheme" content="light dark">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:title" content="한글은 몇 바이트일까? (2바이트 vs 3바이트 차이)">
+<meta property="og:description" content="한글 한 글자는 EUC-KR 방식에서 2바이트, UTF-8 방식에서 3바이트입니다. 영문·숫자·이모지 바이트 수와 계산 예시, 바이트 제한 입력창 대처법을 정리했습니다.">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3950528589828430"
+     crossorigin="anonymous"></script>
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
+<link rel="apple-touch-icon" href="/favicon.png">
+<meta name="google-site-verification" content="zwCpUdfCWwRBVa0vwLoOv7jPIo5nC3mv9Im_DfojCVM" />
+<meta name="naver-site-verification" content="c75f1f11dca6d41ed47e83a590778bcf2aa8247b" />
+<style>
+:root{
+  --ground:#f5f7fa; --surface:#ffffff; --ink:#172033; --muted:#5a6577;
+  --line:#dde3ec; --accent:#0e7c86; --accent-soft:#e3f3f4;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --ground:#0e141b; --surface:#151d27; --ink:#e6ecf3; --muted:#9aa7b8;
+    --line:#263241; --accent:#4fd1c5; --accent-soft:#12303a;
+  }
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--ground); color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;
+  font-size:1rem; line-height:1.8;
+}
+.wrap{max-width:40rem; margin:0 auto; padding:1.75rem 1.25rem 4rem}
+.top{margin:0 0 .8rem; font-size:.85rem; color:var(--muted)}
+.top a{color:var(--muted); text-decoration:none}
+.top a:hover{color:var(--accent); text-decoration:underline}
+.top span{margin:0 .35rem}
+h1{font-size:1.6rem; line-height:1.35; margin:.2rem 0 .4rem; font-weight:800; letter-spacing:-.01em}
+.meta{color:var(--muted); font-size:.85rem; margin:0 0 1rem}
+.lead{color:var(--ink); font-size:1.05rem; margin:0 0 1.5rem; padding-bottom:1.25rem; border-bottom:1px solid var(--line)}
+h2{font-size:1.3rem; line-height:1.4; margin:2.25rem 0 .75rem; font-weight:800; scroll-margin-top:1rem}
+h3{font-size:1.08rem; line-height:1.5; margin:1.4rem 0 .4rem; font-weight:700}
+p{margin:.65rem 0}
+a{color:var(--accent)}
+a:focus-visible{outline:3px solid var(--accent); outline-offset:2px}
+ul,ol{padding-left:1.2rem; margin:.5rem 0}
+li{margin:.35rem 0}
+table{width:100%; border-collapse:collapse; margin:.75rem 0; font-size:.95rem; background:var(--surface)}
+th,td{border:1px solid var(--line); padding:.55rem .6rem; text-align:left; vertical-align:top}
+th{background:var(--accent-soft)}
+
+.toc{
+  background:var(--surface); border:1.5px solid var(--line); border-radius:.6rem;
+  padding:1rem 1.25rem; margin:0 0 1.75rem;
+}
+.toc-title{font-weight:800; font-size:.95rem; margin-bottom:.5rem}
+.toc ol{margin:0; padding-left:1.1rem}
+.toc li{margin:.3rem 0}
+.toc a{text-decoration:none}
+.toc a:hover{text-decoration:underline}
+
+.related-tools{
+  margin:1.75rem 0; padding:1.1rem 1.25rem; background:var(--accent-soft);
+  border-radius:.6rem; font-size:.95rem;
+}
+.related-tools .rt-title{font-weight:800; margin-bottom:.5rem; display:block}
+.related-tools ul{margin:0; padding-left:1.1rem}
+.related-tools a{font-weight:700}
+
+.disclaimer{
+  margin-top:2rem; padding:1rem 1.1rem; border:1px dashed var(--line); border-radius:.5rem;
+  color:var(--muted); font-size:.88rem;
+}
+
+footer{margin-top:3rem; padding-top:1rem; border-top:1px solid var(--line); color:var(--muted); font-size:.85rem}
+footer p{margin:.3rem 0}
+.fl a{margin-right:1rem}
+</style>
+</head>
+<body>
+<main class="wrap">
+
+<nav class="top" aria-label="사이트 이동">
+  <a href="../../../">생활 계산 도구 모음</a><span>/</span><a href="../../">생활정보</a><span>/</span><a href="../">IT·문서</a>
+</nav>
+
+<h1>한글은 몇 바이트일까? (2바이트 vs 3바이트 차이)</h1>
+<p class="meta">최종 수정일 2026-10-01</p>
+<p class="lead">한글 한 글자는 계산 방식에 따라 2바이트 또는 3바이트입니다. 같은 글이라도 바이트 수가 1.5배까지 차이 날 수 있습니다.</p>
+
+<nav class="toc" aria-label="목차">
+  <div class="toc-title">목차</div>
+  <ol>
+    <li><a href="#sec-문자별-바이트-수">문자별 바이트 수</a></li>
+    <li><a href="#sec-계산-예시">계산 예시</a></li>
+    <li><a href="#sec-바이트-제한-입력창에서-주의할-점">바이트 제한 입력창에서 주의할 점</a></li>
+    <li><a href="#sec-한-번에-세어보기">한 번에 세어보기</a></li>
+  </ol>
+</nav>
+
+<h2 id="sec-문자별-바이트-수">문자별 바이트 수</h2>
+
+<table>
+<thead><tr><th>문자</th><th>2바이트 방식(EUC-KR 등)</th><th>UTF-8</th></tr></thead>
+<tbody>
+<tr><td>영문, 숫자, 띄어쓰기, 기본 기호</td><td>1바이트</td><td>1바이트</td></tr>
+<tr><td>한글 한 글자</td><td>2바이트</td><td>3바이트</td></tr>
+<tr><td>이모지</td><td>지원 안 되는 경우 많음</td><td>보통 4바이트</td></tr>
+</tbody>
+</table>
+<p>예전 한국 시스템과 일부 문자 메시지·입력창은 한글을 2바이트로 세는 방식을 쓰고, 요즘 웹과 대부분의 프로그램은 UTF-8을 써서 한글을 3바이트로 셉니다.</p>
+
+
+<h2 id="sec-계산-예시">계산 예시</h2>
+
+<table>
+<thead><tr><th>문장</th><th>글자 수</th><th>2바이트 방식</th><th>UTF-8</th></tr></thead>
+<tbody>
+<tr><td>안녕하세요</td><td>5자</td><td>10바이트</td><td>15바이트</td></tr>
+<tr><td>Hello</td><td>5자</td><td>5바이트</td><td>5바이트</td></tr>
+<tr><td>안녕 Hello!</td><td>9자</td><td>11바이트</td><td>13바이트</td></tr>
+<tr><td>한글 500자</td><td>500자</td><td>1,000바이트</td><td>1,500바이트</td></tr>
+</tbody>
+</table>
+<p>"저는 물류 현장에서 3년간 재고 정확도를 99.8%까지 끌어올렸습니다." 같은 문장은 공백 포함 39자, 2바이트 방식으로 64바이트, UTF-8로 89바이트입니다. 한글이 많을수록 두 방식의 차이가 커집니다.</p>
+
+
+<h2 id="sec-바이트-제한-입력창에서-주의할-점">바이트 제한 입력창에서 주의할 점</h2>
+
+<ul>
+<li>"1,000바이트 이내"라고 되어 있으면 한글 기준으로 약 500자(2바이트 방식) 또는 약 333자(UTF-8) 정도입니다. 어느 방식인지 모르면 실제 입력창의 카운터로 확인하는 게 가장 정확합니다.</li>
+<li>줄바꿈을 2바이트로 세는 곳도 있어서, 줄바꿈이 많은 글은 여유를 두는 것이 좋습니다.</li>
+<li>바이트 제한을 넘기면 제출 시 뒷부분이 잘리는 경우가 있으니, 제출 전에 끝부분까지 다시 확인하세요.</li>
+</ul>
+
+
+<h2 id="sec-한-번에-세어보기">한 번에 세어보기</h2>
+
+<p>글자수 세기 도구에 글을 붙여넣으면 공백 포함·제외 글자 수와 함께 2바이트 방식, UTF-8 방식 바이트 수를 동시에 보여줍니다.</p>
+
+
+<div class="related-tools">
+  <span class="rt-title">이 글과 함께 보면 좋은 도구</span>
+  <ul><li><a href="../../../wordcount/">글자수 세기</a></li></ul>
+</div>
+
+<div class="disclaimer">이 글은 일반적인 정보 제공을 목적으로 하며, 개인의 상황에 따라 결과가 달라질 수 있습니다. 중요한 결정은 관련 기관의 공식 안내나 전문가 상담을 통해 확인해 주시기 바랍니다.</div>
+
+<footer>
+<p>생활 계산 도구 모음</p>
+<p class="fl"><a href="../../../about/">소개</a><a href="../../../privacy/">개인정보처리방침</a><a href="../../../contact/">문의</a></p>
+</footer>
+</main>
+</body>
+</html>

@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>스트리밍 음원 음량 기준 (스포티파이 -14 LUFS, 애플뮤직 -16 LUFS) - 생활정보 - 생활 계산 도구 모음</title>
+<meta name="description" content="스포티파이·유튜브는 -14 LUFS, 애플뮤직은 -16 LUFS 기준으로 음량을 맞춥니다. LUFS 뜻과 플랫폼별 기준, 너무 크게 마스터링하면 손해인 이유를 정리했습니다.">
+<meta name="color-scheme" content="light dark">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:title" content="스트리밍 음원 음량 기준 (스포티파이 -14 LUFS, 애플뮤직 -16 LUFS)">
+<meta property="og:description" content="스포티파이·유튜브는 -14 LUFS, 애플뮤직은 -16 LUFS 기준으로 음량을 맞춥니다. LUFS 뜻과 플랫폼별 기준, 너무 크게 마스터링하면 손해인 이유를 정리했습니다.">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3950528589828430"
+     crossorigin="anonymous"></script>
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
+<link rel="apple-touch-icon" href="/favicon.png">
+<meta name="google-site-verification" content="zwCpUdfCWwRBVa0vwLoOv7jPIo5nC3mv9Im_DfojCVM" />
+<meta name="naver-site-verification" content="c75f1f11dca6d41ed47e83a590778bcf2aa8247b" />
+<style>
+:root{
+  --ground:#f5f7fa; --surface:#ffffff; --ink:#172033; --muted:#5a6577;
+  --line:#dde3ec; --accent:#0e7c86; --accent-soft:#e3f3f4;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --ground:#0e141b; --surface:#151d27; --ink:#e6ecf3; --muted:#9aa7b8;
+    --line:#263241; --accent:#4fd1c5; --accent-soft:#12303a;
+  }
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--ground); color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;
+  font-size:1rem; line-height:1.8;
+}
+.wrap{max-width:40rem; margin:0 auto; padding:1.75rem 1.25rem 4rem}
+.top{margin:0 0 .8rem; font-size:.85rem; color:var(--muted)}
+.top a{color:var(--muted); text-decoration:none}
+.top a:hover{color:var(--accent); text-decoration:underline}
+.top span{margin:0 .35rem}
+h1{font-size:1.6rem; line-height:1.35; margin:.2rem 0 .4rem; font-weight:800; letter-spacing:-.01em}
+.meta{color:var(--muted); font-size:.85rem; margin:0 0 1rem}
+.lead{color:var(--ink); font-size:1.05rem; margin:0 0 1.5rem; padding-bottom:1.25rem; border-bottom:1px solid var(--line)}
+h2{font-size:1.3rem; line-height:1.4; margin:2.25rem 0 .75rem; font-weight:800; scroll-margin-top:1rem}
+h3{font-size:1.08rem; line-height:1.5; margin:1.4rem 0 .4rem; font-weight:700}
+p{margin:.65rem 0}
+a{color:var(--accent)}
+a:focus-visible{outline:3px solid var(--accent); outline-offset:2px}
+ul,ol{padding-left:1.2rem; margin:.5rem 0}
+li{margin:.35rem 0}
+table{width:100%; border-collapse:collapse; margin:.75rem 0; font-size:.95rem; background:var(--surface)}
+th,td{border:1px solid var(--line); padding:.55rem .6rem; text-align:left; vertical-align:top}
+th{background:var(--accent-soft)}
+
+.toc{
+  background:var(--surface); border:1.5px solid var(--line); border-radius:.6rem;
+  padding:1rem 1.25rem; margin:0 0 1.75rem;
+}
+.toc-title{font-weight:800; font-size:.95rem; margin-bottom:.5rem}
+.toc ol{margin:0; padding-left:1.1rem}
+.toc li{margin:.3rem 0}
+.toc a{text-decoration:none}
+.toc a:hover{text-decoration:underline}
+
+.related-tools{
+  margin:1.75rem 0; padding:1.1rem 1.25rem; background:var(--accent-soft);
+  border-radius:.6rem; font-size:.95rem;
+}
+.related-tools .rt-title{font-weight:800; margin-bottom:.5rem; display:block}
+.related-tools ul{margin:0; padding-left:1.1rem}
+.related-tools a{font-weight:700}
+
+.disclaimer{
+  margin-top:2rem; padding:1rem 1.1rem; border:1px dashed var(--line); border-radius:.5rem;
+  color:var(--muted); font-size:.88rem;
+}
+
+footer{margin-top:3rem; padding-top:1rem; border-top:1px solid var(--line); color:var(--muted); font-size:.85rem}
+footer p{margin:.3rem 0}
+.fl a{margin-right:1rem}
+</style>
+</head>
+<body>
+<main class="wrap">
+
+<nav class="top" aria-label="사이트 이동">
+  <a href="../../../">생활 계산 도구 모음</a><span>/</span><a href="../../">생활정보</a><span>/</span><a href="../">IT·문서</a>
+</nav>
+
+<h1>스트리밍 음원 음량 기준 (스포티파이 -14 LUFS, 애플뮤직 -16 LUFS)</h1>
+<p class="meta">최종 수정일 2026-10-01</p>
+<p class="lead">스포티파이와 유튜브는 약 -14 LUFS, 애플뮤직은 -16 LUFS 기준으로 곡마다 음량을 자동으로 맞춥니다. 그래서 무조건 크게 만든다고 더 크게 들리지 않습니다.</p>
+
+<nav class="toc" aria-label="목차">
+  <div class="toc-title">목차</div>
+  <ol>
+    <li><a href="#sec-LUFS란-무엇인가요">LUFS란 무엇인가요</a></li>
+    <li><a href="#sec-플랫폼별-음량-기준">플랫폼별 음량 기준</a></li>
+    <li><a href="#sec-너무-크게-만들면-오히려-손해인-이유">너무 크게 만들면 오히려 손해인 이유</a></li>
+    <li><a href="#sec-무료-마스터링-도구로-다듬기">무료 마스터링 도구로 다듬기</a></li>
+  </ol>
+</nav>
+
+<h2 id="sec-LUFS란-무엇인가요">LUFS란 무엇인가요</h2>
+
+<p>LUFS는 사람 귀에 실제로 얼마나 크게 들리는지를 나타내는 음량 단위입니다. 단순한 최대 볼륨(피크)이 아니라 곡 전체의 평균적인 체감 음량을 잽니다. 숫자가 0에 가까울수록 크고, -14 LUFS는 -8 LUFS보다 작게 들립니다.</p>
+
+
+<h2 id="sec-플랫폼별-음량-기준">플랫폼별 음량 기준</h2>
+
+<table>
+<thead><tr><th>플랫폼</th><th>기준 음량</th></tr></thead>
+<tbody>
+<tr><td>스포티파이</td><td>-14 LUFS (사용자가 -11, -19로 바꿀 수 있음)</td></tr>
+<tr><td>유튜브</td><td>약 -14 LUFS</td></tr>
+<tr><td>애플뮤직</td><td>-16 LUFS (Sound Check)</td></tr>
+<tr><td>디저</td><td>-15 LUFS</td></tr>
+</tbody>
+</table>
+<p>플랫폼마다 정책은 바뀔 수 있으니, 발매 직전에는 각 서비스의 최신 안내를 한 번 더 확인하는 것이 좋습니다.</p>
+
+
+<h2 id="sec-너무-크게-만들면-오히려-손해인-이유">너무 크게 만들면 오히려 손해인 이유</h2>
+
+<p>스포티파이에 -8 LUFS로 아주 크게 만든 곡을 올리면 약 6dB 줄여서 재생합니다. 결국 -14 LUFS로 만든 곡과 비슷한 크기로 들리는데, 크게 만드는 과정에서 다이내믹(소리의 강약)이 눌려 있어서 오히려 답답하고 덜 힘 있게 들릴 수 있습니다.</p>
+<p>그래서 여러 플랫폼에 동시에 발매한다면 <strong>-14 LUFS 안팎, 최대 피크 -1dB 이하</strong>로 맞추는 것이 무난한 기준으로 많이 쓰입니다.</p>
+
+
+<h2 id="sec-무료-마스터링-도구로-다듬기">무료 마스터링 도구로 다듬기</h2>
+
+<p>무료 오디오 마스터링 도구에서 EQ, 드라이브, 스테레오 폭, 라우드니스를 조절하고 WAV로 내려받을 수 있습니다. 천장(최대 출력)은 -1dB 안팎으로 두는 것을 추천합니다. 다만 이 도구의 레벨미터는 정식 LUFS가 아닌 참고용 RMS 미터이므로, 정확한 LUFS 값은 별도의 라우드니스 측정 프로그램으로 최종 확인해 주세요.</p>
+
+
+<div class="related-tools">
+  <span class="rt-title">이 글과 함께 보면 좋은 도구</span>
+  <ul><li><a href="../../../master/">무료 오디오 마스터링</a></li></ul>
+</div>
+
+<div class="disclaimer">이 글은 일반적인 정보 제공을 목적으로 하며, 개인의 상황에 따라 결과가 달라질 수 있습니다. 중요한 결정은 관련 기관의 공식 안내나 전문가 상담을 통해 확인해 주시기 바랍니다.</div>
+
+<footer>
+<p>생활 계산 도구 모음</p>
+<p class="fl"><a href="../../../about/">소개</a><a href="../../../privacy/">개인정보처리방침</a><a href="../../../contact/">문의</a></p>
+</footer>
+</main>
+</body>
+</html>
