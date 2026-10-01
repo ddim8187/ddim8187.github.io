@@ -10,8 +10,32 @@
 <meta property="og:locale" content="ko_KR">
 <meta property="og:title" content="무료 오디오 마스터링">
 <meta property="og:description" content="브라우저 안에서 EQ·드라이브·스테레오 폭·리미터로 음원을 마스터링하고 WAV로 내려받는 무료 도구입니다.">
+<link rel="alternate" hreflang="ko" href="https://ddim8187.github.io/master/">
+<link rel="alternate" hreflang="en" href="https://ddim8187.github.io/master/en/">
+<link rel="alternate" hreflang="x-default" href="https://ddim8187.github.io/master/">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"WebApplication","name":"무료 오디오 마스터링","applicationCategory":"MultimediaApplication","operatingSystem":"Any","inLanguage":"ko","offers":{"@type":"Offer","price":"0","priceCurrency":"KRW"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"HowTo","name":"무료 오디오 마스터링 사용 방법","inLanguage":"ko","step":[
+  {"@type":"HowToStep","name":"음원 업로드","text":"업로드 박스를 눌러 파일을 고르거나 끌어다 놓습니다."},
+  {"@type":"HowToStep","name":"EQ로 톤 다듬기","text":"음색 성향 드롭다운으로 시작점을 잡고 7개 밴드를 조정합니다."},
+  {"@type":"HowToStep","name":"드라이브로 질감 더하기","text":"드라이브 슬라이더로 따뜻한 배음을 더합니다."},
+  {"@type":"HowToStep","name":"De-harsh로 날카로운 소리 다듬기","text":"3~5kHz 부근의 거슬리는 소리를 눌러줍니다."},
+  {"@type":"HowToStep","name":"스테레오 폭 조절","text":"좌우 폭을 넓히거나 좁힙니다."},
+  {"@type":"HowToStep","name":"라우드니스 조절","text":"천장과 밀어넣는 세기를 정해 음량을 높입니다."},
+  {"@type":"HowToStep","name":"WAV로 다운로드","text":"마스터링된 WAV 다운로드 버튼을 눌러 결과물을 받습니다."}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+  {"@type":"Question","name":"업로드한 파일이 어딘가에 저장되나요?","acceptedAnswer":{"@type":"Answer","text":"아니요. 파일은 브라우저 메모리 안에서만 처리되며 서버로 전송되거나 저장되지 않습니다. 탭을 닫으면 사라집니다."}},
+  {"@type":"Question","name":"왜 내려받기 버튼을 누르면 시간이 좀 걸리나요?","acceptedAnswer":{"@type":"Answer","text":"다운로드 시점에 곡 전체를 처음부터 끝까지 다시 정밀하게 처리해서 파일로 만들기 때문입니다."}},
+  {"@type":"Question","name":"결과물이 유료 마스터링 서비스만큼 좋을까요?","acceptedAnswer":{"@type":"Answer","text":"전문 엔지니어나 대형 AI 서비스만큼의 정교함은 어렵지만, 러프 믹스나 데모 음원 마무리에는 충분히 쓸모가 있습니다."}},
+  {"@type":"Question","name":"회원가입이나 로그인이 필요한가요?","acceptedAnswer":{"@type":"Answer","text":"아니요. 회원가입, 로그인 없이 바로 사용할 수 있습니다."}},
+  {"@type":"Question","name":"어떤 파일 형식을 올릴 수 있나요?","acceptedAnswer":{"@type":"Answer","text":"MP3, WAV, M4A 등 브라우저가 재생할 수 있는 오디오 형식이면 대부분 가능합니다."}},
+  {"@type":"Question","name":"내려받은 파일은 어떤 형식인가요?","acceptedAnswer":{"@type":"Answer","text":"16비트 WAV 파일로 내려받으며, 무손실 형식이라 추가 편집에도 적합합니다."}}
+]}
 </script>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3950528589828430"
      crossorigin="anonymous"></script>
@@ -116,6 +140,18 @@ button{font:inherit; cursor:pointer}
 .step-eyebrow{
   display:flex; align-items:center; gap:.6rem; font-weight:700; color:#fff; font-size:.95rem; margin:1.5rem 0 0;
 }
+
+/* Before/After 데모 */
+.demo-box{
+  background:var(--panel); border:1px solid var(--line); border-radius:.75rem; padding:1.1rem 1.25rem;
+  margin:0 0 1.5rem;
+}
+.demo-label{margin:0 0 .8rem; font-size:.92rem; color:var(--ink)}
+.demo-row{display:flex; align-items:center; gap:.8rem; flex-wrap:wrap}
+.demo-toggle{display:flex; border:1px solid var(--line); border-radius:.5rem; overflow:hidden}
+.demo-toggle .btn{border:0; border-radius:0; padding:.55rem 1rem}
+.demo-toggle .btn + .btn{border-left:1px solid var(--line)}
+#demo-status{margin:.6rem 0 0}
 .select{
   width:100%; background:var(--panel-raised); color:var(--ink); border:1px solid var(--line); border-radius:.5rem;
   padding:.6rem .7rem; font:inherit; font-size:1rem;
@@ -178,12 +214,24 @@ footer p{margin:.3rem 0}
 <body>
 <main class="wrap">
 
-<nav class="top" aria-label="사이트 이동"><a href="../">생활 계산 도구 모음</a></nav>
+<nav class="top" aria-label="사이트 이동"><a href="../">생활 계산 도구 모음</a> · <a href="en/">English</a></nav>
 
 <header class="hero">
   <h1>무료 오디오 마스터링</h1>
   <p class="lead">음원 파일을 업로드하면 이 브라우저 안에서만 처리됩니다. 서버로 전송되거나 저장되지 않으며, 파일을 닫는 순간 사라집니다.</p>
 </header>
+
+<div class="demo-box">
+  <p class="demo-label">파일을 올리기 전에, 샘플 사운드로 Before / After 차이부터 들어보세요</p>
+  <div class="demo-row">
+    <button type="button" class="btn primary demo-play" id="demo-play">▶ 재생</button>
+    <div class="demo-toggle" role="group" aria-label="Before/After 선택">
+      <button type="button" class="btn on" id="demo-before-btn" aria-pressed="true">Before</button>
+      <button type="button" class="btn" id="demo-after-btn" aria-pressed="false">After</button>
+    </div>
+  </div>
+  <p class="hint" id="demo-status">샘플 로딩 중…</p>
+</div>
 
 <p class="step-eyebrow"><span class="num">1</span>음원 업로드 &amp; 실시간 듣기</p>
 
@@ -302,6 +350,17 @@ footer p{margin:.3rem 0}
 </div>
 
 <article>
+<h2>사용 방법</h2>
+<ol>
+<li><strong>음원 업로드</strong>: 위쪽 박스를 눌러 파일을 고르거나 끌어다 놓습니다.</li>
+<li><strong>EQ로 톤 다듬기</strong>: '음색 성향' 드롭다운으로 시작점을 잡고, 필요하면 7개 밴드를 직접 조정합니다.</li>
+<li><strong>드라이브로 질감 더하기</strong>: 살짝 따뜻한 배음이 필요하면 드라이브를 올립니다.</li>
+<li><strong>De-harsh로 날카로운 소리 다듬기</strong>: 보컬이나 하이햇이 따갑게 느껴지면 다듬기 강도를 올립니다.</li>
+<li><strong>스테레오 폭 조절</strong>: 소리를 더 넓게 혹은 좁게 만듭니다.</li>
+<li><strong>라우드니스 조절</strong>: 천장(dB)과 밀어넣는 세기를 정해 전체 음량을 높입니다.</li>
+<li><strong>WAV로 다운로드</strong>: 설정이 마음에 들면 '마스터링된 WAV 다운로드' 버튼을 누릅니다.</li>
+</ol>
+
 <h2>이 도구가 하는 일</h2>
 <p>음원을 EQ, 드라이브(새추레이션), 디하시, 스테레오 폭, 라우드니스 조절(리미터)을 거쳐 한 번에 다듬고, 처리된 결과를 WAV 파일로 내려받을 수 있습니다. 모든 처리는 브라우저 안(Web Audio API)에서 이루어지며 파일을 서버로 보내지 않습니다.</p>
 
@@ -327,6 +386,14 @@ footer p{margin:.3rem 0}
 <p>다운로드 시점에 곡 전체를 처음부터 끝까지 다시 한번 정밀하게 처리해서 파일로 만들기 때문입니다. 곡 길이에 따라 몇 초에서 수십 초 걸릴 수 있습니다.</p>
 <h3>결과물이 유료 마스터링 서비스만큼 좋을까요?</h3>
 <p>전문 마스터링 엔지니어나 대형 AI 학습 기반 서비스만큼의 정교함은 어렵습니다. 다만 러프 믹스를 빠르게 다듬거나, 데모·가이드 음원 수준의 마무리에는 충분히 쓸모가 있습니다.</p>
+<h3>회원가입이나 로그인이 필요한가요?</h3>
+<p>아니요. 회원가입, 로그인 없이 바로 쓸 수 있습니다.</p>
+<h3>어떤 파일 형식을 올릴 수 있나요?</h3>
+<p>MP3, WAV, M4A 등 이용 중인 브라우저가 재생할 수 있는 오디오 형식이면 대부분 가능합니다. 재생이 안 된다면 WAV나 MP3로 바꿔서 다시 시도해 보세요.</p>
+<h3>내려받은 파일은 어떤 형식인가요?</h3>
+<p>16비트 WAV 파일로 내려받습니다. 무손실 형식이라 음질 손실 없이 보관하거나 다른 프로그램에서 추가로 편집할 수 있습니다.</p>
+<h3>모바일에서도 쓸 수 있나요?</h3>
+<p>네, 스마트폰·태블릿 브라우저에서도 동작합니다. 다만 기기 성능과 파일 길이에 따라 처리 속도가 다를 수 있습니다.</p>
 
 <h2>유의사항</h2>
 <ul>
@@ -629,6 +696,7 @@ function stopPlayback(){
 function playFromStart(){
   if(!originalBuffer) return;
   stopPlayback();
+  stopDemo();
   sourceNode = audioCtx.createBufferSource();
   sourceNode.buffer = originalBuffer;
   sourceNode.loop = true;
@@ -748,7 +816,85 @@ async function exportMastered(){
   }
 }
 
+// ---------------------------------------------------------------
+// Before/After 데모 플레이어 (업로드 전에 효과를 미리 들어볼 수 있는 샘플)
+// ---------------------------------------------------------------
+let demoBuffer = null;
+let demoSource = null;
+let demoPlaying = false;
+let demoMode = 'before'; // 'before' | 'after'
+
+const DEMO_PARAMS = {
+  eqGains: EQ_PRESETS.warm.slice(),
+  drive: 25,
+  deharsh: 30,
+  width: 140,
+  ceilingDb: -1,
+  pushDb: 9
+};
+
+async function loadDemo(){
+  try{
+    ensureCtx();
+    const res = await fetch('demo-before.wav');
+    const arrBuf = await res.arrayBuffer();
+    demoBuffer = await audioCtx.decodeAudioData(arrBuf);
+    $('demo-status').textContent = '샘플 사운드 준비 완료 — Before/After를 눌러 바로 들어보세요.';
+  }catch(e){
+    $('demo-status').textContent = '샘플 사운드를 불러오지 못했습니다.';
+    console.error(e);
+  }
+}
+
+function stopDemo(){
+  if(demoSource){
+    try{ demoSource.stop(); }catch(e){}
+    try{ demoSource.disconnect(); }catch(e){}
+    demoSource = null;
+  }
+  demoPlaying = false;
+  $('demo-play').textContent = '▶ 재생';
+}
+
+function playDemo(){
+  if(!demoBuffer) return;
+  stopPlayback(); // 업로드 파일 재생 중이었다면 중단(동시 재생 방지)
+  stopDemo();
+  if(audioCtx.state === 'suspended') audioCtx.resume();
+  demoSource = audioCtx.createBufferSource();
+  demoSource.buffer = demoBuffer;
+  demoSource.loop = true;
+  if(demoMode === 'after'){
+    const out = buildMasterChain(audioCtx, demoSource, DEMO_PARAMS);
+    out.connect(audioCtx.destination);
+  } else {
+    demoSource.connect(audioCtx.destination);
+  }
+  demoSource.start();
+  demoPlaying = true;
+  $('demo-play').textContent = '⏸ 정지';
+}
+
+function setDemoMode(mode){
+  demoMode = mode;
+  $('demo-before-btn').classList.toggle('on', mode === 'before');
+  $('demo-before-btn').setAttribute('aria-pressed', String(mode === 'before'));
+  $('demo-after-btn').classList.toggle('on', mode === 'after');
+  $('demo-after-btn').setAttribute('aria-pressed', String(mode === 'after'));
+  if(demoPlaying) playDemo(); // 재생 중이면 바로 전환해서 들려줌
+}
+
+function initDemo(){
+  $('demo-play').addEventListener('click', () => {
+    if(demoPlaying) stopDemo(); else playDemo();
+  });
+  $('demo-before-btn').addEventListener('click', () => setDemoMode('before'));
+  $('demo-after-btn').addEventListener('click', () => setDemoMode('after'));
+  loadDemo();
+}
+
 initUI();
+initDemo();
 </script>
 </body>
 </html>
