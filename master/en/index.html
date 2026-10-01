@@ -1,0 +1,903 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Free Online Audio Mastering — EQ, Limiter & Stereo Width in Your Browser</title>
+<meta name="description" content="Upload a track and master it right in your browser with EQ, drive, stereo width and a limiter, then download it as WAV. Nothing is sent to a server.">
+<meta name="color-scheme" content="dark">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Free Online Audio Mastering">
+<meta property="og:description" content="Master your track in-browser with EQ, drive, stereo width and a limiter, then download it as WAV.">
+<link rel="alternate" hreflang="ko" href="https://ddim8187.github.io/master/">
+<link rel="alternate" hreflang="en" href="https://ddim8187.github.io/master/en/">
+<link rel="alternate" hreflang="x-default" href="https://ddim8187.github.io/master/">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Free Online Audio Mastering","applicationCategory":"MultimediaApplication","operatingSystem":"Any","inLanguage":"en","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"HowTo","name":"How to use the free audio mastering tool","inLanguage":"en","step":[
+  {"@type":"HowToStep","name":"Upload a track","text":"Click the upload box or drag and drop a file."},
+  {"@type":"HowToStep","name":"Shape the tone with EQ","text":"Pick a Character preset to start, then adjust the 7 bands."},
+  {"@type":"HowToStep","name":"Add drive","text":"Use the drive slider to add warm analog-style harmonics."},
+  {"@type":"HowToStep","name":"Tame harshness with De-harsh","text":"Reduce harsh energy around 3-5kHz."},
+  {"@type":"HowToStep","name":"Adjust stereo width","text":"Widen or narrow the left/right image."},
+  {"@type":"HowToStep","name":"Raise loudness","text":"Set the ceiling and push amount to raise overall loudness."},
+  {"@type":"HowToStep","name":"Download the WAV","text":"Press the Download Mastered WAV button to get your file."}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+  {"@type":"Question","name":"Is my uploaded file stored anywhere?","acceptedAnswer":{"@type":"Answer","text":"No. The file is processed entirely in your browser's memory and is never sent to or stored on a server. It disappears when you close the tab."}},
+  {"@type":"Question","name":"Why does the download button take a moment?","acceptedAnswer":{"@type":"Answer","text":"At download time the entire track is re-processed from start to finish at full precision to build the file."}},
+  {"@type":"Question","name":"Will the result sound as good as a paid mastering service?","acceptedAnswer":{"@type":"Answer","text":"It won't match a professional engineer or a large AI-trained service, but it's plenty useful for polishing a rough mix or finishing a demo."}},
+  {"@type":"Question","name":"Do I need to sign up or log in?","acceptedAnswer":{"@type":"Answer","text":"No sign-up or login is required."}},
+  {"@type":"Question","name":"What file formats can I upload?","acceptedAnswer":{"@type":"Answer","text":"Most formats your browser can play, such as MP3, WAV, and M4A."}},
+  {"@type":"Question","name":"What format is the downloaded file?","acceptedAnswer":{"@type":"Answer","text":"A 16-bit WAV file — lossless, so it holds up well for further editing."}}
+]}
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3950528589828430"
+     crossorigin="anonymous"></script>
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
+<link rel="apple-touch-icon" href="/favicon.png">
+<meta name="google-site-verification" content="zwCpUdfCWwRBVa0vwLoOv7jPIo5nC3mv9Im_DfojCVM" />
+<meta name="naver-site-verification" content="c75f1f11dca6d41ed47e83a590778bcf2aa8247b" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0c0d10;
+  --panel:#15171c;
+  --panel-raised:#1b1e25;
+  --line:#2a2d36;
+  --ink:#e9e7e0;
+  --ink-dim:#8b8d97;
+  --amber:#e8a33d;
+  --amber-dim:#7a5a28;
+  --teal:#57b8a4;
+  --red:#e5544f;
+  --mono: 'Space Grotesk', -apple-system, sans-serif;
+  --sans: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
+}
+*{box-sizing:border-box}
+[hidden]{display:none !important}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:var(--sans); font-size:1rem; line-height:1.7;
+  background-image:
+    radial-gradient(ellipse 60% 40% at 50% -10%, rgba(232,163,61,.08), transparent);
+}
+.wrap{max-width:46rem; margin:0 auto; padding:1.5rem 1.1rem 4rem}
+.top{margin:0 0 1.25rem; font-size:.85rem}
+.top a{color:var(--ink-dim); text-decoration:none}
+.top a:hover{color:var(--amber)}
+a{color:var(--amber)}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--amber); outline-offset:2px}
+
+header.hero{margin-bottom:1.5rem}
+h1{
+  font-family:var(--mono); font-weight:700; font-size:1.55rem; line-height:1.3;
+  margin:0 0 .5rem; letter-spacing:-.01em; color:#fff;
+}
+.lead{color:var(--ink-dim); margin:0 0 0; font-size:.98rem; max-width:34rem}
+
+/* 드롭존 / 트랜스포트 */
+.drop{
+  border:1.5px dashed var(--line); border-radius:.75rem; background:var(--panel);
+  padding:2rem 1.25rem; text-align:center; margin:1.5rem 0 1.25rem; cursor:pointer;
+  transition:border-color .15s;
+}
+.drop.drag{border-color:var(--amber)}
+.drop strong{display:block; font-size:1.05rem; margin-bottom:.3rem; color:#fff}
+.drop span{color:var(--ink-dim); font-size:.88rem}
+input[type="file"]{display:none}
+
+.transport{
+  display:none; align-items:center; gap:.75rem; background:var(--panel); border:1px solid var(--line);
+  border-radius:.75rem; padding:.9rem 1.1rem; margin:0 0 1.25rem; flex-wrap:wrap;
+}
+.transport.show{display:flex}
+.transport .fname{font-size:.9rem; color:var(--ink-dim); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:11rem}
+button{font:inherit; cursor:pointer}
+.btn{
+  background:var(--panel-raised); color:var(--ink); border:1px solid var(--line); border-radius:.5rem;
+  padding:.55rem .9rem; font-size:.88rem; font-weight:600;
+}
+.btn:hover{border-color:var(--amber-dim)}
+.btn.on{background:var(--amber); color:#1a1206; border-color:var(--amber)}
+.btn.primary{background:var(--amber); color:#1a1206; border-color:var(--amber); font-weight:700}
+.btn.primary:hover{opacity:.92}
+.btn:disabled{opacity:.4; cursor:not-allowed}
+.spacer{flex:1 1 auto}
+
+/* 미터 */
+.meter-box{
+  background:var(--panel); border:1px solid var(--line); border-radius:.75rem; padding:1.1rem 1.25rem;
+  margin:0 0 1.5rem;
+}
+.meter-top{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:.6rem}
+.meter-label{font-size:.8rem; color:var(--ink-dim); letter-spacing:.02em}
+.meter-value{font-family:var(--mono); font-size:1.5rem; font-weight:700; color:#fff; font-variant-numeric:tabular-nums}
+.meter-value.peak-hot{color:var(--red)}
+.meter-track{height:.6rem; background:#000; border-radius:.3rem; overflow:hidden; position:relative}
+.meter-fill{height:100%; width:0%; background:linear-gradient(90deg, var(--teal), var(--amber) 75%, var(--red) 92%); transition:width .05s linear}
+.meter-scale{display:flex; justify-content:space-between; font-size:.68rem; color:var(--ink-dim); margin-top:.3rem; font-family:var(--mono)}
+
+/* 모듈 */
+.module{background:var(--panel); border:1px solid var(--line); border-radius:.75rem; padding:1.1rem 1.25rem; margin:0 0 1.1rem}
+.module summary{list-style:none; cursor:pointer; display:flex; align-items:center; justify-content:space-between}
+.module summary::-webkit-details-marker{display:none}
+.module-title{font-weight:700; font-size:.95rem; color:#fff; display:flex; align-items:center; gap:.6rem}
+.module-title .dot{width:.5rem; height:.5rem; border-radius:50%; background:var(--teal); display:inline-block}
+.num{
+  display:inline-flex; align-items:center; justify-content:center; width:1.5rem; height:1.5rem;
+  border-radius:50%; background:var(--amber); color:#1a1206; font-family:var(--mono); font-weight:700;
+  font-size:.78rem; flex:0 0 auto;
+}
+.step-eyebrow{
+  display:flex; align-items:center; gap:.6rem; font-weight:700; color:#fff; font-size:.95rem; margin:1.5rem 0 0;
+}
+
+/* Before/After 데모 */
+.demo-box{
+  background:var(--panel); border:1px solid var(--line); border-radius:.75rem; padding:1.1rem 1.25rem;
+  margin:0 0 1.5rem;
+}
+.demo-label{margin:0 0 .8rem; font-size:.92rem; color:var(--ink)}
+.demo-row{display:flex; align-items:center; gap:.8rem; flex-wrap:wrap}
+.demo-toggle{display:flex; border:1px solid var(--line); border-radius:.5rem; overflow:hidden}
+.demo-toggle .btn{border:0; border-radius:0; padding:.55rem 1rem}
+.demo-toggle .btn + .btn{border-left:1px solid var(--line)}
+#demo-status{margin:.6rem 0 0}
+.select{
+  width:100%; background:var(--panel-raised); color:var(--ink); border:1px solid var(--line); border-radius:.5rem;
+  padding:.6rem .7rem; font:inherit; font-size:1rem;
+}
+.chev{color:var(--ink-dim); transition:transform .15s}
+details[open] .chev{transform:rotate(180deg)}
+.module-body{padding-top:1rem}
+
+/* EQ */
+.eq-grid{display:grid; grid-template-columns:repeat(7,1fr); gap:.4rem; align-items:end}
+.eq-band{display:flex; flex-direction:column; align-items:center; gap:.4rem}
+.eq-slider{
+  writing-mode:vertical-lr; direction:rtl; width:1.4rem; height:6.5rem;
+  accent-color:var(--amber); background:transparent;
+}
+.eq-val{font-family:var(--mono); font-size:.72rem; color:var(--ink-dim); font-variant-numeric:tabular-nums}
+.eq-name{font-size:.66rem; color:var(--ink-dim); font-weight:600; letter-spacing:.02em}
+.eq-freq{font-size:.68rem; color:var(--ink-dim)}
+.presets{display:flex; gap:.5rem; flex-wrap:wrap; margin-top:1rem}
+.presets .btn{padding:.4rem .75rem; font-size:.82rem; font-weight:500}
+
+/* 슬라이더 공통(가로) */
+.hrow{display:grid; grid-template-columns:1fr; gap:.3rem; margin-bottom:1rem}
+.hrow:last-child{margin-bottom:0}
+.hrow-top{display:flex; justify-content:space-between; font-size:.85rem}
+.hrow-top .lbl{color:var(--ink); font-weight:600}
+.hrow-top .val{font-family:var(--mono); color:var(--amber); font-variant-numeric:tabular-nums}
+input[type="range"]{
+  -webkit-appearance:none; width:100%; height:1.4rem; background:transparent;
+}
+input[type="range"]::-webkit-slider-runnable-track{height:.35rem; background:var(--line); border-radius:.2rem}
+input[type="range"]::-webkit-slider-thumb{
+  -webkit-appearance:none; width:1.05rem; height:1.05rem; border-radius:50%;
+  background:var(--amber); margin-top:-.35rem; border:2px solid #0c0d10;
+}
+input[type="range"]::-moz-range-track{height:.35rem; background:var(--line); border-radius:.2rem}
+input[type="range"]::-moz-range-thumb{width:1.05rem; height:1.05rem; border-radius:50%; background:var(--amber); border:2px solid #0c0d10}
+.hint{color:var(--ink-dim); font-size:.82rem; margin:.2rem 0 0}
+
+.err{color:var(--red); font-size:.9rem; min-height:1.3rem; margin:.5rem 0 0}
+.download-row{display:flex; justify-content:center; margin:1.5rem 0 2rem}
+.download-row .btn{padding:.85rem 1.6rem; font-size:1rem}
+
+/* 본문 */
+article{margin-top:2.5rem}
+article h2{font-family:var(--mono); font-size:1.15rem; color:#fff; margin:2.25rem 0 .7rem; font-weight:700}
+article h3{font-size:1rem; color:#fff; margin:1.3rem 0 .3rem; font-weight:700}
+article p{color:var(--ink-dim); margin:.6rem 0}
+article ul{color:var(--ink-dim); padding-left:1.2rem; margin:.5rem 0}
+article li{margin:.35rem 0}
+article table{width:100%; border-collapse:collapse; margin:.75rem 0; font-size:.92rem}
+article th,article td{border:1px solid var(--line); padding:.55rem .6rem; text-align:left; color:var(--ink-dim)}
+article th{background:var(--panel); color:var(--ink)}
+
+footer{margin-top:3rem; padding-top:1rem; border-top:1px solid var(--line); color:var(--ink-dim); font-size:.85rem}
+footer p{margin:.3rem 0}
+.fl a{margin-right:1rem}
+</style>
+</head>
+<body>
+<main class="wrap">
+
+<nav class="top" aria-label="Site navigation"><a href="../../">Tools home</a> · <a href="../">한국어</a></nav>
+
+<header class="hero">
+  <h1>Free Audio Mastering</h1>
+  <p class="lead">Upload a track and it's processed entirely in your browser. Nothing is sent to or stored on a server — it disappears the moment you close the tab.</p>
+</header>
+
+<div class="demo-box">
+  <p class="demo-label">Before uploading anything, hear the Before / After difference with a sample sound</p>
+  <div class="demo-row">
+    <button type="button" class="btn primary demo-play" id="demo-play">▶ Play</button>
+    <div class="demo-toggle" role="group" aria-label="Choose Before/After">
+      <button type="button" class="btn on" id="demo-before-btn" aria-pressed="true">Before</button>
+      <button type="button" class="btn" id="demo-after-btn" aria-pressed="false">After</button>
+    </div>
+  </div>
+  <p class="hint" id="demo-status">Loading sample…</p>
+</div>
+
+<p class="step-eyebrow"><span class="num">1</span>Upload &amp; live preview</p>
+
+<div class="drop" id="drop" tabindex="0" role="button" aria-label="Choose an audio file">
+  <strong>Click here or drag a file in</strong>
+  <span>MP3, WAV, M4A — any audio format your browser can play</span>
+  <input type="file" id="file-input" accept="audio/*">
+</div>
+
+<p class="err" id="err" role="alert"></p>
+
+<div class="transport" id="transport">
+  <button type="button" class="btn primary" id="play-btn">Play</button>
+  <button type="button" class="btn" id="ab-btn">Listen to original</button>
+  <span class="fname" id="fname"></span>
+  <div class="spacer"></div>
+  <button type="button" class="btn" id="reset-btn">Change file</button>
+</div>
+
+<div class="meter-box" id="meter-box" hidden>
+  <div class="meter-top">
+    <span class="meter-label">Output level (dBFS · reference RMS meter)</span>
+    <span class="meter-value" id="meter-value">-∞</span>
+  </div>
+  <div class="meter-track"><div class="meter-fill" id="meter-fill"></div></div>
+  <div class="meter-scale"><span>-60</span><span>-40</span><span>-20</span><span>-12</span><span>-6</span><span>-3</span><span>0</span></div>
+</div>
+
+<div id="controls">
+
+  <details class="module" open>
+    <summary>
+      <span class="module-title"><span class="num">2</span>EQ — 7 bands</span>
+      <span class="chev">▾</span>
+    </summary>
+    <div class="module-body">
+      <div class="eq-grid" id="eq-grid"></div>
+      <div class="hrow" style="margin-top:1.1rem">
+        <div class="hrow-top"><span class="lbl">Character</span></div>
+        <select id="character-select" class="select">
+          <option value="flat">Standard (flat balance)</option>
+          <option value="warm">Warm</option>
+          <option value="bright">Bright</option>
+          <option value="loud">Thick (EDM-leaning)</option>
+        </select>
+        <p class="hint">A preset to set a starting point. You can still fine-tune each band with the sliders above.</p>
+      </div>
+    </div>
+  </details>
+
+  <details class="module">
+    <summary>
+      <span class="module-title"><span class="num">3</span>Drive (saturation)</span>
+      <span class="chev">▾</span>
+    </summary>
+    <div class="module-body">
+      <div class="hrow">
+        <div class="hrow-top"><span class="lbl">Drive amount</span><span class="val" id="drive-val">0</span></div>
+        <input type="range" id="drive-slider" min="0" max="100" step="1" value="0">
+        <p class="hint">Closer to 0 keeps the sound clean; higher values add warm harmonics and a touch of grit.</p>
+      </div>
+    </div>
+  </details>
+
+  <details class="module">
+    <summary>
+      <span class="module-title"><span class="num">4</span>De-harsh</span>
+      <span class="chev">▾</span>
+    </summary>
+    <div class="module-body">
+      <div class="hrow">
+        <div class="hrow-top"><span class="lbl">Amount</span><span class="val" id="deharsh-val">0</span></div>
+        <input type="range" id="deharsh-slider" min="0" max="100" step="1" value="0">
+        <p class="hint">Tames harsh energy around 3-5kHz. Try raising it if vocals or hi-hats sound piercing. 0 keeps the sound fully untouched.</p>
+      </div>
+    </div>
+  </details>
+
+  <details class="module">
+    <summary>
+      <span class="module-title"><span class="num">5</span>Stereo width</span>
+      <span class="chev">▾</span>
+    </summary>
+    <div class="module-body">
+      <div class="hrow">
+        <div class="hrow-top"><span class="lbl">Width</span><span class="val" id="width-val">100%</span></div>
+        <input type="range" id="width-slider" min="0" max="200" step="1" value="100">
+        <p class="hint">0% is mono, 100% is the original image, and beyond 100% widens the stereo field. Pushing it too far can thin the sound out on mono playback (e.g. phone speakers).</p>
+      </div>
+    </div>
+  </details>
+
+  <details class="module">
+    <summary>
+      <span class="module-title"><span class="num">6</span>Loudness (Maximizer)</span>
+      <span class="chev">▾</span>
+    </summary>
+    <div class="module-body">
+      <div class="hrow">
+        <div class="hrow-top"><span class="lbl">How much to push</span><span class="val" id="push-val">0 dB</span></div>
+        <input type="range" id="push-slider" min="0" max="18" step="0.5" value="0">
+        <p class="hint">Sets how hard the overall level gets pushed up. Higher values sound louder and more compressed, but too much can squash the dynamics and feel flat.</p>
+      </div>
+      <div class="hrow">
+        <div class="hrow-top"><span class="lbl">Ceiling (max output)</span><span class="val" id="ceiling-val">-1.0 dB</span></div>
+        <input type="range" id="ceiling-slider" min="-6" max="0" step="0.1" value="-1">
+        <p class="hint">The level won't be allowed to exceed this. Around -1dB is usually a safe choice.</p>
+      </div>
+    </div>
+  </details>
+
+  <div class="err" id="export-err" role="alert"></div>
+  <div class="download-row">
+    <button type="button" class="btn primary" id="export-btn" disabled>Download Mastered WAV</button>
+  </div>
+</div>
+
+<article>
+<h2>How to use it</h2>
+<ol>
+<li><strong>Upload a track</strong>: click the box above or drag a file in.</li>
+<li><strong>Shape the tone with EQ</strong>: pick a Character preset to start, then fine-tune the 7 bands.</li>
+<li><strong>Add drive</strong>: raise it for a touch of warm analog-style harmonics.</li>
+<li><strong>Tame harshness with De-harsh</strong>: raise it if vocals or hi-hats sound piercing.</li>
+<li><strong>Adjust stereo width</strong>: widen or narrow the image.</li>
+<li><strong>Raise loudness</strong>: set the ceiling and push amount to bring up the overall level.</li>
+<li><strong>Download the WAV</strong>: once you're happy, press "Download Mastered WAV".</li>
+</ol>
+
+<h2>What this tool does</h2>
+<p>It runs your track through EQ, drive (saturation), de-harsh, stereo width and loudness (a limiter) in one pass, then lets you download the result as a WAV file. Everything happens in your browser (the Web Audio API) — nothing is uploaded to a server.</p>
+
+<h2>What each stage does</h2>
+<h3>7-band EQ (Sub·Bass·L-Mid·Mid·H-Mid·Pres·Air)</h3>
+<p>Boost or cut seven bands from 60Hz (low-end weight) up to 12kHz (air and clarity). Pick a Character preset as a starting point, then fine-tune from there.</p>
+<h3>Drive (saturation)</h3>
+<p>Adds a touch of nonlinear distortion for warm, analog-style harmonics. Push it too far and things get harsh, so dial it in gradually.</p>
+<h3>De-harsh</h3>
+<p>Gently dips around 3.8kHz to smooth out piercing high end — useful when vocal sibilance or hi-hats feel too sharp.</p>
+<h3>Stereo width</h3>
+<p>Widens or narrows the difference between the left and right channels (the side signal). 100% is the original; lower values move toward mono with a more centered image.</p>
+<h3>Loudness (Maximizer)</h3>
+<p>Momentarily clamps the signal so it never exceeds the chosen ceiling, raising overall loudness. "How much to push" controls how hard it's driven.</p>
+
+<h2>Being upfront about the meter</h2>
+<p>The on-screen meter isn't the broadcast/streaming LUFS standard (ITU-R BS.1770, which includes K-weighting and gating) — it's a <strong>simple RMS-to-dBFS reference reading</strong>. If you need an accurate loudness value for distribution, double-check with a dedicated loudness meter before finalizing.</p>
+
+<h2>FAQ</h2>
+<h3>Is my uploaded file stored anywhere?</h3>
+<p>No. It's processed entirely in your browser's memory and is never sent to or stored on a server. It disappears when you close the tab.</p>
+<h3>Why does the download button take a moment?</h3>
+<p>At download time, the entire track is re-processed from start to finish at full precision to build the file. This can take anywhere from a few seconds to a bit longer depending on the track's length.</p>
+<h3>Will the result sound as good as a paid mastering service?</h3>
+<p>It won't match a professional mastering engineer or a large AI-trained service. That said, it's plenty useful for quickly polishing a rough mix or finishing a demo-quality track.</p>
+<h3>Do I need to sign up or log in?</h3>
+<p>No. You can use it right away without any account.</p>
+<h3>What file formats can I upload?</h3>
+<p>Most formats your browser can play — MP3, WAV, M4A, and others. If a file won't load, try converting it to WAV or MP3.</p>
+<h3>What format is the downloaded file?</h3>
+<p>A 16-bit WAV file. It's lossless, so you can archive it or edit it further in another program without quality loss.</p>
+<h3>Does it work on mobile?</h3>
+<p>Yes, it works in mobile browsers too, though processing speed depends on your device and the track's length.</p>
+
+<h2>Good to know</h2>
+<ul>
+<li>Playback and processing may not work with every browser/file combination. If that happens, try a widely supported format like WAV or MP3.</li>
+<li>Large or long files take longer to process and may feel sluggish depending on your device.</li>
+<li>This tool is provided for reference only; it doesn't guarantee the sound quality or fitness for any particular purpose.</li>
+</ul>
+</article>
+
+<footer>
+<p>Free Audio Mastering</p>
+<p class="fl"><a href="../../about/">About</a><a href="../../privacy/">Privacy</a><a href="../../contact/">Contact</a></p>
+</footer>
+</main>
+
+<script>
+'use strict';
+
+'use strict';
+// ==CORE START==
+function dbToLinear(db){ return Math.pow(10, db / 20); }
+function linearToDb(lin){ return lin <= 0 ? -Infinity : 20 * Math.log10(lin); }
+
+function makeDistortionCurve(amount, nSamples){
+  nSamples = nSamples || 2048;
+  const k = typeof amount === 'number' ? amount : 0;
+  const curve = new Float32Array(nSamples);
+  const deg = Math.PI / 180;
+  for(let i = 0; i < nSamples; i++){
+    const x = (i * 2) / nSamples - 1;
+    curve[i] = ((3 + k) * x * 20 * deg) / (Math.PI + k * Math.abs(x));
+  }
+  return curve;
+}
+
+function writeAsciiString(view, offset, str){
+  for(let i = 0; i < str.length; i++) view.setUint8(offset + i, str.charCodeAt(i));
+}
+
+// AudioBuffer 또는 {numberOfChannels, length, sampleRate, getChannelData(ch)} 형태를
+// 받아 16비트 PCM WAV Blob으로 인코딩
+function bufferToWaveBlob(abuffer){
+  const numCh = abuffer.numberOfChannels;
+  const len = abuffer.length;
+  const bytesPerSample = 2;
+  const blockAlign = numCh * bytesPerSample;
+  const dataSize = len * blockAlign;
+  const buffer = new ArrayBuffer(44 + dataSize);
+  const view = new DataView(buffer);
+
+  writeAsciiString(view, 0, 'RIFF');
+  view.setUint32(4, 36 + dataSize, true);
+  writeAsciiString(view, 8, 'WAVE');
+  writeAsciiString(view, 12, 'fmt ');
+  view.setUint32(16, 16, true);
+  view.setUint16(20, 1, true);
+  view.setUint16(22, numCh, true);
+  view.setUint32(24, abuffer.sampleRate, true);
+  view.setUint32(28, abuffer.sampleRate * blockAlign, true);
+  view.setUint16(32, blockAlign, true);
+  view.setUint16(34, 16, true);
+  writeAsciiString(view, 36, 'data');
+  view.setUint32(40, dataSize, true);
+
+  const channelData = [];
+  for(let ch = 0; ch < numCh; ch++) channelData.push(abuffer.getChannelData(ch));
+
+  let offset = 44;
+  for(let i = 0; i < len; i++){
+    for(let ch = 0; ch < numCh; ch++){
+      let s = channelData[ch][i];
+      s = Math.max(-1, Math.min(1, s));
+      view.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
+      offset += 2;
+    }
+  }
+  return new Blob([buffer], { type: 'audio/wav' });
+}
+
+const EQ_BANDS = [
+  { freq: 60,    type: 'lowshelf',  name: 'Sub' },
+  { freq: 150,   type: 'peaking',   name: 'Bass' },
+  { freq: 400,   type: 'peaking',   name: 'L-Mid' },
+  { freq: 1000,  type: 'peaking',   name: 'Mid' },
+  { freq: 2500,  type: 'peaking',   name: 'H-Mid' },
+  { freq: 6000,  type: 'peaking',   name: 'Pres' },
+  { freq: 12000, type: 'highshelf', name: 'Air' }
+];
+
+const EQ_PRESETS = {
+  flat: [0, 0, 0, 0, 0, 0, 0],
+  warm: [2, 1.5, 0.5, -1, -1.5, -1, 0.5],
+  bright: [-1, -0.5, 0, 0.5, 1.5, 2.5, 3],
+  loud: [3, 1, -1, 0.5, 1, 2, 2.5]
+};
+
+// 재생/오프라인 렌더 양쪽에서 재사용하는 신호 체인 구성 함수.
+// ctx: AudioContext 또는 OfflineAudioContext, source: 체인의 시작 노드
+// params: { eqGains:number[7], drive:number(0~100), width:number(0~200, 100=원본),
+//           ceilingDb:number, pushDb:number }
+// 반환값: 체인의 마지막(출력) 노드
+function buildMasterChain(ctx, source, params){
+  const filters = EQ_BANDS.map((b, i) => {
+    const f = ctx.createBiquadFilter();
+    f.type = b.type;
+    f.frequency.value = b.freq;
+    f.Q.value = 1.0;
+    f.gain.value = params.eqGains[i] || 0;
+    return f;
+  });
+  let node = source;
+  filters.forEach(f => { node.connect(f); node = f; });
+
+  const shaper = ctx.createWaveShaper();
+  shaper.curve = makeDistortionCurve(params.drive || 0);
+  shaper.oversample = '2x';
+  node.connect(shaper);
+  node = shaper;
+
+  // --- De-harsh: 3.8kHz 부근을 다듬는 필터 ---
+  const deharsh = ctx.createBiquadFilter();
+  deharsh.type = 'peaking';
+  deharsh.frequency.value = 3800;
+  deharsh.Q.value = 1.4;
+  deharsh.gain.value = -((params.deharsh || 0) / 100) * 9;
+  node.connect(deharsh);
+  node = deharsh;
+
+  // --- 스테레오 폭 (Mid-Side) ---
+  const splitter = ctx.createChannelSplitter(2);
+  node.connect(splitter);
+  const widthRatio = (params.width != null ? params.width : 100) / 100;
+
+  const midGain = ctx.createGain(); midGain.gain.value = 0.5;
+  const sideL = ctx.createGain(); sideL.gain.value = 0.5;
+  const sideR = ctx.createGain(); sideR.gain.value = -0.5;
+  splitter.connect(midGain, 0); splitter.connect(midGain, 1);
+  splitter.connect(sideL, 0); splitter.connect(sideR, 1);
+
+  const sideSum = ctx.createGain(); sideSum.gain.value = 1;
+  sideL.connect(sideSum); sideR.connect(sideSum);
+
+  const widthPos = ctx.createGain(); widthPos.gain.value = widthRatio;
+  const widthNeg = ctx.createGain(); widthNeg.gain.value = -widthRatio;
+  sideSum.connect(widthPos); sideSum.connect(widthNeg);
+
+  const merger = ctx.createChannelMerger(2);
+  midGain.connect(merger, 0, 0); widthPos.connect(merger, 0, 0);
+  midGain.connect(merger, 0, 1); widthNeg.connect(merger, 0, 1);
+  node = merger;
+
+  // --- 리미터 ---
+  const pushGain = ctx.createGain();
+  pushGain.gain.value = dbToLinear(params.pushDb || 0);
+  node.connect(pushGain);
+
+  const comp = ctx.createDynamicsCompressor();
+  comp.threshold.value = params.ceilingDb != null ? params.ceilingDb : -1;
+  comp.knee.value = 0;
+  comp.ratio.value = 20;
+  comp.attack.value = 0.001;
+  comp.release.value = 0.15;
+  pushGain.connect(comp);
+
+  const ceilingGain = ctx.createGain();
+  ceilingGain.gain.value = 1;
+  comp.connect(ceilingGain);
+
+  return ceilingGain;
+}
+// ==CORE END==
+
+const $ = id => document.getElementById(id);
+let audioCtx = null;
+let originalBuffer = null;
+let sourceNode = null;
+let chainOutput = null;
+let bypassGain = null;
+let liveGain = null;
+let analyser = null;
+let isPlaying = false;
+let isBypassed = false;
+let rafId = null;
+let peakHold = -Infinity;
+let fileNameBase = 'mastered';
+
+const state = {
+  eqGains: EQ_PRESETS.flat.slice(),
+  drive: 0,
+  deharsh: 0,
+  width: 100,
+  ceilingDb: -1,
+  pushDb: 0
+};
+
+function ensureCtx(){
+  if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return audioCtx;
+}
+
+function buildEqUI(){
+  const grid = $('eq-grid');
+  grid.innerHTML = '';
+  EQ_BANDS.forEach((b, i) => {
+    const col = document.createElement('div');
+    col.className = 'eq-band';
+    const nameLbl = document.createElement('span');
+    nameLbl.className = 'eq-name';
+    nameLbl.textContent = b.name;
+    const val = document.createElement('span');
+    val.className = 'eq-val';
+    val.id = 'eqv-' + i;
+    val.textContent = '0';
+    const slider = document.createElement('input');
+    slider.type = 'range';
+    slider.className = 'eq-slider';
+    slider.min = '-12'; slider.max = '12'; slider.step = '0.5'; slider.value = '0';
+    slider.id = 'eq-' + i;
+    slider.addEventListener('input', () => {
+      state.eqGains[i] = parseFloat(slider.value);
+      val.textContent = (state.eqGains[i] > 0 ? '+' : '') + state.eqGains[i];
+      rebuildLiveChain();
+    });
+    const freqLbl = document.createElement('span');
+    freqLbl.className = 'eq-freq';
+    freqLbl.textContent = b.freq >= 1000 ? (b.freq/1000) + 'k' : String(b.freq);
+    col.appendChild(nameLbl); col.appendChild(val); col.appendChild(slider); col.appendChild(freqLbl);
+    grid.appendChild(col);
+  });
+}
+
+function applyEqPreset(name){
+  const g = EQ_PRESETS[name] || EQ_PRESETS.flat;
+  state.eqGains = g.slice();
+  g.forEach((v, i) => {
+    $('eq-' + i).value = v;
+    $('eqv-' + i).textContent = (v > 0 ? '+' : '') + v;
+  });
+  rebuildLiveChain();
+}
+
+function disconnectChain(){
+  if(sourceNode){ try{ sourceNode.disconnect(); }catch(e){} }
+}
+
+function rebuildLiveChain(){
+  if(!audioCtx || !sourceNode) return;
+  disconnectAllExceptSource();
+  if(isBypassed){
+    sourceNode.connect(liveGain);
+  } else {
+    const out = buildMasterChain(audioCtx, sourceNode, state);
+    out.connect(liveGain);
+  }
+}
+function disconnectAllExceptSource(){
+  try{ sourceNode.disconnect(); }catch(e){}
+}
+
+function resetUIForNewFile(){
+  $('transport').classList.add('show');
+  $('meter-box').hidden = false;
+  $('export-btn').disabled = false;
+  $('err').textContent = '';
+}
+
+async function loadFile(file){
+  $('err').textContent = '';
+  fileNameBase = file.name.replace(/\.[^.]+$/, '') || 'mastered';
+  $('fname').textContent = file.name;
+  try{
+    ensureCtx();
+    const arrBuf = await file.arrayBuffer();
+    originalBuffer = await audioCtx.decodeAudioData(arrBuf.slice(0));
+    resetUIForNewFile();
+    startGraphIdle();
+  }catch(e){
+    $('err').textContent = 'This file could not be played. Please try a different format such as WAV or MP3.';
+    console.error(e);
+  }
+}
+
+function startGraphIdle(){
+  liveGain = audioCtx.createGain();
+  analyser = audioCtx.createAnalyser();
+  analyser.fftSize = 2048;
+  liveGain.connect(analyser);
+  analyser.connect(audioCtx.destination);
+}
+
+function stopPlayback(){
+  if(sourceNode){
+    try{ sourceNode.stop(); }catch(e){}
+    try{ sourceNode.disconnect(); }catch(e){}
+    sourceNode = null;
+  }
+  isPlaying = false;
+  $('play-btn').textContent = 'Play';
+  if(rafId){ cancelAnimationFrame(rafId); rafId = null; }
+}
+
+function playFromStart(){
+  if(!originalBuffer) return;
+  stopPlayback();
+  stopDemo();
+  sourceNode = audioCtx.createBufferSource();
+  sourceNode.buffer = originalBuffer;
+  sourceNode.loop = true;
+  rebuildLiveChain();
+  sourceNode.start();
+  isPlaying = true;
+  $('play-btn').textContent = 'Pause';
+  peakHold = -Infinity;
+  updateMeter();
+}
+
+function togglePlay(){
+  if(!originalBuffer) return;
+  if(audioCtx.state === 'suspended') audioCtx.resume();
+  if(isPlaying){
+    stopPlayback();
+  } else {
+    playFromStart();
+  }
+}
+
+function updateMeter(){
+  if(!isPlaying || !analyser) return;
+  const data = new Float32Array(analyser.fftSize);
+  analyser.getFloatTimeDomainData(data);
+  let sumSq = 0;
+  for(let i = 0; i < data.length; i++) sumSq += data[i] * data[i];
+  const rms = Math.sqrt(sumSq / data.length);
+  const db = linearToDb(rms);
+  if(db > peakHold) peakHold = db;
+  const shown = Math.max(-60, isFinite(db) ? db : -60);
+  const pct = Math.max(0, Math.min(100, (shown + 60) * (100 / 60)));
+  $('meter-fill').style.width = pct + '%';
+  $('meter-value').textContent = (isFinite(db) ? db.toFixed(1) : '-∞');
+  $('meter-value').className = 'meter-value' + (db > -1 ? ' peak-hot' : '');
+  rafId = requestAnimationFrame(updateMeter);
+}
+
+function bindSliderPair(sliderId, labelId, fmt, onChange){
+  const el = $(sliderId);
+  el.addEventListener('input', () => {
+    const v = parseFloat(el.value);
+    $(labelId).textContent = fmt(v);
+    onChange(v);
+    rebuildLiveChain();
+  });
+}
+
+function initUI(){
+  buildEqUI();
+
+  document.getElementById('character-select').addEventListener('change', (e) => applyEqPreset(e.target.value));
+
+  bindSliderPair('drive-slider', 'drive-val', v => String(v), v => { state.drive = v; });
+  bindSliderPair('deharsh-slider', 'deharsh-val', v => String(v), v => { state.deharsh = v; });
+  bindSliderPair('width-slider', 'width-val', v => v + '%', v => { state.width = v; });
+  bindSliderPair('ceiling-slider', 'ceiling-val', v => v.toFixed(1) + ' dB', v => { state.ceilingDb = v; });
+  bindSliderPair('push-slider', 'push-val', v => v.toFixed(1) + ' dB', v => { state.pushDb = v; });
+
+  $('play-btn').addEventListener('click', togglePlay);
+  $('ab-btn').addEventListener('click', () => {
+    isBypassed = !isBypassed;
+    $('ab-btn').textContent = isBypassed ? 'Listen to mastered' : 'Listen to original';
+    $('ab-btn').classList.toggle('on', isBypassed);
+    rebuildLiveChain();
+  });
+  $('reset-btn').addEventListener('click', () => {
+    stopPlayback();
+    originalBuffer = null;
+    $('transport').classList.remove('show');
+    $('meter-box').hidden = true;
+    $('export-btn').disabled = true;
+    $('file-input').value = '';
+  });
+
+  const drop = $('drop');
+  drop.addEventListener('click', () => $('file-input').click());
+  drop.addEventListener('keydown', e => { if(e.key === 'Enter' || e.key === ' ') $('file-input').click(); });
+  $('file-input').addEventListener('change', e => { if(e.target.files[0]) loadFile(e.target.files[0]); });
+  ['dragenter','dragover'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add('drag'); }));
+  ['dragleave','drop'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove('drag'); }));
+  drop.addEventListener('drop', e => { if(e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]); });
+
+  $('export-btn').addEventListener('click', exportMastered);
+}
+
+async function exportMastered(){
+  if(!originalBuffer){ $('export-err').textContent = 'Please upload an audio file first.'; return; }
+  $('export-err').textContent = '';
+  const btn = $('export-btn');
+  const original = btn.textContent;
+  btn.textContent = 'Processing… please wait';
+  btn.disabled = true;
+  try{
+    const offlineCtx = new (window.OfflineAudioContext || window.webkitOfflineAudioContext)(
+      originalBuffer.numberOfChannels, originalBuffer.length, originalBuffer.sampleRate
+    );
+    const src = offlineCtx.createBufferSource();
+    src.buffer = originalBuffer;
+    const out = buildMasterChain(offlineCtx, src, state);
+    out.connect(offlineCtx.destination);
+    src.start();
+    const rendered = await offlineCtx.startRendering();
+    const blob = bufferToWaveBlob(rendered);
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = fileNameBase + '_mastered.wav';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 2000);
+  }catch(e){
+    $('export-err').textContent = 'Something went wrong while exporting. Please reload the file and try again.';
+    console.error(e);
+  }finally{
+    btn.textContent = original;
+    btn.disabled = false;
+  }
+}
+
+// ---------------------------------------------------------------
+// Before/After 데모 플레이어 (업로드 전에 효과를 미리 들어볼 수 있는 샘플)
+// ---------------------------------------------------------------
+let demoBuffer = null;
+let demoSource = null;
+let demoPlaying = false;
+let demoMode = 'before'; // 'before' | 'after'
+
+const DEMO_PARAMS = {
+  eqGains: EQ_PRESETS.warm.slice(),
+  drive: 25,
+  deharsh: 30,
+  width: 140,
+  ceilingDb: -1,
+  pushDb: 9
+};
+
+async function loadDemo(){
+  try{
+    ensureCtx();
+    const res = await fetch('../demo-before.wav');
+    const arrBuf = await res.arrayBuffer();
+    demoBuffer = await audioCtx.decodeAudioData(arrBuf);
+    $('demo-status').textContent = 'Sample ready — press Before/After to listen right away.';
+  }catch(e){
+    $('demo-status').textContent = 'Could not load the sample sound.';
+    console.error(e);
+  }
+}
+
+function stopDemo(){
+  if(demoSource){
+    try{ demoSource.stop(); }catch(e){}
+    try{ demoSource.disconnect(); }catch(e){}
+    demoSource = null;
+  }
+  demoPlaying = false;
+  $('demo-play').textContent = '▶ Play';
+}
+
+function playDemo(){
+  if(!demoBuffer) return;
+  stopPlayback(); // 업로드 파일 재생 중이었다면 중단(동시 재생 방지)
+  stopDemo();
+  if(audioCtx.state === 'suspended') audioCtx.resume();
+  demoSource = audioCtx.createBufferSource();
+  demoSource.buffer = demoBuffer;
+  demoSource.loop = true;
+  if(demoMode === 'after'){
+    const out = buildMasterChain(audioCtx, demoSource, DEMO_PARAMS);
+    out.connect(audioCtx.destination);
+  } else {
+    demoSource.connect(audioCtx.destination);
+  }
+  demoSource.start();
+  demoPlaying = true;
+  $('demo-play').textContent = '⏸ Stop';
+}
+
+function setDemoMode(mode){
+  demoMode = mode;
+  $('demo-before-btn').classList.toggle('on', mode === 'before');
+  $('demo-before-btn').setAttribute('aria-pressed', String(mode === 'before'));
+  $('demo-after-btn').classList.toggle('on', mode === 'after');
+  $('demo-after-btn').setAttribute('aria-pressed', String(mode === 'after'));
+  if(demoPlaying) playDemo(); // 재생 중이면 바로 전환해서 들려줌
+}
+
+function initDemo(){
+  $('demo-play').addEventListener('click', () => {
+    if(demoPlaying) stopDemo(); else playDemo();
+  });
+  $('demo-before-btn').addEventListener('click', () => setDemoMode('before'));
+  $('demo-after-btn').addEventListener('click', () => setDemoMode('after'));
+  loadDemo();
+}
+
+initUI();
+initDemo();
+
+</script>
+</body>
+</html>
