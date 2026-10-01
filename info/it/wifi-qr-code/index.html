@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>와이파이 QR코드 만드는 방법 (비밀번호 안 알려줘도 접속) - 생활정보 - 생활 계산 도구 모음</title>
+<meta name="description" content="와이파이 이름과 비밀번호를 QR코드로 만들면 손님이 카메라로 찍기만 해도 접속됩니다. 입력 형식, 특수문자 처리, 보안 주의점을 정리했습니다.">
+<meta name="color-scheme" content="light dark">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:title" content="와이파이 QR코드 만드는 방법 (비밀번호 안 알려줘도 접속)">
+<meta property="og:description" content="와이파이 이름과 비밀번호를 QR코드로 만들면 손님이 카메라로 찍기만 해도 접속됩니다. 입력 형식, 특수문자 처리, 보안 주의점을 정리했습니다.">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3950528589828430"
+     crossorigin="anonymous"></script>
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
+<link rel="apple-touch-icon" href="/favicon.png">
+<meta name="google-site-verification" content="zwCpUdfCWwRBVa0vwLoOv7jPIo5nC3mv9Im_DfojCVM" />
+<meta name="naver-site-verification" content="c75f1f11dca6d41ed47e83a590778bcf2aa8247b" />
+<style>
+:root{
+  --ground:#f5f7fa; --surface:#ffffff; --ink:#172033; --muted:#5a6577;
+  --line:#dde3ec; --accent:#0e7c86; --accent-soft:#e3f3f4;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --ground:#0e141b; --surface:#151d27; --ink:#e6ecf3; --muted:#9aa7b8;
+    --line:#263241; --accent:#4fd1c5; --accent-soft:#12303a;
+  }
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--ground); color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;
+  font-size:1rem; line-height:1.8;
+}
+.wrap{max-width:40rem; margin:0 auto; padding:1.75rem 1.25rem 4rem}
+.top{margin:0 0 .8rem; font-size:.85rem; color:var(--muted)}
+.top a{color:var(--muted); text-decoration:none}
+.top a:hover{color:var(--accent); text-decoration:underline}
+.top span{margin:0 .35rem}
+h1{font-size:1.6rem; line-height:1.35; margin:.2rem 0 .4rem; font-weight:800; letter-spacing:-.01em}
+.meta{color:var(--muted); font-size:.85rem; margin:0 0 1rem}
+.lead{color:var(--ink); font-size:1.05rem; margin:0 0 1.5rem; padding-bottom:1.25rem; border-bottom:1px solid var(--line)}
+h2{font-size:1.3rem; line-height:1.4; margin:2.25rem 0 .75rem; font-weight:800; scroll-margin-top:1rem}
+h3{font-size:1.08rem; line-height:1.5; margin:1.4rem 0 .4rem; font-weight:700}
+p{margin:.65rem 0}
+a{color:var(--accent)}
+a:focus-visible{outline:3px solid var(--accent); outline-offset:2px}
+ul,ol{padding-left:1.2rem; margin:.5rem 0}
+li{margin:.35rem 0}
+table{width:100%; border-collapse:collapse; margin:.75rem 0; font-size:.95rem; background:var(--surface)}
+th,td{border:1px solid var(--line); padding:.55rem .6rem; text-align:left; vertical-align:top}
+th{background:var(--accent-soft)}
+
+.toc{
+  background:var(--surface); border:1.5px solid var(--line); border-radius:.6rem;
+  padding:1rem 1.25rem; margin:0 0 1.75rem;
+}
+.toc-title{font-weight:800; font-size:.95rem; margin-bottom:.5rem}
+.toc ol{margin:0; padding-left:1.1rem}
+.toc li{margin:.3rem 0}
+.toc a{text-decoration:none}
+.toc a:hover{text-decoration:underline}
+
+.related-tools{
+  margin:1.75rem 0; padding:1.1rem 1.25rem; background:var(--accent-soft);
+  border-radius:.6rem; font-size:.95rem;
+}
+.related-tools .rt-title{font-weight:800; margin-bottom:.5rem; display:block}
+.related-tools ul{margin:0; padding-left:1.1rem}
+.related-tools a{font-weight:700}
+
+.disclaimer{
+  margin-top:2rem; padding:1rem 1.1rem; border:1px dashed var(--line); border-radius:.5rem;
+  color:var(--muted); font-size:.88rem;
+}
+
+footer{margin-top:3rem; padding-top:1rem; border-top:1px solid var(--line); color:var(--muted); font-size:.85rem}
+footer p{margin:.3rem 0}
+.fl a{margin-right:1rem}
+</style>
+</head>
+<body>
+<main class="wrap">
+
+<nav class="top" aria-label="사이트 이동">
+  <a href="../../../">생활 계산 도구 모음</a><span>/</span><a href="../../">생활정보</a><span>/</span><a href="../">IT·문서</a>
+</nav>
+
+<h1>와이파이 QR코드 만드는 방법 (비밀번호 안 알려줘도 접속)</h1>
+<p class="meta">최종 수정일 2026-10-01</p>
+<p class="lead">와이파이 정보를 정해진 형식으로 QR코드에 넣으면, 스마트폰 카메라로 찍기만 해도 비밀번호 입력 없이 바로 접속됩니다.</p>
+
+<nav class="toc" aria-label="목차">
+  <div class="toc-title">목차</div>
+  <ol>
+    <li><a href="#sec-QR코드에-넣을-내용-형식">QR코드에 넣을 내용 (형식)</a></li>
+    <li><a href="#sec-예시">예시</a></li>
+    <li><a href="#sec-이름이나-비밀번호에-특수문자가-있다면">이름이나 비밀번호에 특수문자가 있다면</a></li>
+    <li><a href="#sec-접속이-안-될-때-확인할-것">접속이 안 될 때 확인할 것</a></li>
+    <li><a href="#sec-보안-주의점">보안 주의점</a></li>
+  </ol>
+</nav>
+
+<h2 id="sec-QR코드에-넣을-내용-형식">QR코드에 넣을 내용 (형식)</h2>
+
+<div class="formula" style="background:var(--surface);border:1.5px solid var(--line);border-radius:.5rem;padding:.8rem 1rem;margin:.8rem 0;word-break:break-all">WIFI:T:WPA;S:와이파이이름;P:비밀번호;;</div>
+<ul>
+<li><strong>T</strong>: 보안 방식입니다. 대부분의 공유기는 <code>WPA</code>(WPA2·WPA3 포함)를 씁니다. 비밀번호가 없는 공용 와이파이는 <code>nopass</code>를 넣습니다.</li>
+<li><strong>S</strong>: 와이파이 이름(SSID)입니다. 대소문자까지 정확히 입력해야 합니다.</li>
+<li><strong>P</strong>: 비밀번호입니다.</li>
+<li>맨 끝의 <strong>;;</strong>(세미콜론 두 개)를 빠뜨리지 않도록 주의하세요.</li>
+</ul>
+
+
+<h2 id="sec-예시">예시</h2>
+
+<p>와이파이 이름이 <code>MyCafe_5G</code>, 비밀번호가 <code>coffee1234</code>라면 아래처럼 입력합니다.</p>
+<div class="formula" style="background:var(--surface);border:1.5px solid var(--line);border-radius:.5rem;padding:.8rem 1rem;margin:.8rem 0;word-break:break-all">WIFI:T:WPA;S:MyCafe_5G;P:coffee1234;;</div>
+<p>이 문자열을 QR 코드 생성기의 내용 칸에 그대로 붙여넣고 PNG나 SVG로 내려받아 인쇄하면 됩니다.</p>
+
+
+<h2 id="sec-이름이나-비밀번호에-특수문자가-있다면">이름이나 비밀번호에 특수문자가 있다면</h2>
+
+<p>이름이나 비밀번호에 <code>;</code> <code>,</code> <code>:</code> <code>\</code> <code>"</code> 같은 문자가 들어 있으면 형식 구분 기호와 헷갈리기 때문에, 그 문자 앞에 역슬래시(<code>\</code>)를 붙여야 합니다. 예를 들어 비밀번호가 <code>abc;123</code>이면 <code>P:abc\;123</code>으로 씁니다.</p>
+
+
+<h2 id="sec-접속이-안-될-때-확인할-것">접속이 안 될 때 확인할 것</h2>
+
+<ul>
+<li>와이파이 이름의 대소문자, 띄어쓰기가 실제와 똑같은지 확인합니다.</li>
+<li>매장 벽에 붙일 용도라면 QR 생성기의 오류 복원 수준을 Q나 H로 올려두면 일부가 오염돼도 잘 인식됩니다.</li>
+<li>인쇄한 뒤에는 반드시 아이폰과 안드로이드 기본 카메라로 한 번씩 찍어서 접속되는지 확인해 주세요.</li>
+</ul>
+
+
+<h2 id="sec-보안-주의점">보안 주의점</h2>
+
+<p>QR코드 안에는 비밀번호가 그대로 들어 있어서, QR을 찍을 수 있는 사람은 누구나 비밀번호를 알 수 있습니다. 가게라면 손님용 와이파이를 내부 업무용과 분리해서 손님용만 QR로 공유하는 것이 안전합니다.</p>
+
+
+<div class="related-tools">
+  <span class="rt-title">이 글과 함께 보면 좋은 도구</span>
+  <ul><li><a href="../../../qr/">QR 코드·바코드 생성기</a></li></ul>
+</div>
+
+<div class="disclaimer">이 글은 일반적인 정보 제공을 목적으로 하며, 개인의 상황에 따라 결과가 달라질 수 있습니다. 중요한 결정은 관련 기관의 공식 안내나 전문가 상담을 통해 확인해 주시기 바랍니다.</div>
+
+<footer>
+<p>생활 계산 도구 모음</p>
+<p class="fl"><a href="../../../about/">소개</a><a href="../../../privacy/">개인정보처리방침</a><a href="../../../contact/">문의</a></p>
+</footer>
+</main>
+</body>
+</html>
