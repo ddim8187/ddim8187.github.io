@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>컴프레서와 리미터 차이 (마스터링에서 음량 올리는 원리) - 생활정보 - 생활 계산 도구 모음</title>
+<meta name="description" content="컴프레서는 큰 소리를 비율만큼 줄이고, 리미터는 정해진 천장을 아예 넘지 못하게 막습니다. 두 장비의 차이와 마스터링에서 음량을 올리는 원리, 과하게 쓸 때의 문제를 정리했습니다.">
+<meta name="color-scheme" content="light dark">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:title" content="컴프레서와 리미터 차이 (마스터링에서 음량 올리는 원리)">
+<meta property="og:description" content="컴프레서는 큰 소리를 비율만큼 줄이고, 리미터는 정해진 천장을 아예 넘지 못하게 막습니다. 두 장비의 차이와 마스터링에서 음량을 올리는 원리, 과하게 쓸 때의 문제를 정리했습니다.">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3950528589828430"
+     crossorigin="anonymous"></script>
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
+<link rel="apple-touch-icon" href="/favicon.png">
+<meta name="google-site-verification" content="zwCpUdfCWwRBVa0vwLoOv7jPIo5nC3mv9Im_DfojCVM" />
+<meta name="naver-site-verification" content="c75f1f11dca6d41ed47e83a590778bcf2aa8247b" />
+<style>
+:root{
+  --ground:#f5f7fa; --surface:#ffffff; --ink:#172033; --muted:#5a6577;
+  --line:#dde3ec; --accent:#0e7c86; --accent-soft:#e3f3f4;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --ground:#0e141b; --surface:#151d27; --ink:#e6ecf3; --muted:#9aa7b8;
+    --line:#263241; --accent:#4fd1c5; --accent-soft:#12303a;
+  }
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--ground); color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;
+  font-size:1rem; line-height:1.8;
+}
+.wrap{max-width:40rem; margin:0 auto; padding:1.75rem 1.25rem 4rem}
+.top{margin:0 0 .8rem; font-size:.85rem; color:var(--muted)}
+.top a{color:var(--muted); text-decoration:none}
+.top a:hover{color:var(--accent); text-decoration:underline}
+.top span{margin:0 .35rem}
+h1{font-size:1.6rem; line-height:1.35; margin:.2rem 0 .4rem; font-weight:800; letter-spacing:-.01em}
+.meta{color:var(--muted); font-size:.85rem; margin:0 0 1rem}
+.lead{color:var(--ink); font-size:1.05rem; margin:0 0 1.5rem; padding-bottom:1.25rem; border-bottom:1px solid var(--line)}
+h2{font-size:1.3rem; line-height:1.4; margin:2.25rem 0 .75rem; font-weight:800; scroll-margin-top:1rem}
+h3{font-size:1.08rem; line-height:1.5; margin:1.4rem 0 .4rem; font-weight:700}
+p{margin:.65rem 0}
+a{color:var(--accent)}
+a:focus-visible{outline:3px solid var(--accent); outline-offset:2px}
+ul,ol{padding-left:1.2rem; margin:.5rem 0}
+li{margin:.35rem 0}
+table{width:100%; border-collapse:collapse; margin:.75rem 0; font-size:.95rem; background:var(--surface)}
+th,td{border:1px solid var(--line); padding:.55rem .6rem; text-align:left; vertical-align:top}
+th{background:var(--accent-soft)}
+
+.toc{
+  background:var(--surface); border:1.5px solid var(--line); border-radius:.6rem;
+  padding:1rem 1.25rem; margin:0 0 1.75rem;
+}
+.toc-title{font-weight:800; font-size:.95rem; margin-bottom:.5rem}
+.toc ol{margin:0; padding-left:1.1rem}
+.toc li{margin:.3rem 0}
+.toc a{text-decoration:none}
+.toc a:hover{text-decoration:underline}
+
+.related-tools{
+  margin:1.75rem 0; padding:1.1rem 1.25rem; background:var(--accent-soft);
+  border-radius:.6rem; font-size:.95rem;
+}
+.related-tools .rt-title{font-weight:800; margin-bottom:.5rem; display:block}
+.related-tools ul{margin:0; padding-left:1.1rem}
+.related-tools a{font-weight:700}
+
+.disclaimer{
+  margin-top:2rem; padding:1rem 1.1rem; border:1px dashed var(--line); border-radius:.5rem;
+  color:var(--muted); font-size:.88rem;
+}
+
+footer{margin-top:3rem; padding-top:1rem; border-top:1px solid var(--line); color:var(--muted); font-size:.85rem}
+footer p{margin:.3rem 0}
+.fl a{margin-right:1rem}
+</style>
+</head>
+<body>
+<main class="wrap">
+
+<nav class="top" aria-label="사이트 이동">
+  <a href="../../../">생활 계산 도구 모음</a><span>/</span><a href="../../">생활정보</a><span>/</span><a href="../">오디오·음악</a>
+</nav>
+
+<h1>컴프레서와 리미터 차이 (마스터링에서 음량 올리는 원리)</h1>
+<p class="meta">최종 수정일 2026-10-02</p>
+<p class="lead">컴프레서는 큰 소리를 일정 비율로 눌러 강약 차이를 줄이고, 리미터는 정해진 천장을 아예 넘지 못하게 막습니다. 마스터링에서 음량을 키울 때는 주로 리미터를 씁니다.</p>
+
+<nav class="toc" aria-label="목차">
+  <div class="toc-title">목차</div>
+  <ol>
+    <li><a href="#sec-한눈에-비교">한눈에 비교</a></li>
+    <li><a href="#sec-리미터로-음량을-올리는-원리">리미터로 음량을 올리는 원리</a></li>
+    <li><a href="#sec-너무-세게-밀면-생기는-문제">너무 세게 밀면 생기는 문제</a></li>
+    <li><a href="#sec-천장은-어떻게-정할까">천장은 어떻게 정할까</a></li>
+    <li><a href="#sec-마스터링-도구에서는">마스터링 도구에서는</a></li>
+  </ol>
+</nav>
+
+<h2 id="sec-한눈에-비교">한눈에 비교</h2>
+
+<table>
+<thead><tr><th>구분</th><th>컴프레서</th><th>리미터</th></tr></thead>
+<tbody>
+<tr><td>하는 일</td><td>기준을 넘는 소리를 비율만큼 줄임</td><td>천장을 넘는 소리를 거의 완전히 막음</td></tr>
+<tr><td>비율(Ratio)</td><td>보통 2:1~6:1</td><td>매우 높음 (10:1 이상, 사실상 벽)</td></tr>
+<tr><td>주 용도</td><td>소리를 단단하게, 강약을 고르게</td><td>최대 출력 제한, 음량 끌어올리기</td></tr>
+</tbody>
+</table>
+
+
+<h2 id="sec-리미터로-음량을-올리는-원리">리미터로 음량을 올리는 원리</h2>
+
+<p>곡에서 가장 큰 순간(피크)이 천장에 닿으면 더 이상 전체 볼륨을 올릴 수 없습니다. 리미터는 그 짧은 피크만 순간적으로 눌러주기 때문에, 나머지 부분을 더 끌어올릴 여유가 생깁니다. 그래서 리미터에 소리를 세게 밀어넣을수록 전체적으로 더 크게 들립니다.</p>
+
+
+<h2 id="sec-너무-세게-밀면-생기는-문제">너무 세게 밀면 생기는 문제</h2>
+
+<ul>
+<li><strong>강약이 사라짐</strong>: 조용한 부분과 큰 부분의 차이가 줄어 곡이 평평하고 답답해집니다.</li>
+<li><strong>펀치가 약해짐</strong>: 킥과 스네어의 순간적인 타격감이 눌려 힘이 빠집니다.</li>
+<li><strong>찌그러짐</strong>: 과하게 누르면 소리가 갈라지는 왜곡이 생깁니다.</li>
+</ul>
+<p>게다가 스포티파이·유튜브 같은 스트리밍 서비스는 큰 곡의 음량을 자동으로 줄여서 재생하기 때문에, 무리하게 키워도 실제로는 더 크게 들리지 않을 수 있습니다.</p>
+
+
+<h2 id="sec-천장은-어떻게-정할까">천장은 어떻게 정할까</h2>
+
+<p>보통 천장은 <strong>-1dB 안팎</strong>으로 둡니다. 0dB에 딱 맞추면 MP3 같은 압축 파일로 변환하거나 스트리밍 서비스에서 재생할 때 피크가 살짝 넘쳐 찌그러질 수 있기 때문입니다.</p>
+
+
+<h2 id="sec-마스터링-도구에서는">마스터링 도구에서는</h2>
+
+<p>무료 오디오 마스터링 도구의 '라우드니스 조절'에서 밀어넣는 세기와 천장을 정할 수 있습니다. 밀어넣기는 조금씩 올리면서 원본과 번갈아 들어보고, 펀치가 죽기 시작하는 지점 바로 전에서 멈추는 것을 추천합니다.</p>
+
+
+<div class="related-tools">
+  <span class="rt-title">이 글과 함께 보면 좋은 도구</span>
+  <ul><li><a href="../../../master/">무료 오디오 마스터링</a></li></ul>
+</div>
+
+<div class="disclaimer">이 글은 일반적인 정보 제공을 목적으로 하며, 개인의 상황에 따라 결과가 달라질 수 있습니다. 중요한 결정은 관련 기관의 공식 안내나 전문가 상담을 통해 확인해 주시기 바랍니다.</div>
+
+<footer>
+<p>생활 계산 도구 모음</p>
+<p class="fl"><a href="../../../about/">소개</a><a href="../../../privacy/">개인정보처리방침</a><a href="../../../contact/">문의</a></p>
+</footer>
+</main>
+</body>
+</html>

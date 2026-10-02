@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EQ 주파수 대역별 역할 (60Hz부터 12kHz까지) - 생활정보 - 생활 계산 도구 모음</title>
+<meta name="description" content="EQ 주파수 대역별로 어떤 소리가 담기는지, 올리고 내리면 어떻게 들리는지 정리했습니다. 저음이 뭉칠 때, 소리가 답답할 때, 귀가 아플 때 손볼 대역도 함께 안내합니다.">
+<meta name="color-scheme" content="light dark">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:title" content="EQ 주파수 대역별 역할 (60Hz부터 12kHz까지)">
+<meta property="og:description" content="EQ 주파수 대역별로 어떤 소리가 담기는지, 올리고 내리면 어떻게 들리는지 정리했습니다. 저음이 뭉칠 때, 소리가 답답할 때, 귀가 아플 때 손볼 대역도 함께 안내합니다.">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3950528589828430"
+     crossorigin="anonymous"></script>
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
+<link rel="apple-touch-icon" href="/favicon.png">
+<meta name="google-site-verification" content="zwCpUdfCWwRBVa0vwLoOv7jPIo5nC3mv9Im_DfojCVM" />
+<meta name="naver-site-verification" content="c75f1f11dca6d41ed47e83a590778bcf2aa8247b" />
+<style>
+:root{
+  --ground:#f5f7fa; --surface:#ffffff; --ink:#172033; --muted:#5a6577;
+  --line:#dde3ec; --accent:#0e7c86; --accent-soft:#e3f3f4;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --ground:#0e141b; --surface:#151d27; --ink:#e6ecf3; --muted:#9aa7b8;
+    --line:#263241; --accent:#4fd1c5; --accent-soft:#12303a;
+  }
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--ground); color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;
+  font-size:1rem; line-height:1.8;
+}
+.wrap{max-width:40rem; margin:0 auto; padding:1.75rem 1.25rem 4rem}
+.top{margin:0 0 .8rem; font-size:.85rem; color:var(--muted)}
+.top a{color:var(--muted); text-decoration:none}
+.top a:hover{color:var(--accent); text-decoration:underline}
+.top span{margin:0 .35rem}
+h1{font-size:1.6rem; line-height:1.35; margin:.2rem 0 .4rem; font-weight:800; letter-spacing:-.01em}
+.meta{color:var(--muted); font-size:.85rem; margin:0 0 1rem}
+.lead{color:var(--ink); font-size:1.05rem; margin:0 0 1.5rem; padding-bottom:1.25rem; border-bottom:1px solid var(--line)}
+h2{font-size:1.3rem; line-height:1.4; margin:2.25rem 0 .75rem; font-weight:800; scroll-margin-top:1rem}
+h3{font-size:1.08rem; line-height:1.5; margin:1.4rem 0 .4rem; font-weight:700}
+p{margin:.65rem 0}
+a{color:var(--accent)}
+a:focus-visible{outline:3px solid var(--accent); outline-offset:2px}
+ul,ol{padding-left:1.2rem; margin:.5rem 0}
+li{margin:.35rem 0}
+table{width:100%; border-collapse:collapse; margin:.75rem 0; font-size:.95rem; background:var(--surface)}
+th,td{border:1px solid var(--line); padding:.55rem .6rem; text-align:left; vertical-align:top}
+th{background:var(--accent-soft)}
+
+.toc{
+  background:var(--surface); border:1.5px solid var(--line); border-radius:.6rem;
+  padding:1rem 1.25rem; margin:0 0 1.75rem;
+}
+.toc-title{font-weight:800; font-size:.95rem; margin-bottom:.5rem}
+.toc ol{margin:0; padding-left:1.1rem}
+.toc li{margin:.3rem 0}
+.toc a{text-decoration:none}
+.toc a:hover{text-decoration:underline}
+
+.related-tools{
+  margin:1.75rem 0; padding:1.1rem 1.25rem; background:var(--accent-soft);
+  border-radius:.6rem; font-size:.95rem;
+}
+.related-tools .rt-title{font-weight:800; margin-bottom:.5rem; display:block}
+.related-tools ul{margin:0; padding-left:1.1rem}
+.related-tools a{font-weight:700}
+
+.disclaimer{
+  margin-top:2rem; padding:1rem 1.1rem; border:1px dashed var(--line); border-radius:.5rem;
+  color:var(--muted); font-size:.88rem;
+}
+
+footer{margin-top:3rem; padding-top:1rem; border-top:1px solid var(--line); color:var(--muted); font-size:.85rem}
+footer p{margin:.3rem 0}
+.fl a{margin-right:1rem}
+</style>
+</head>
+<body>
+<main class="wrap">
+
+<nav class="top" aria-label="사이트 이동">
+  <a href="../../../">생활 계산 도구 모음</a><span>/</span><a href="../../">생활정보</a><span>/</span><a href="../">오디오·음악</a>
+</nav>
+
+<h1>EQ 주파수 대역별 역할 (60Hz부터 12kHz까지)</h1>
+<p class="meta">최종 수정일 2026-10-02</p>
+<p class="lead">EQ는 소리를 주파수 대역별로 나눠 올리거나 내리는 도구입니다. 대역마다 담긴 소리를 알면 "답답하다", "웅웅거린다" 같은 문제를 어디서 고칠지 바로 찾을 수 있습니다.</p>
+
+<nav class="toc" aria-label="목차">
+  <div class="toc-title">목차</div>
+  <ol>
+    <li><a href="#sec-대역별로-담긴-소리">대역별로 담긴 소리</a></li>
+    <li><a href="#sec-증상별로-어디를-손볼까">증상별로 어디를 손볼까</a></li>
+    <li><a href="#sec-마스터링-EQ는-조금씩">마스터링 EQ는 조금씩</a></li>
+    <li><a href="#sec-직접-들어보며-조정하기">직접 들어보며 조정하기</a></li>
+  </ol>
+</nav>
+
+<h2 id="sec-대역별로-담긴-소리">대역별로 담긴 소리</h2>
+
+<table>
+<thead><tr><th>대역 (대략)</th><th>이름</th><th>담긴 소리</th><th>너무 많으면</th></tr></thead>
+<tbody>
+<tr><td>60Hz 부근</td><td>Sub</td><td>킥과 베이스의 몸으로 느끼는 울림</td><td>웅웅거리고 스피커가 버거움</td></tr>
+<tr><td>150Hz 부근</td><td>Bass</td><td>베이스·킥의 펀치, 따뜻함</td><td>뭉개지고 탁함</td></tr>
+<tr><td>400Hz 부근</td><td>Low-Mid</td><td>소리의 두께</td><td>박스 안에서 듣는 듯 답답함</td></tr>
+<tr><td>1kHz 부근</td><td>Mid</td><td>보컬·악기의 존재감</td><td>코맹맹이, 라디오 같은 소리</td></tr>
+<tr><td>2.5kHz 부근</td><td>High-Mid</td><td>가사 전달력, 공격성</td><td>쏘고 피곤함</td></tr>
+<tr><td>6kHz 부근</td><td>Presence</td><td>선명함, 치찰음(ㅅ·ㅊ 소리)</td><td>따갑고 귀가 아픔</td></tr>
+<tr><td>12kHz 부근</td><td>Air</td><td>공기감, 반짝임</td><td>쉿쉿거리고 얇아짐</td></tr>
+</tbody>
+</table>
+<p>경계는 딱 정해진 것이 아니라 대략적인 구간입니다. 곡과 악기에 따라 조금씩 다르게 들릴 수 있습니다.</p>
+
+
+<h2 id="sec-증상별로-어디를-손볼까">증상별로 어디를 손볼까</h2>
+
+<ul>
+<li><strong>저음이 뭉치고 탁할 때</strong>: 150~400Hz를 조금 줄여봅니다.</li>
+<li><strong>전체가 답답하고 어두울 때</strong>: 400Hz를 살짝 줄이고 12kHz 부근을 살짝 올려봅니다.</li>
+<li><strong>보컬이 따갑고 귀가 아플 때</strong>: 2.5~6kHz를 조금 줄여봅니다.</li>
+<li><strong>저음이 약하게 느껴질 때</strong>: 60Hz를 무작정 올리기보다 150Hz 부근을 먼저 확인합니다. 작은 스피커나 이어폰은 60Hz를 잘 재생하지 못하기 때문입니다.</li>
+</ul>
+
+
+<h2 id="sec-마스터링-EQ는-조금씩">마스터링 EQ는 조금씩</h2>
+
+<p>마스터링은 곡 전체에 적용되기 때문에 1~2dB만 움직여도 차이가 크게 들립니다. 6dB 이상 크게 올리거나 내려야 한다면 마스터링보다 믹스 단계에서 해당 악기를 손보는 것이 낫습니다. 그리고 올리는 것보다 거슬리는 대역을 줄이는 쪽이 대체로 결과가 자연스럽습니다.</p>
+
+
+<h2 id="sec-직접-들어보며-조정하기">직접 들어보며 조정하기</h2>
+
+<p>무료 오디오 마스터링 도구의 EQ는 위 표의 7개 대역(Sub, Bass, L-Mid, Mid, H-Mid, Pres, Air)으로 구성되어 있어서, 원본과 마스터링본을 번갈아 들으며 대역별 변화를 바로 확인할 수 있습니다.</p>
+
+
+<div class="related-tools">
+  <span class="rt-title">이 글과 함께 보면 좋은 도구</span>
+  <ul><li><a href="../../../master/">무료 오디오 마스터링</a></li></ul>
+</div>
+
+<div class="disclaimer">이 글은 일반적인 정보 제공을 목적으로 하며, 개인의 상황에 따라 결과가 달라질 수 있습니다. 중요한 결정은 관련 기관의 공식 안내나 전문가 상담을 통해 확인해 주시기 바랍니다.</div>
+
+<footer>
+<p>생활 계산 도구 모음</p>
+<p class="fl"><a href="../../../about/">소개</a><a href="../../../privacy/">개인정보처리방침</a><a href="../../../contact/">문의</a></p>
+</footer>
+</main>
+</body>
+</html>

@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>스테레오 폭 넓히기와 모노 호환성 (휴대폰 스피커에서 소리가 사라진다면) - 생활정보 - 생활 계산 도구 모음</title>
+<meta name="description" content="스테레오 폭을 넓히면 공간감이 커지지만, 휴대폰 스피커처럼 모노로 재생되면 소리가 약해지거나 사라질 수 있습니다. 미드·사이드 원리와 안전하게 폭을 조절하는 방법을 정리했습니다.">
+<meta name="color-scheme" content="light dark">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:title" content="스테레오 폭 넓히기와 모노 호환성 (휴대폰 스피커에서 소리가 사라진다면)">
+<meta property="og:description" content="스테레오 폭을 넓히면 공간감이 커지지만, 휴대폰 스피커처럼 모노로 재생되면 소리가 약해지거나 사라질 수 있습니다. 미드·사이드 원리와 안전하게 폭을 조절하는 방법을 정리했습니다.">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3950528589828430"
+     crossorigin="anonymous"></script>
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
+<link rel="apple-touch-icon" href="/favicon.png">
+<meta name="google-site-verification" content="zwCpUdfCWwRBVa0vwLoOv7jPIo5nC3mv9Im_DfojCVM" />
+<meta name="naver-site-verification" content="c75f1f11dca6d41ed47e83a590778bcf2aa8247b" />
+<style>
+:root{
+  --ground:#f5f7fa; --surface:#ffffff; --ink:#172033; --muted:#5a6577;
+  --line:#dde3ec; --accent:#0e7c86; --accent-soft:#e3f3f4;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --ground:#0e141b; --surface:#151d27; --ink:#e6ecf3; --muted:#9aa7b8;
+    --line:#263241; --accent:#4fd1c5; --accent-soft:#12303a;
+  }
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--ground); color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;
+  font-size:1rem; line-height:1.8;
+}
+.wrap{max-width:40rem; margin:0 auto; padding:1.75rem 1.25rem 4rem}
+.top{margin:0 0 .8rem; font-size:.85rem; color:var(--muted)}
+.top a{color:var(--muted); text-decoration:none}
+.top a:hover{color:var(--accent); text-decoration:underline}
+.top span{margin:0 .35rem}
+h1{font-size:1.6rem; line-height:1.35; margin:.2rem 0 .4rem; font-weight:800; letter-spacing:-.01em}
+.meta{color:var(--muted); font-size:.85rem; margin:0 0 1rem}
+.lead{color:var(--ink); font-size:1.05rem; margin:0 0 1.5rem; padding-bottom:1.25rem; border-bottom:1px solid var(--line)}
+h2{font-size:1.3rem; line-height:1.4; margin:2.25rem 0 .75rem; font-weight:800; scroll-margin-top:1rem}
+h3{font-size:1.08rem; line-height:1.5; margin:1.4rem 0 .4rem; font-weight:700}
+p{margin:.65rem 0}
+a{color:var(--accent)}
+a:focus-visible{outline:3px solid var(--accent); outline-offset:2px}
+ul,ol{padding-left:1.2rem; margin:.5rem 0}
+li{margin:.35rem 0}
+table{width:100%; border-collapse:collapse; margin:.75rem 0; font-size:.95rem; background:var(--surface)}
+th,td{border:1px solid var(--line); padding:.55rem .6rem; text-align:left; vertical-align:top}
+th{background:var(--accent-soft)}
+
+.toc{
+  background:var(--surface); border:1.5px solid var(--line); border-radius:.6rem;
+  padding:1rem 1.25rem; margin:0 0 1.75rem;
+}
+.toc-title{font-weight:800; font-size:.95rem; margin-bottom:.5rem}
+.toc ol{margin:0; padding-left:1.1rem}
+.toc li{margin:.3rem 0}
+.toc a{text-decoration:none}
+.toc a:hover{text-decoration:underline}
+
+.related-tools{
+  margin:1.75rem 0; padding:1.1rem 1.25rem; background:var(--accent-soft);
+  border-radius:.6rem; font-size:.95rem;
+}
+.related-tools .rt-title{font-weight:800; margin-bottom:.5rem; display:block}
+.related-tools ul{margin:0; padding-left:1.1rem}
+.related-tools a{font-weight:700}
+
+.disclaimer{
+  margin-top:2rem; padding:1rem 1.1rem; border:1px dashed var(--line); border-radius:.5rem;
+  color:var(--muted); font-size:.88rem;
+}
+
+footer{margin-top:3rem; padding-top:1rem; border-top:1px solid var(--line); color:var(--muted); font-size:.85rem}
+footer p{margin:.3rem 0}
+.fl a{margin-right:1rem}
+</style>
+</head>
+<body>
+<main class="wrap">
+
+<nav class="top" aria-label="사이트 이동">
+  <a href="../../../">생활 계산 도구 모음</a><span>/</span><a href="../../">생활정보</a><span>/</span><a href="../">오디오·음악</a>
+</nav>
+
+<h1>스테레오 폭 넓히기와 모노 호환성 (휴대폰 스피커에서 소리가 사라진다면)</h1>
+<p class="meta">최종 수정일 2026-10-02</p>
+<p class="lead">스테레오 폭을 넓히면 소리가 시원하게 퍼지지만, 너무 넓히면 휴대폰 스피커처럼 한쪽으로 합쳐 재생되는 환경에서 일부 소리가 약해지거나 사라질 수 있습니다.</p>
+
+<nav class="toc" aria-label="목차">
+  <div class="toc-title">목차</div>
+  <ol>
+    <li><a href="#sec-미드와-사이드">미드와 사이드</a></li>
+    <li><a href="#sec-모노로-들으면-왜-소리가-사라지나요">모노로 들으면 왜 소리가 사라지나요</a></li>
+    <li><a href="#sec-안전하게-폭을-조절하는-요령">안전하게 폭을 조절하는 요령</a></li>
+    <li><a href="#sec-마스터링-도구에서는">마스터링 도구에서는</a></li>
+  </ol>
+</nav>
+
+<h2 id="sec-미드와-사이드">미드와 사이드</h2>
+
+<div class="formula" style="background:var(--surface);border:1.5px solid var(--line);border-radius:.5rem;padding:.8rem 1rem;margin:.8rem 0">미드(Mid) = 왼쪽과 오른쪽에 공통으로 있는 소리 (가운데)<br>사이드(Side) = 왼쪽과 오른쪽이 서로 다른 부분 (양옆)</div>
+<p>스테레오 폭 조절은 이 사이드 성분의 크기를 키우거나 줄이는 방식입니다. 사이드를 키우면 소리가 넓게 퍼지고, 줄이면 가운데로 모입니다. 보컬, 킥, 베이스는 보통 미드에, 리버브나 좌우로 나뉜 기타·신스는 사이드에 많이 담겨 있습니다.</p>
+
+
+<h2 id="sec-모노로-들으면-왜-소리가-사라지나요">모노로 들으면 왜 소리가 사라지나요</h2>
+
+<p>휴대폰 스피커, 블루투스 스피커 한 개, 매장 방송처럼 왼쪽과 오른쪽을 하나로 합쳐 재생하면 사이드 성분은 서로 상쇄되어 사라지고 미드만 남습니다. 그래서 폭을 과하게 넓혀 사이드 비중이 커진 곡은 모노로 들을 때 리버브나 넓게 깔린 악기가 갑자기 작아지거나 텅 빈 느낌이 납니다.</p>
+
+
+<h2 id="sec-안전하게-폭을-조절하는-요령">안전하게 폭을 조절하는 요령</h2>
+
+<ul>
+<li><strong>저음은 가운데에</strong>: 킥과 베이스 같은 저음은 넓히지 않는 것이 좋습니다. 저음이 양옆으로 퍼지면 힘이 빠지고 모노에서 손실이 큽니다.</li>
+<li><strong>조금씩</strong>: 원본 대비 110~130% 정도의 작은 변화로도 공간감 차이가 충분히 느껴집니다.</li>
+<li><strong>모노로 꼭 확인</strong>: 휴대폰 스피커로 직접 틀어보거나, 이어폰 한쪽만 끼고 들어보면 모노 호환성을 간단히 점검할 수 있습니다.</li>
+<li><strong>좁히는 것도 방법</strong>: 너무 산만하게 퍼진 믹스는 폭을 90% 정도로 살짝 좁히면 중심이 또렷해지기도 합니다.</li>
+</ul>
+
+
+<h2 id="sec-마스터링-도구에서는">마스터링 도구에서는</h2>
+
+<p>무료 오디오 마스터링 도구의 '스테레오 폭'은 0%가 모노, 100%가 원본, 200%가 최대 폭입니다. 실제 조절은 미드·사이드 방식으로 이루어지므로 위 원리가 그대로 적용됩니다.</p>
+
+
+<div class="related-tools">
+  <span class="rt-title">이 글과 함께 보면 좋은 도구</span>
+  <ul><li><a href="../../../master/">무료 오디오 마스터링</a></li></ul>
+</div>
+
+<div class="disclaimer">이 글은 일반적인 정보 제공을 목적으로 하며, 개인의 상황에 따라 결과가 달라질 수 있습니다. 중요한 결정은 관련 기관의 공식 안내나 전문가 상담을 통해 확인해 주시기 바랍니다.</div>
+
+<footer>
+<p>생활 계산 도구 모음</p>
+<p class="fl"><a href="../../../about/">소개</a><a href="../../../privacy/">개인정보처리방침</a><a href="../../../contact/">문의</a></p>
+</footer>
+</main>
+</body>
+</html>

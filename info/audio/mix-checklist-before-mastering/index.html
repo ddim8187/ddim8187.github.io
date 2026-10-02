@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>마스터링 전 믹스 파일 준비 체크리스트 - 생활정보 - 생활 계산 도구 모음</title>
+<meta name="description" content="마스터링 전에 믹스 파일을 어떻게 내보내야 하는지 정리했습니다. 헤드룸, 마스터 버스 리미터, 파일 형식·비트 깊이·샘플레이트, 곡 앞뒤 여백까지 체크리스트로 확인하세요.">
+<meta name="color-scheme" content="light dark">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:title" content="마스터링 전 믹스 파일 준비 체크리스트">
+<meta property="og:description" content="마스터링 전에 믹스 파일을 어떻게 내보내야 하는지 정리했습니다. 헤드룸, 마스터 버스 리미터, 파일 형식·비트 깊이·샘플레이트, 곡 앞뒤 여백까지 체크리스트로 확인하세요.">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3950528589828430"
+     crossorigin="anonymous"></script>
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
+<link rel="apple-touch-icon" href="/favicon.png">
+<meta name="google-site-verification" content="zwCpUdfCWwRBVa0vwLoOv7jPIo5nC3mv9Im_DfojCVM" />
+<meta name="naver-site-verification" content="c75f1f11dca6d41ed47e83a590778bcf2aa8247b" />
+<style>
+:root{
+  --ground:#f5f7fa; --surface:#ffffff; --ink:#172033; --muted:#5a6577;
+  --line:#dde3ec; --accent:#0e7c86; --accent-soft:#e3f3f4;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --ground:#0e141b; --surface:#151d27; --ink:#e6ecf3; --muted:#9aa7b8;
+    --line:#263241; --accent:#4fd1c5; --accent-soft:#12303a;
+  }
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--ground); color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;
+  font-size:1rem; line-height:1.8;
+}
+.wrap{max-width:40rem; margin:0 auto; padding:1.75rem 1.25rem 4rem}
+.top{margin:0 0 .8rem; font-size:.85rem; color:var(--muted)}
+.top a{color:var(--muted); text-decoration:none}
+.top a:hover{color:var(--accent); text-decoration:underline}
+.top span{margin:0 .35rem}
+h1{font-size:1.6rem; line-height:1.35; margin:.2rem 0 .4rem; font-weight:800; letter-spacing:-.01em}
+.meta{color:var(--muted); font-size:.85rem; margin:0 0 1rem}
+.lead{color:var(--ink); font-size:1.05rem; margin:0 0 1.5rem; padding-bottom:1.25rem; border-bottom:1px solid var(--line)}
+h2{font-size:1.3rem; line-height:1.4; margin:2.25rem 0 .75rem; font-weight:800; scroll-margin-top:1rem}
+h3{font-size:1.08rem; line-height:1.5; margin:1.4rem 0 .4rem; font-weight:700}
+p{margin:.65rem 0}
+a{color:var(--accent)}
+a:focus-visible{outline:3px solid var(--accent); outline-offset:2px}
+ul,ol{padding-left:1.2rem; margin:.5rem 0}
+li{margin:.35rem 0}
+table{width:100%; border-collapse:collapse; margin:.75rem 0; font-size:.95rem; background:var(--surface)}
+th,td{border:1px solid var(--line); padding:.55rem .6rem; text-align:left; vertical-align:top}
+th{background:var(--accent-soft)}
+
+.toc{
+  background:var(--surface); border:1.5px solid var(--line); border-radius:.6rem;
+  padding:1rem 1.25rem; margin:0 0 1.75rem;
+}
+.toc-title{font-weight:800; font-size:.95rem; margin-bottom:.5rem}
+.toc ol{margin:0; padding-left:1.1rem}
+.toc li{margin:.3rem 0}
+.toc a{text-decoration:none}
+.toc a:hover{text-decoration:underline}
+
+.related-tools{
+  margin:1.75rem 0; padding:1.1rem 1.25rem; background:var(--accent-soft);
+  border-radius:.6rem; font-size:.95rem;
+}
+.related-tools .rt-title{font-weight:800; margin-bottom:.5rem; display:block}
+.related-tools ul{margin:0; padding-left:1.1rem}
+.related-tools a{font-weight:700}
+
+.disclaimer{
+  margin-top:2rem; padding:1rem 1.1rem; border:1px dashed var(--line); border-radius:.5rem;
+  color:var(--muted); font-size:.88rem;
+}
+
+footer{margin-top:3rem; padding-top:1rem; border-top:1px solid var(--line); color:var(--muted); font-size:.85rem}
+footer p{margin:.3rem 0}
+.fl a{margin-right:1rem}
+</style>
+</head>
+<body>
+<main class="wrap">
+
+<nav class="top" aria-label="사이트 이동">
+  <a href="../../../">생활 계산 도구 모음</a><span>/</span><a href="../../">생활정보</a><span>/</span><a href="../">오디오·음악</a>
+</nav>
+
+<h1>마스터링 전 믹스 파일 준비 체크리스트</h1>
+<p class="meta">최종 수정일 2026-10-02</p>
+<p class="lead">마스터링 결과는 들어가는 믹스 파일의 상태에 크게 좌우됩니다. 내보내기 전에 아래 항목만 확인해도 마스터링이 훨씬 수월해집니다.</p>
+
+<nav class="toc" aria-label="목차">
+  <div class="toc-title">목차</div>
+  <ol>
+    <li><a href="#sec-체크리스트">체크리스트</a></li>
+    <li><a href="#sec-헤드룸은-왜-남겨야-하나요">헤드룸은 왜 남겨야 하나요</a></li>
+    <li><a href="#sec-마스터-버스의-리미터컴프레서는-꺼주세요">마스터 버스의 리미터·컴프레서는 꺼주세요</a></li>
+    <li><a href="#sec-내보낸-뒤-한-번-더-들어보기">내보낸 뒤 한 번 더 들어보기</a></li>
+    <li><a href="#sec-준비가-끝났다면">준비가 끝났다면</a></li>
+  </ol>
+</nav>
+
+<h2 id="sec-체크리스트">체크리스트</h2>
+
+<table>
+<thead><tr><th>항목</th><th>권장</th><th>이유</th></tr></thead>
+<tbody>
+<tr><td>최대 피크</td><td>약 -6~-3dB</td><td>마스터링에서 손볼 여유(헤드룸) 확보</td></tr>
+<tr><td>마스터 버스 리미터</td><td>끄기</td><td>미리 눌러두면 마스터링에서 되돌릴 수 없음</td></tr>
+<tr><td>파일 형식</td><td>WAV 또는 AIFF</td><td>MP3는 손실 압축이라 음질이 깎인 상태</td></tr>
+<tr><td>비트 깊이</td><td>24비트 (가능하면 32비트 float)</td><td>작은 소리의 디테일 보존</td></tr>
+<tr><td>샘플레이트</td><td>작업한 프로젝트와 동일하게</td><td>불필요한 변환 손실 방지</td></tr>
+<tr><td>곡 앞뒤</td><td>잘리지 않게 약간의 여백</td><td>리버브 꼬리, 첫 박 손실 방지</td></tr>
+</tbody>
+</table>
+
+
+<h2 id="sec-헤드룸은-왜-남겨야-하나요">헤드룸은 왜 남겨야 하나요</h2>
+
+<p>믹스가 이미 0dB에 꽉 차 있으면 마스터링에서 EQ로 어떤 대역을 조금만 올려도 소리가 넘쳐 찌그러집니다. 최대 피크를 -6~-3dB 정도로 두면 그만큼 여유가 생겨 EQ와 리미터를 자연스럽게 쓸 수 있습니다. 볼륨이 작게 들리는 건 마스터링 단계에서 키우면 되므로 걱정하지 않아도 됩니다.</p>
+
+
+<h2 id="sec-마스터-버스의-리미터컴프레서는-꺼주세요">마스터 버스의 리미터·컴프레서는 꺼주세요</h2>
+
+<p>믹스하면서 크게 들으려고 마스터 버스에 리미터를 걸어두는 경우가 많은데, 이 상태로 내보내면 이미 눌린 소리가 마스터링으로 넘어갑니다. 한 번 눌린 강약은 되살리기 어렵기 때문에, 믹스의 일부로 의도한 효과가 아니라면 내보내기 전에 꺼두는 것이 좋습니다.</p>
+
+
+<h2 id="sec-내보낸-뒤-한-번-더-들어보기">내보낸 뒤 한 번 더 들어보기</h2>
+
+<ul>
+<li>처음부터 끝까지 끊김, 잡음, 클릭 소리가 없는지 들어봅니다.</li>
+<li>곡 시작과 끝이 잘리지 않았는지 확인합니다.</li>
+<li>뮤트해 둔 트랙이나 솔로 상태로 남은 트랙이 없는지 확인합니다.</li>
+</ul>
+
+
+<h2 id="sec-준비가-끝났다면">준비가 끝났다면</h2>
+
+<p>무료 오디오 마스터링 도구는 WAV, MP3, M4A 등 브라우저가 재생할 수 있는 파일을 받아 마스터링한 뒤 16비트 WAV로 내려줍니다. 원본은 가능하면 WAV로 넣는 것이 음질 면에서 유리합니다.</p>
+
+
+<div class="related-tools">
+  <span class="rt-title">이 글과 함께 보면 좋은 도구</span>
+  <ul><li><a href="../../../master/">무료 오디오 마스터링</a></li></ul>
+</div>
+
+<div class="disclaimer">이 글은 일반적인 정보 제공을 목적으로 하며, 개인의 상황에 따라 결과가 달라질 수 있습니다. 중요한 결정은 관련 기관의 공식 안내나 전문가 상담을 통해 확인해 주시기 바랍니다.</div>
+
+<footer>
+<p>생활 계산 도구 모음</p>
+<p class="fl"><a href="../../../about/">소개</a><a href="../../../privacy/">개인정보처리방침</a><a href="../../../contact/">문의</a></p>
+</footer>
+</main>
+</body>
+</html>
