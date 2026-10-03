@@ -3,28 +3,28 @@
 <head>  
 <meta charset="utf-8">  
 <meta name="viewport" content="width=device-width, initial-scale=1">  
-<title>무료 오디오 마스터링 - 브라우저에서 바로 EQ·리미터·스테레오 폭 조절</title>  
-<meta name="description" content="음원 파일을 업로드 없이 이 브라우저 안에서 EQ, 드라이브, 스테레오 폭, 리미터로 마스터링하고 WAV로 내려받는 무료 도구입니다. 서버 전송 없이 전부 로컬에서 처리됩니다.">  
+<title>Suno AI 무료 마스터링 - AI 음악 음질 개선 & WAV 다운로드</title>  
+<meta name="description" content="Suno AI로 만든 음악을 무료로 마스터링하세요. MP3·WAV를 브라우저에서 바로 처리하고 보컬 선명도, 음량, 스테레오감을 간편하게 개선해 WAV로 다운로드할 수 있습니다.">  
 <meta name="color-scheme" content="dark">  
 <meta property="og:type" content="website">  
 <meta property="og:locale" content="ko_KR">  
-<meta property="og:title" content="무료 오디오 마스터링">  
-<meta property="og:description" content="브라우저 안에서 EQ·드라이브·스테레오 폭·리미터로 음원을 마스터링하고 WAV로 내려받는 무료 도구입니다.">  
+<meta property="og:title" content="Suno AI 무료 마스터링">  
+<meta property="og:description" content="Suno AI 음악을 브라우저에서 무료로 마스터링하세요. 회원가입 없이 MP3·WAV를 처리하고 WAV로 다운로드할 수 있습니다.">  
 <link rel="alternate" hreflang="ko" href="https://ddim8187.github.io/master/">  
 <link rel="alternate" hreflang="en" href="https://ddim8187.github.io/master/en/">  
 <link rel="alternate" hreflang="x-default" href="https://ddim8187.github.io/master/">  
 <script type="application/ld+json">  
-{"@context":"https://schema.org","@type":"WebApplication","name":"무료 오디오 마스터링","applicationCategory":"MultimediaApplication","operatingSystem":"Any","inLanguage":"ko","offers":{"@type":"Offer","price":"0","priceCurrency":"KRW"}}  
+{"@context":"https://schema.org","@type":"WebApplication","name":"Suno AI 무료 마스터링","applicationCategory":"MultimediaApplication","operatingSystem":"Any","inLanguage":"ko","offers":{"@type":"Offer","price":"0","priceCurrency":"KRW"}}  
 </script>  
 <script type="application/ld+json">  
-{"@context":"https://schema.org","@type":"HowTo","name":"무료 오디오 마스터링 사용 방법","inLanguage":"ko","step":[  
+{"@context":"https://schema.org","@type":"HowTo","name":"Suno AI 음악 무료 마스터링 사용 방법","inLanguage":"ko","step":[  
   {"@type":"HowToStep","name":"음원 업로드","text":"업로드 박스를 눌러 파일을 고르거나 끌어다 놓습니다."},  
   {"@type":"HowToStep","name":"EQ로 톤 다듬기","text":"음색 성향 드롭다운으로 시작점을 잡고 7개 밴드를 조정합니다."},  
   {"@type":"HowToStep","name":"드라이브로 질감 더하기","text":"드라이브 슬라이더로 따뜻한 배음을 더합니다."},  
   {"@type":"HowToStep","name":"De-harsh로 날카로운 소리 다듬기","text":"3~5kHz 부근의 거슬리는 소리를 눌러줍니다."},  
   {"@type":"HowToStep","name":"스테레오 폭 조절","text":"좌우 폭을 넓히거나 좁힙니다."},  
   {"@type":"HowToStep","name":"라우드니스 조절","text":"천장과 밀어넣는 세기를 정해 음량을 높입니다."},  
-  {"@type":"HowToStep","name":"WAV로 다운로드","text":"마스터링된 WAV 다운로드 버튼을 눌러 결과물을 받습니다."}  
+  {"@type":"HowToStep","name":"WAV로 다운로드","text":"Suno 마스터링 WAV 다운로드 버튼을 눌러 결과물을 받습니다."}  
 ]}  
 </script>  
 <script type="application/ld+json">  
@@ -61,6 +61,8 @@
   --mono: 'Space Grotesk', -apple-system, sans-serif;  
   --sans: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;  
 }  
+
+.suno-badge{display:inline-block;margin-bottom:.65rem;padding:.28rem .55rem;border:1px solid var(--amber-dim);border-radius:999px;color:var(--amber);font-family:var(--mono);font-size:.68rem;font-weight:700;letter-spacing:.04em}.privacy-note{margin-top:.9rem;color:var(--teal);font-size:.82rem}.auto-module{border-color:var(--amber-dim);background:linear-gradient(180deg,rgba(232,163,61,.055),var(--panel))}.auto-num{background:var(--teal);color:#08110f}.auto-title{margin:0 0 .15rem;color:#fff;font-size:1.02rem;font-weight:700}.suno-presets{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.65rem;margin-top:1rem}.preset-card{display:flex;flex-direction:column;align-items:flex-start;gap:.18rem;min-width:0;padding:.8rem .85rem;text-align:left;background:var(--panel-raised);color:var(--ink);border:1px solid var(--line);border-radius:.6rem}.preset-card:hover{border-color:var(--amber-dim)}.preset-card.active{border-color:var(--amber);box-shadow:0 0 0 1px rgba(232,163,61,.15) inset}.preset-card span{font-size:1.15rem}.preset-card strong{font-size:.88rem;color:#fff}.preset-card small{font-size:.72rem;line-height:1.35;color:var(--ink-dim)}.applied-note{margin:.75rem 0 0;color:var(--amber);font-size:.8rem;font-weight:600}.suno-callout{margin:1.1rem 0 0;padding:.9rem 1rem;border-left:3px solid var(--amber);background:rgba(232,163,61,.055);border-radius:0 .5rem .5rem 0}.suno-callout strong{color:#fff}@media (max-width:430px){.suno-presets{grid-template-columns:1fr}.suno-badge{font-size:.62rem}}
 *{box-sizing:border-box}  
 [hidden]{display:none !important}  
 html{-webkit-text-size-adjust:100%}  
@@ -222,7 +224,7 @@ footer p{margin:.3rem 0}
 </header>  
   
 <div class="demo-box">  
-  <p class="demo-label">파일을 올리기 전에, 샘플 사운드로 Before / After 차이부터 들어보세요</p>  
+  <p class="demo-label"><strong>🎧 먼저 들어보세요</strong><br><span class="hint">Suno 음악에 적용되는 마스터링 전후의 차이를 샘플로 확인할 수 있습니다.</span></p>  
   <div class="demo-row">  
     <button type="button" class="btn primary demo-play" id="demo-play">▶ 재생</button>  
     <div class="demo-toggle" role="group" aria-label="Before/After 선택">  
@@ -233,7 +235,7 @@ footer p{margin:.3rem 0}
   <p class="hint" id="demo-status">샘플 로딩 중…</p>  
 </div>  
   
-<p class="step-eyebrow"><span class="num">1</span>음원 업로드 &amp; 실시간 듣기</p>  
+<p class="step-eyebrow"><span class="num">1</span>Suno 음악 업로드 &amp; 실시간 듣기</p>  
   
 <div class="drop" id="drop" tabindex="0" role="button" aria-label="음원 파일 선택">  
   <strong>여기를 누르거나 파일을 끌어다 놓으세요</strong>  
@@ -262,9 +264,27 @@ footer p{margin:.3rem 0}
   
 <div id="controls">  
   
+  <details class="module auto-module" open>
+    <summary>
+      <span class="module-title"><span class="num auto-num">✨</span>Suno 자동 마스터링</span>
+      <span class="chev">▾</span>
+    </summary>
+    <div class="module-body">
+      <p class="auto-title">음악을 잘 몰라도 괜찮아요</p>
+      <p class="hint">Suno에서 생성한 곡을 처음 마스터링한다면 아래 추천 설정부터 적용해보세요. 적용 후에도 고급 설정에서 자유롭게 조절할 수 있습니다.</p>
+      <div class="suno-presets">
+        <button type="button" class="preset-card active" data-suno-preset="standard"><span>🎵</span><strong>Suno 기본</strong><small>균형 잡힌 기본 마스터</small></button>
+        <button type="button" class="preset-card" data-suno-preset="vocal"><span>🎤</span><strong>보컬 선명하게</strong><small>보컬과 존재감 강조</small></button>
+        <button type="button" class="preset-card" data-suno-preset="wide"><span>🎧</span><strong>풍부하고 넓게</strong><small>스테레오감과 공간감 강조</small></button>
+        <button type="button" class="preset-card" data-suno-preset="soft"><span>🌙</span><strong>부드럽게</strong><small>날카로운 고음 완화</small></button>
+      </div>
+      <p class="applied-note" id="applied-note">현재 추천: Suno 기본</p>
+    </div>
+  </details>
+
   <details class="module" open>  
     <summary>  
-      <span class="module-title"><span class="num">2</span>EQ — 7밴드 보정</span>  
+      <span class="module-title"><span class="num">3</span>EQ — 7밴드 보정</span>  
       <span class="chev">▾</span>  
     </summary>  
     <div class="module-body">  
@@ -284,7 +304,7 @@ footer p{margin:.3rem 0}
   
   <details class="module">  
     <summary>  
-      <span class="module-title"><span class="num">3</span>드라이브 (새추레이션)</span>  
+      <span class="module-title"><span class="num">4</span>드라이브 (새추레이션)</span>  
       <span class="chev">▾</span>  
     </summary>  
     <div class="module-body">  
@@ -298,7 +318,7 @@ footer p{margin:.3rem 0}
   
   <details class="module">  
     <summary>  
-      <span class="module-title"><span class="num">4</span>날카로운 고음 다듬기 (De-harsh)</span>  
+      <span class="module-title"><span class="num">5</span>날카로운 고음 다듬기 (De-harsh)</span>  
       <span class="chev">▾</span>  
     </summary>  
     <div class="module-body">  
@@ -312,7 +332,7 @@ footer p{margin:.3rem 0}
   
   <details class="module">  
     <summary>  
-      <span class="module-title"><span class="num">5</span>스테레오 폭</span>  
+      <span class="module-title"><span class="num">6</span>스테레오 폭</span>  
       <span class="chev">▾</span>  
     </summary>  
     <div class="module-body">  
@@ -326,7 +346,7 @@ footer p{margin:.3rem 0}
   
   <details class="module">  
     <summary>  
-      <span class="module-title"><span class="num">6</span>라우드니스 조절 (Maximizer)</span>  
+      <span class="module-title"><span class="num">7</span>라우드니스 조절 (Maximizer)</span>  
       <span class="chev">▾</span>  
     </summary>  
     <div class="module-body">  
@@ -345,24 +365,27 @@ footer p{margin:.3rem 0}
   
   <div class="err" id="export-err" role="alert"></div>  
   <div class="download-row">  
-    <button type="button" class="btn primary" id="export-btn" disabled>마스터링된 WAV 다운로드</button>  
+    <button type="button" class="btn primary" id="export-btn" disabled>Suno 마스터링 WAV 다운로드</button>  
   </div>  
 </div>  
   
 <article>  
-<h2>사용 방법</h2>  
+<h2>Suno AI 음악을 무료로 마스터링하는 방법</h2>  
 <ol>  
 <li><strong>음원 업로드</strong>: 위쪽 박스를 눌러 파일을 고르거나 끌어다 놓습니다.</li>  
-<li><strong>EQ로 톤 다듬기</strong>: '음색 성향' 드롭다운으로 시작점을 잡고, 필요하면 7개 밴드를 직접 조정합니다.</li>  
+<li><strong>Suno 자동 마스터링 선택</strong>: 처음이라면 'Suno 기본' 프리셋을 먼저 적용합니다.</li>
+<li><strong>EQ로 톤 다듬기</strong>: 필요하면 '음색 성향' 드롭다운으로 시작점을 잡고 7개 밴드를 직접 조정합니다.</li>  
 <li><strong>드라이브로 질감 더하기</strong>: 살짝 따뜻한 배음이 필요하면 드라이브를 올립니다.</li>  
 <li><strong>De-harsh로 날카로운 소리 다듬기</strong>: 보컬이나 하이햇이 따갑게 느껴지면 다듬기 강도를 올립니다.</li>  
 <li><strong>스테레오 폭 조절</strong>: 소리를 더 넓게 혹은 좁게 만듭니다.</li>  
 <li><strong>라우드니스 조절</strong>: 천장(dB)과 밀어넣는 세기를 정해 전체 음량을 높입니다.</li>  
-<li><strong>WAV로 다운로드</strong>: 설정이 마음에 들면 '마스터링된 WAV 다운로드' 버튼을 누릅니다.</li>  
+<li><strong>WAV로 다운로드</strong>: 설정이 마음에 들면 'Suno 마스터링 WAV 다운로드' 버튼을 누릅니다.</li>  
 </ol>  
   
+<div class="suno-callout"><strong>💡 Suno 음악에 특히 유용한 이유</strong><br><span class="hint">Suno에서 만든 곡을 별도의 오디오 프로그램 없이 브라우저에서 바로 정리할 수 있도록 자동 프리셋과 고급 수동 설정을 함께 제공합니다.</span></div>
+
 <h2>이 도구가 하는 일</h2>  
-<p>음원을 EQ, 드라이브(새추레이션), 디하시, 스테레오 폭, 라우드니스 조절(리미터)을 거쳐 한 번에 다듬고, 처리된 결과를 WAV 파일로 내려받을 수 있습니다. 모든 처리는 브라우저 안(Web Audio API)에서 이루어지며 파일을 서버로 보내지 않습니다.</p>  
+<p>Suno AI 등에서 만든 음원을 EQ, 드라이브(새추레이션), 디하시, 스테레오 폭, 라우드니스 조절(리미터)을 거쳐 한 번에 다듬고, 처리된 결과를 WAV 파일로 내려받을 수 있습니다. 모든 처리는 브라우저 안(Web Audio API)에서 이루어지며 파일을 서버로 보내지 않습니다.</p>  
   
 <h2>각 단계는 무엇을 하나요</h2>  
 <h3>EQ 7밴드 (Sub·Bass·L-Mid·Mid·H-Mid·Pres·Air)</h3>  
@@ -388,7 +411,7 @@ footer p{margin:.3rem 0}
 <p>전문 마스터링 엔지니어나 대형 AI 학습 기반 서비스만큼의 정교함은 어렵습니다. 다만 러프 믹스를 빠르게 다듬거나, 데모·가이드 음원 수준의 마무리에는 충분히 쓸모가 있습니다.</p>  
 <h3>회원가입이나 로그인이 필요한가요?</h3>  
 <p>아니요. 회원가입, 로그인 없이 바로 쓸 수 있습니다.</p>  
-<h3>어떤 파일 형식을 올릴 수 있나요?</h3>  
+<h3>Suno에서 받은 MP3나 WAV도 사용할 수 있나요?</h3>  
 <p>MP3, WAV, M4A 등 이용 중인 브라우저가 재생할 수 있는 오디오 형식이면 대부분 가능합니다. 재생이 안 된다면 WAV나 MP3로 바꿔서 다시 시도해 보세요.</p>  
 <h3>내려받은 파일은 어떤 형식인가요?</h3>  
 <p>16비트 WAV 파일로 내려받습니다. 무손실 형식이라 음질 손실 없이 보관하거나 다른 프로그램에서 추가로 편집할 수 있습니다.</p>  
@@ -410,7 +433,7 @@ footer p{margin:.3rem 0}
 </article>  
   
 <footer>  
-<p>무료 오디오 마스터링</p>  
+<p>Suno AI 무료 마스터링</p>  
 <p class="fl"><a href="../about/">소개</a><a href="../privacy/">개인정보처리방침</a><a href="../contact/">문의</a></p>  
 </footer>  
 </main>  
@@ -499,6 +522,25 @@ const EQ_PRESETS = {
 // params: { eqGains:number[7], drive:number(0~100), width:number(0~200, 100=원본),  
 //           ceilingDb:number, pushDb:number }  
 // 반환값: 체인의 마지막(출력) 노드  
+function makeSafetyClipCurve(){
+  const n = 2048;
+  const curve = new Float32Array(n);
+  const threshold = dbToLinear(-0.3);
+  for(let i = 0; i < n; i++){
+    const x = (i / (n - 1)) * 2 - 1;
+    const ax = Math.abs(x);
+    if(ax <= threshold){
+      curve[i] = x;
+    } else {
+      const sign = x < 0 ? -1 : 1;
+      const excess = (ax - threshold) / (1 - threshold);
+      const softened = threshold + (1 - threshold) * (1 - Math.exp(-3 * excess)) / (1 - Math.exp(-3));
+      curve[i] = sign * Math.min(1, softened);
+    }
+  }
+  return curve;
+}
+
 function buildMasterChain(ctx, source, params){  
   const filters = EQ_BANDS.map((b, i) => {  
     const f = ctx.createBiquadFilter();  
@@ -562,11 +604,19 @@ function buildMasterChain(ctx, source, params){
   comp.release.value = 0.15;  
   pushGain.connect(comp);  
   
-  const ceilingGain = ctx.createGain();  
-  ceilingGain.gain.value = 1;  
-  comp.connect(ceilingGain);  
-  
-  return ceilingGain;  
+  // --- 최종 출력 안전단 ---
+  // 컴프레서의 아주 짧은 트랜지언트 피크로 인한 Preview 클리핑을 방지한다.
+  const safetyGain = ctx.createGain();
+  safetyGain.gain.value = dbToLinear(-2.0);
+  comp.connect(safetyGain);
+
+  // 극단적인 피크만 부드럽게 눌러주는 최종 안전 클리퍼.
+  const safetyClip = ctx.createWaveShaper();
+  safetyClip.curve = makeSafetyClipCurve();
+  safetyClip.oversample = '4x';
+  safetyGain.connect(safetyClip);
+
+  return safetyClip;
 }  
 // ==CORE END==  
   
@@ -582,7 +632,7 @@ let isPlaying = false;
 let isBypassed = false;  
 let rafId = null;  
 let peakHold = -Infinity;  
-let fileNameBase = 'mastered';  
+let fileNameBase = 'suno-mastered';  
   
 const state = {  
   eqGains: EQ_PRESETS.flat.slice(),  
@@ -669,7 +719,7 @@ function resetUIForNewFile(){
   
 async function loadFile(file){  
   $('err').textContent = '';  
-  fileNameBase = file.name.replace(/\.[^.]+$/, '') || 'mastered';  
+  fileNameBase = file.name.replace(/\.[^.]+$/, '') || 'suno-mastered';  
   $('fname').textContent = file.name;  
   try{  
     ensureCtx();  
@@ -754,8 +804,13 @@ function bindSliderPair(sliderId, labelId, fmt, onChange){
   });  
 }  
   
+const SUNO_PRESETS={standard:{label:'Suno 기본',eq:'flat',drive:8,deharsh:10,width:110,push:6,ceiling:-1},vocal:{label:'보컬 선명하게',eq:'bright',drive:5,deharsh:18,width:105,push:5,ceiling:-1},wide:{label:'풍부하고 넓게',eq:'warm',drive:10,deharsh:8,width:135,push:6,ceiling:-1},soft:{label:'부드럽게',eq:'warm',drive:4,deharsh:32,width:105,push:5,ceiling:-1.2}};
+function applySunoPreset(name){const p=SUNO_PRESETS[name]||SUNO_PRESETS.standard;applyEqPreset(p.eq);state.drive=p.drive;state.deharsh=p.deharsh;state.width=p.width;state.pushDb=p.push;state.ceilingDb=p.ceiling;$('drive-slider').value=p.drive;$('drive-val').textContent=String(p.drive);$('deharsh-slider').value=p.deharsh;$('deharsh-val').textContent=String(p.deharsh);$('width-slider').value=p.width;$('width-val').textContent=p.width+'%';$('push-slider').value=p.push;$('push-val').textContent=p.push.toFixed(1)+' dB';$('ceiling-slider').value=p.ceiling;$('ceiling-val').textContent=p.ceiling.toFixed(1)+' dB';document.querySelectorAll('[data-suno-preset]').forEach(btn=>btn.classList.toggle('active',btn.dataset.sunoPreset===name));$('applied-note').textContent='현재 추천: '+p.label;rebuildLiveChain();}
+function initSunoPresets(){document.querySelectorAll('[data-suno-preset]').forEach(btn=>btn.addEventListener('click',()=>applySunoPreset(btn.dataset.sunoPreset)));}
 function initUI(){  
-  buildEqUI();  
+  buildEqUI();
+  initSunoPresets();
+  applySunoPreset('standard');  
   
   document.getElementById('character-select').addEventListener('change', (e) => applyEqPreset(e.target.value));  
   
@@ -833,13 +888,13 @@ let demoSource = null;
 let demoPlaying = false;  
 let demoMode = 'before'; // 'before' | 'after'  
   
-const DEMO_PARAMS = {  
-  eqGains: EQ_PRESETS.warm.slice(),  
-  drive: 8,  
-  deharsh: 12,  
-  width: 108,  
-  ceilingDb: -1.5,  
-  pushDb: 2  
+const DEMO_PARAMS = {
+  eqGains: EQ_PRESETS.warm.slice(),
+  drive: 8,
+  deharsh: 12,
+  width: 108,
+  ceilingDb: -1.5,
+  pushDb: 2
 };  
   
 async function loadDemo(){  
