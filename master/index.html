@@ -1,909 +1,964 @@
-<!doctype html>
-<html lang="ko">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>무료 오디오 마스터링 - 브라우저에서 바로 EQ·리미터·스테레오 폭 조절</title>
-<meta name="description" content="음원 파일을 업로드 없이 이 브라우저 안에서 EQ, 드라이브, 스테레오 폭, 리미터로 마스터링하고 WAV로 내려받는 무료 도구입니다. 서버 전송 없이 전부 로컬에서 처리됩니다.">
-<meta name="color-scheme" content="dark">
-<meta property="og:type" content="website">
-<meta property="og:locale" content="ko_KR">
-<meta property="og:title" content="무료 오디오 마스터링">
-<meta property="og:description" content="브라우저 안에서 EQ·드라이브·스테레오 폭·리미터로 음원을 마스터링하고 WAV로 내려받는 무료 도구입니다.">
-<link rel="alternate" hreflang="ko" href="https://ddim8187.github.io/master/">
-<link rel="alternate" hreflang="en" href="https://ddim8187.github.io/master/en/">
-<link rel="alternate" hreflang="x-default" href="https://ddim8187.github.io/master/">
-<script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebApplication","name":"무료 오디오 마스터링","applicationCategory":"MultimediaApplication","operatingSystem":"Any","inLanguage":"ko","offers":{"@type":"Offer","price":"0","priceCurrency":"KRW"}}
-</script>
-<script type="application/ld+json">
-{"@context":"https://schema.org","@type":"HowTo","name":"무료 오디오 마스터링 사용 방법","inLanguage":"ko","step":[
-  {"@type":"HowToStep","name":"음원 업로드","text":"업로드 박스를 눌러 파일을 고르거나 끌어다 놓습니다."},
-  {"@type":"HowToStep","name":"EQ로 톤 다듬기","text":"음색 성향 드롭다운으로 시작점을 잡고 7개 밴드를 조정합니다."},
-  {"@type":"HowToStep","name":"드라이브로 질감 더하기","text":"드라이브 슬라이더로 따뜻한 배음을 더합니다."},
-  {"@type":"HowToStep","name":"De-harsh로 날카로운 소리 다듬기","text":"3~5kHz 부근의 거슬리는 소리를 눌러줍니다."},
-  {"@type":"HowToStep","name":"스테레오 폭 조절","text":"좌우 폭을 넓히거나 좁힙니다."},
-  {"@type":"HowToStep","name":"라우드니스 조절","text":"천장과 밀어넣는 세기를 정해 음량을 높입니다."},
-  {"@type":"HowToStep","name":"WAV로 다운로드","text":"마스터링된 WAV 다운로드 버튼을 눌러 결과물을 받습니다."}
-]}
-</script>
-<script type="application/ld+json">
-{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
-  {"@type":"Question","name":"업로드한 파일이 어딘가에 저장되나요?","acceptedAnswer":{"@type":"Answer","text":"아니요. 파일은 브라우저 메모리 안에서만 처리되며 서버로 전송되거나 저장되지 않습니다. 탭을 닫으면 사라집니다."}},
-  {"@type":"Question","name":"왜 내려받기 버튼을 누르면 시간이 좀 걸리나요?","acceptedAnswer":{"@type":"Answer","text":"다운로드 시점에 곡 전체를 처음부터 끝까지 다시 정밀하게 처리해서 파일로 만들기 때문입니다."}},
-  {"@type":"Question","name":"결과물이 유료 마스터링 서비스만큼 좋을까요?","acceptedAnswer":{"@type":"Answer","text":"전문 엔지니어나 대형 AI 서비스만큼의 정교함은 어렵지만, 러프 믹스나 데모 음원 마무리에는 충분히 쓸모가 있습니다."}},
-  {"@type":"Question","name":"회원가입이나 로그인이 필요한가요?","acceptedAnswer":{"@type":"Answer","text":"아니요. 회원가입, 로그인 없이 바로 사용할 수 있습니다."}},
-  {"@type":"Question","name":"어떤 파일 형식을 올릴 수 있나요?","acceptedAnswer":{"@type":"Answer","text":"MP3, WAV, M4A 등 브라우저가 재생할 수 있는 오디오 형식이면 대부분 가능합니다."}},
-  {"@type":"Question","name":"내려받은 파일은 어떤 형식인가요?","acceptedAnswer":{"@type":"Answer","text":"16비트 WAV 파일로 내려받으며, 무손실 형식이라 추가 편집에도 적합합니다."}}
-]}
-</script>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3950528589828430"
-     crossorigin="anonymous"></script>
-<link rel="icon" href="/favicon.ico" type="image/x-icon">
-<link rel="apple-touch-icon" href="/favicon.png">
-<meta name="google-site-verification" content="zwCpUdfCWwRBVa0vwLoOv7jPIo5nC3mv9Im_DfojCVM" />
-<meta name="naver-site-verification" content="c75f1f11dca6d41ed47e83a590778bcf2aa8247b" />
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-<style>
-:root{
-  --bg:#0c0d10;
-  --panel:#15171c;
-  --panel-raised:#1b1e25;
-  --line:#2a2d36;
-  --ink:#e9e7e0;
-  --ink-dim:#8b8d97;
-  --amber:#e8a33d;
-  --amber-dim:#7a5a28;
-  --teal:#57b8a4;
-  --red:#e5544f;
-  --mono: 'Space Grotesk', -apple-system, sans-serif;
-  --sans: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
-}
-*{box-sizing:border-box}
-[hidden]{display:none !important}
-html{-webkit-text-size-adjust:100%}
-html,body{max-width:100%; overflow-x:hidden}
-body{
-  margin:0; background:var(--bg); color:var(--ink);
-  font-family:var(--sans); font-size:1rem; line-height:1.7;
-  background-image:
-    radial-gradient(ellipse 60% 40% at 50% -10%, rgba(232,163,61,.08), transparent);
-}
-.wrap{max-width:46rem; margin:0 auto; padding:1.5rem 1.1rem 4rem}
-.top{margin:0 0 1.25rem; font-size:.85rem}
-.top a{color:var(--ink-dim); text-decoration:none}
-.top a:hover{color:var(--amber)}
-a{color:var(--amber)}
-a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--amber); outline-offset:2px}
+<!doctype html>  
+<html lang="ko">  
+<head>  
+<meta charset="utf-8">  
+<meta name="viewport" content="width=device-width, initial-scale=1">  
+<title>Suno AI 무료 마스터링 - AI 음악 음질 개선 & WAV 다운로드</title>  
+<meta name="description" content="Suno AI로 만든 음악을 무료로 마스터링하세요. MP3·WAV를 브라우저에서 바로 처리하고 보컬 선명도, 음량, 스테레오감을 간편하게 개선해 WAV로 다운로드할 수 있습니다.">  
+<meta name="color-scheme" content="dark">  
+<meta property="og:type" content="website">  
+<meta property="og:locale" content="ko_KR">  
+<meta property="og:title" content="Suno AI 무료 마스터링">  
+<meta property="og:description" content="Suno AI 음악을 브라우저에서 무료로 마스터링하세요. 회원가입 없이 MP3·WAV를 처리하고 WAV로 다운로드할 수 있습니다.">  
+<link rel="alternate" hreflang="ko" href="https://ddim8187.github.io/master/">  
+<link rel="alternate" hreflang="en" href="https://ddim8187.github.io/master/en/">  
+<link rel="alternate" hreflang="x-default" href="https://ddim8187.github.io/master/">  
+<script type="application/ld+json">  
+{"@context":"https://schema.org","@type":"WebApplication","name":"Suno AI 무료 마스터링","applicationCategory":"MultimediaApplication","operatingSystem":"Any","inLanguage":"ko","offers":{"@type":"Offer","price":"0","priceCurrency":"KRW"}}  
+</script>  
+<script type="application/ld+json">  
+{"@context":"https://schema.org","@type":"HowTo","name":"Suno AI 음악 무료 마스터링 사용 방법","inLanguage":"ko","step":[  
+  {"@type":"HowToStep","name":"음원 업로드","text":"업로드 박스를 눌러 파일을 고르거나 끌어다 놓습니다."},  
+  {"@type":"HowToStep","name":"EQ로 톤 다듬기","text":"음색 성향 드롭다운으로 시작점을 잡고 7개 밴드를 조정합니다."},  
+  {"@type":"HowToStep","name":"드라이브로 질감 더하기","text":"드라이브 슬라이더로 따뜻한 배음을 더합니다."},  
+  {"@type":"HowToStep","name":"De-harsh로 날카로운 소리 다듬기","text":"3~5kHz 부근의 거슬리는 소리를 눌러줍니다."},  
+  {"@type":"HowToStep","name":"스테레오 폭 조절","text":"좌우 폭을 넓히거나 좁힙니다."},  
+  {"@type":"HowToStep","name":"라우드니스 조절","text":"천장과 밀어넣는 세기를 정해 음량을 높입니다."},  
+  {"@type":"HowToStep","name":"WAV로 다운로드","text":"Suno 마스터링 WAV 다운로드 버튼을 눌러 결과물을 받습니다."}  
+]}  
+</script>  
+<script type="application/ld+json">  
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[  
+  {"@type":"Question","name":"업로드한 파일이 어딘가에 저장되나요?","acceptedAnswer":{"@type":"Answer","text":"아니요. 파일은 브라우저 메모리 안에서만 처리되며 서버로 전송되거나 저장되지 않습니다. 탭을 닫으면 사라집니다."}},  
+  {"@type":"Question","name":"왜 내려받기 버튼을 누르면 시간이 좀 걸리나요?","acceptedAnswer":{"@type":"Answer","text":"다운로드 시점에 곡 전체를 처음부터 끝까지 다시 정밀하게 처리해서 파일로 만들기 때문입니다."}},  
+  {"@type":"Question","name":"결과물이 유료 마스터링 서비스만큼 좋을까요?","acceptedAnswer":{"@type":"Answer","text":"전문 엔지니어나 대형 AI 서비스만큼의 정교함은 어렵지만, 러프 믹스나 데모 음원 마무리에는 충분히 쓸모가 있습니다."}},  
+  {"@type":"Question","name":"회원가입이나 로그인이 필요한가요?","acceptedAnswer":{"@type":"Answer","text":"아니요. 회원가입, 로그인 없이 바로 사용할 수 있습니다."}},  
+  {"@type":"Question","name":"어떤 파일 형식을 올릴 수 있나요?","acceptedAnswer":{"@type":"Answer","text":"MP3, WAV, M4A 등 브라우저가 재생할 수 있는 오디오 형식이면 대부분 가능합니다."}},  
+  {"@type":"Question","name":"내려받은 파일은 어떤 형식인가요?","acceptedAnswer":{"@type":"Answer","text":"16비트 WAV 파일로 내려받으며, 무손실 형식이라 추가 편집에도 적합합니다."}}  
+]}  
+</script>  
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3950528589828430"  
+     crossorigin="anonymous"></script>  
+<link rel="icon" href="/favicon.ico" type="image/x-icon">  
+<link rel="apple-touch-icon" href="/favicon.png">  
+<meta name="google-site-verification" content="zwCpUdfCWwRBVa0vwLoOv7jPIo5nC3mv9Im_DfojCVM" />  
+<meta name="naver-site-verification" content="c75f1f11dca6d41ed47e83a590778bcf2aa8247b" />  
+<link rel="preconnect" href="https://fonts.googleapis.com">  
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>  
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">  
+<style>  
+:root{  
+  --bg:#0c0d10;  
+  --panel:#15171c;  
+  --panel-raised:#1b1e25;  
+  --line:#2a2d36;  
+  --ink:#e9e7e0;  
+  --ink-dim:#8b8d97;  
+  --amber:#e8a33d;  
+  --amber-dim:#7a5a28;  
+  --teal:#57b8a4;  
+  --red:#e5544f;  
+  --mono: 'Space Grotesk', -apple-system, sans-serif;  
+  --sans: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;  
+}  
 
-header.hero{margin-bottom:1.5rem}
-h1{
-  font-family:var(--mono); font-weight:700; font-size:1.55rem; line-height:1.3;
-  margin:0 0 .5rem; letter-spacing:-.01em; color:#fff;
-}
-.lead{color:var(--ink-dim); margin:0 0 0; font-size:.98rem; max-width:34rem}
-
-/* 드롭존 / 트랜스포트 */
-.drop{
-  border:1.5px dashed var(--line); border-radius:.75rem; background:var(--panel);
-  padding:2rem 1.25rem; text-align:center; margin:1.5rem 0 1.25rem; cursor:pointer;
-  transition:border-color .15s;
-}
-.drop.drag{border-color:var(--amber)}
-.drop strong{display:block; font-size:1.05rem; margin-bottom:.3rem; color:#fff}
-.drop span{color:var(--ink-dim); font-size:.88rem}
-input[type="file"]{display:none}
-
-.transport{
-  display:none; align-items:center; gap:.75rem; background:var(--panel); border:1px solid var(--line);
-  border-radius:.75rem; padding:.9rem 1.1rem; margin:0 0 1.25rem; flex-wrap:wrap;
-}
-.transport.show{display:flex}
-.transport .fname{font-size:.9rem; color:var(--ink-dim); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:11rem}
-button{font:inherit; cursor:pointer}
-.btn{
-  background:var(--panel-raised); color:var(--ink); border:1px solid var(--line); border-radius:.5rem;
-  padding:.55rem .9rem; font-size:.88rem; font-weight:600;
-}
-.btn:hover{border-color:var(--amber-dim)}
-.btn.on{background:var(--amber); color:#1a1206; border-color:var(--amber)}
-.btn.primary{background:var(--amber); color:#1a1206; border-color:var(--amber); font-weight:700}
-.btn.primary:hover{opacity:.92}
-.btn:disabled{opacity:.4; cursor:not-allowed}
-.spacer{flex:1 1 auto}
-
-/* 미터 */
-.meter-box{
-  background:var(--panel); border:1px solid var(--line); border-radius:.75rem; padding:1.1rem 1.25rem;
-  margin:0 0 1.5rem;
-}
-.meter-top{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:.6rem}
-.meter-label{font-size:.8rem; color:var(--ink-dim); letter-spacing:.02em}
-.meter-value{font-family:var(--mono); font-size:1.5rem; font-weight:700; color:#fff; font-variant-numeric:tabular-nums}
-.meter-value.peak-hot{color:var(--red)}
-.meter-track{height:.6rem; background:#000; border-radius:.3rem; overflow:hidden; position:relative}
-.meter-fill{height:100%; width:0%; background:linear-gradient(90deg, var(--teal), var(--amber) 75%, var(--red) 92%); transition:width .05s linear}
-.meter-scale{display:flex; justify-content:space-between; font-size:.68rem; color:var(--ink-dim); margin-top:.3rem; font-family:var(--mono)}
-
-/* 모듈 */
-.module{background:var(--panel); border:1px solid var(--line); border-radius:.75rem; padding:1.1rem 1.25rem; margin:0 0 1.1rem}
-.module summary{list-style:none; cursor:pointer; display:flex; align-items:center; justify-content:space-between}
-.module summary::-webkit-details-marker{display:none}
-.module-title{font-weight:700; font-size:.95rem; color:#fff; display:flex; align-items:center; gap:.6rem}
-.module-title .dot{width:.5rem; height:.5rem; border-radius:50%; background:var(--teal); display:inline-block}
-.num{
-  display:inline-flex; align-items:center; justify-content:center; width:1.5rem; height:1.5rem;
-  border-radius:50%; background:var(--amber); color:#1a1206; font-family:var(--mono); font-weight:700;
-  font-size:.78rem; flex:0 0 auto;
-}
-.step-eyebrow{
-  display:flex; align-items:center; gap:.6rem; font-weight:700; color:#fff; font-size:.95rem; margin:1.5rem 0 0;
-}
-
-/* Before/After 데모 */
-.demo-box{
-  background:var(--panel); border:1px solid var(--line); border-radius:.75rem; padding:1.1rem 1.25rem;
-  margin:0 0 1.5rem;
-}
-.demo-label{margin:0 0 .8rem; font-size:.92rem; color:var(--ink)}
-.demo-row{display:flex; align-items:center; gap:.8rem; flex-wrap:wrap}
-.demo-toggle{display:flex; border:1px solid var(--line); border-radius:.5rem; overflow:hidden}
-.demo-toggle .btn{border:0; border-radius:0; padding:.55rem 1rem}
-.demo-toggle .btn + .btn{border-left:1px solid var(--line)}
-#demo-status{margin:.6rem 0 0}
-.select{
-  width:100%; background:var(--panel-raised); color:var(--ink); border:1px solid var(--line); border-radius:.5rem;
-  padding:.6rem .7rem; font:inherit; font-size:1rem;
-}
-.chev{color:var(--ink-dim); transition:transform .15s}
-details[open] .chev{transform:rotate(180deg)}
-.module-body{padding-top:1rem}
-
-/* EQ */
-/* 세로 슬라이더는 iOS에서 폭 계산이 깨져 화면 밖으로 넘치므로, 밴드마다 가로 한 줄로 배치 */
-.eq-grid{display:flex; flex-direction:column; gap:.35rem}
-.eq-band{display:grid; grid-template-columns:3.6rem minmax(0,1fr) 3rem; align-items:center; gap:.7rem; min-width:0}
-.eq-label{display:flex; flex-direction:column; line-height:1.25}
-.eq-name{font-size:.82rem; color:var(--ink); font-weight:700}
-.eq-freq{font-size:.7rem; color:var(--ink-dim); font-family:var(--mono)}
-input[type="range"].eq-slider{width:100%; min-width:0; margin:0}
-.eq-val{font-family:var(--mono); font-size:.8rem; color:var(--amber); text-align:right; font-variant-numeric:tabular-nums}
-.presets{display:flex; gap:.5rem; flex-wrap:wrap; margin-top:1rem}
-.presets .btn{padding:.4rem .75rem; font-size:.82rem; font-weight:500}
-
-/* 슬라이더 공통(가로) */
-.hrow{display:grid; grid-template-columns:1fr; gap:.3rem; margin-bottom:1rem}
-.hrow:last-child{margin-bottom:0}
-.hrow-top{display:flex; justify-content:space-between; font-size:.85rem}
-.hrow-top .lbl{color:var(--ink); font-weight:600}
-.hrow-top .val{font-family:var(--mono); color:var(--amber); font-variant-numeric:tabular-nums}
-input[type="range"]{
-  -webkit-appearance:none; width:100%; height:1.4rem; background:transparent;
-}
-input[type="range"]::-webkit-slider-runnable-track{height:.35rem; background:var(--line); border-radius:.2rem}
-input[type="range"]::-webkit-slider-thumb{
-  -webkit-appearance:none; width:1.05rem; height:1.05rem; border-radius:50%;
-  background:var(--amber); margin-top:-.35rem; border:2px solid #0c0d10;
-}
-input[type="range"]::-moz-range-track{height:.35rem; background:var(--line); border-radius:.2rem}
-input[type="range"]::-moz-range-thumb{width:1.05rem; height:1.05rem; border-radius:50%; background:var(--amber); border:2px solid #0c0d10}
-.hint{color:var(--ink-dim); font-size:.82rem; margin:.2rem 0 0}
-
-.err{color:var(--red); font-size:.9rem; min-height:1.3rem; margin:.5rem 0 0}
-.download-row{display:flex; justify-content:center; margin:1.5rem 0 2rem}
-.download-row .btn{padding:.85rem 1.6rem; font-size:1rem}
-
-/* 본문 */
-article{margin-top:2.5rem}
-article h2{font-family:var(--mono); font-size:1.15rem; color:#fff; margin:2.25rem 0 .7rem; font-weight:700}
-article h3{font-size:1rem; color:#fff; margin:1.3rem 0 .3rem; font-weight:700}
-article p{color:var(--ink-dim); margin:.6rem 0}
-article ul{color:var(--ink-dim); padding-left:1.2rem; margin:.5rem 0}
-article li{margin:.35rem 0}
-article table{width:100%; border-collapse:collapse; margin:.75rem 0; font-size:.92rem}
-article th,article td{border:1px solid var(--line); padding:.55rem .6rem; text-align:left; color:var(--ink-dim)}
-article th{background:var(--panel); color:var(--ink)}
-
-footer{margin-top:3rem; padding-top:1rem; border-top:1px solid var(--line); color:var(--ink-dim); font-size:.85rem}
-footer p{margin:.3rem 0}
-.fl a{margin-right:1rem}
-</style>
-</head>
-<body>
-<main class="wrap">
-
-<nav class="top" aria-label="사이트 이동"><a href="../">생활 계산 도구 모음</a> · <a href="en/">English</a></nav>
-
-<header class="hero">
-  <h1>무료 오디오 마스터링</h1>
-  <p class="lead">음원 파일을 업로드하면 이 브라우저 안에서만 처리됩니다. 서버로 전송되거나 저장되지 않으며, 파일을 닫는 순간 사라집니다.</p>
-</header>
-
-<div class="demo-box">
-  <p class="demo-label">파일을 올리기 전에, 샘플 사운드로 Before / After 차이부터 들어보세요</p>
-  <div class="demo-row">
-    <button type="button" class="btn primary demo-play" id="demo-play">▶ 재생</button>
-    <div class="demo-toggle" role="group" aria-label="Before/After 선택">
-      <button type="button" class="btn on" id="demo-before-btn" aria-pressed="true">Before</button>
-      <button type="button" class="btn" id="demo-after-btn" aria-pressed="false">After</button>
-    </div>
-  </div>
-  <p class="hint" id="demo-status">샘플 로딩 중…</p>
-</div>
-
-<p class="step-eyebrow"><span class="num">1</span>음원 업로드 &amp; 실시간 듣기</p>
-
-<div class="drop" id="drop" tabindex="0" role="button" aria-label="음원 파일 선택">
-  <strong>여기를 누르거나 파일을 끌어다 놓으세요</strong>
-  <span>MP3, WAV, M4A 등 이 브라우저가 재생할 수 있는 오디오 파일</span>
-  <input type="file" id="file-input" accept="audio/*">
-</div>
-
-<p class="err" id="err" role="alert"></p>
-
-<div class="transport" id="transport">
-  <button type="button" class="btn primary" id="play-btn">재생</button>
-  <button type="button" class="btn" id="ab-btn">원본으로 듣기</button>
-  <span class="fname" id="fname"></span>
-  <div class="spacer"></div>
-  <button type="button" class="btn" id="reset-btn">파일 바꾸기</button>
-</div>
-
-<div class="meter-box" id="meter-box" hidden>
-  <div class="meter-top">
-    <span class="meter-label">출력 레벨 (dBFS · 참고용 RMS 미터)</span>
-    <span class="meter-value" id="meter-value">-∞</span>
-  </div>
-  <div class="meter-track"><div class="meter-fill" id="meter-fill"></div></div>
-  <div class="meter-scale"><span>-60</span><span>-40</span><span>-20</span><span>-12</span><span>-6</span><span>-3</span><span>0</span></div>
-</div>
-
-<div id="controls">
-
-  <details class="module" open>
+.suno-badge{display:inline-block;margin-bottom:.65rem;padding:.28rem .55rem;border:1px solid var(--amber-dim);border-radius:999px;color:var(--amber);font-family:var(--mono);font-size:.68rem;font-weight:700;letter-spacing:.04em}.privacy-note{margin-top:.9rem;color:var(--teal);font-size:.82rem}.auto-module{border-color:var(--amber-dim);background:linear-gradient(180deg,rgba(232,163,61,.055),var(--panel))}.auto-num{background:var(--teal);color:#08110f}.auto-title{margin:0 0 .15rem;color:#fff;font-size:1.02rem;font-weight:700}.suno-presets{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.65rem;margin-top:1rem}.preset-card{display:flex;flex-direction:column;align-items:flex-start;gap:.18rem;min-width:0;padding:.8rem .85rem;text-align:left;background:var(--panel-raised);color:var(--ink);border:1px solid var(--line);border-radius:.6rem}.preset-card:hover{border-color:var(--amber-dim)}.preset-card.active{border-color:var(--amber);box-shadow:0 0 0 1px rgba(232,163,61,.15) inset}.preset-card span{font-size:1.15rem}.preset-card strong{font-size:.88rem;color:#fff}.preset-card small{font-size:.72rem;line-height:1.35;color:var(--ink-dim)}.applied-note{margin:.75rem 0 0;color:var(--amber);font-size:.8rem;font-weight:600}.suno-callout{margin:1.1rem 0 0;padding:.9rem 1rem;border-left:3px solid var(--amber);background:rgba(232,163,61,.055);border-radius:0 .5rem .5rem 0}.suno-callout strong{color:#fff}@media (max-width:430px){.suno-presets{grid-template-columns:1fr}.suno-badge{font-size:.62rem}}
+*{box-sizing:border-box}  
+[hidden]{display:none !important}  
+html{-webkit-text-size-adjust:100%}  
+html,body{max-width:100%; overflow-x:hidden}  
+body{  
+  margin:0; background:var(--bg); color:var(--ink);  
+  font-family:var(--sans); font-size:1rem; line-height:1.7;  
+  background-image:  
+    radial-gradient(ellipse 60% 40% at 50% -10%, rgba(232,163,61,.08), transparent);  
+}  
+.wrap{max-width:46rem; margin:0 auto; padding:1.5rem 1.1rem 4rem}  
+.top{margin:0 0 1.25rem; font-size:.85rem}  
+.top a{color:var(--ink-dim); text-decoration:none}  
+.top a:hover{color:var(--amber)}  
+a{color:var(--amber)}  
+a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--amber); outline-offset:2px}  
+  
+header.hero{margin-bottom:1.5rem}  
+h1{  
+  font-family:var(--mono); font-weight:700; font-size:1.55rem; line-height:1.3;  
+  margin:0 0 .5rem; letter-spacing:-.01em; color:#fff;  
+}  
+.lead{color:var(--ink-dim); margin:0 0 0; font-size:.98rem; max-width:34rem}  
+  
+/* 드롭존 / 트랜스포트 */  
+.drop{  
+  border:1.5px dashed var(--line); border-radius:.75rem; background:var(--panel);  
+  padding:2rem 1.25rem; text-align:center; margin:1.5rem 0 1.25rem; cursor:pointer;  
+  transition:border-color .15s;  
+}  
+.drop.drag{border-color:var(--amber)}  
+.drop strong{display:block; font-size:1.05rem; margin-bottom:.3rem; color:#fff}  
+.drop span{color:var(--ink-dim); font-size:.88rem}  
+input[type="file"]{display:none}  
+  
+.transport{  
+  display:none; align-items:center; gap:.75rem; background:var(--panel); border:1px solid var(--line);  
+  border-radius:.75rem; padding:.9rem 1.1rem; margin:0 0 1.25rem; flex-wrap:wrap;  
+}  
+.transport.show{display:flex}  
+.transport .fname{font-size:.9rem; color:var(--ink-dim); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:11rem}  
+button{font:inherit; cursor:pointer}  
+.btn{  
+  background:var(--panel-raised); color:var(--ink); border:1px solid var(--line); border-radius:.5rem;  
+  padding:.55rem .9rem; font-size:.88rem; font-weight:600;  
+}  
+.btn:hover{border-color:var(--amber-dim)}  
+.btn.on{background:var(--amber); color:#1a1206; border-color:var(--amber)}  
+.btn.primary{background:var(--amber); color:#1a1206; border-color:var(--amber); font-weight:700}  
+.btn.primary:hover{opacity:.92}  
+.btn:disabled{opacity:.4; cursor:not-allowed}  
+.spacer{flex:1 1 auto}  
+  
+/* 미터 */  
+.meter-box{  
+  background:var(--panel); border:1px solid var(--line); border-radius:.75rem; padding:1.1rem 1.25rem;  
+  margin:0 0 1.5rem;  
+}  
+.meter-top{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:.6rem}  
+.meter-label{font-size:.8rem; color:var(--ink-dim); letter-spacing:.02em}  
+.meter-value{font-family:var(--mono); font-size:1.5rem; font-weight:700; color:#fff; font-variant-numeric:tabular-nums}  
+.meter-value.peak-hot{color:var(--red)}  
+.meter-track{height:.6rem; background:#000; border-radius:.3rem; overflow:hidden; position:relative}  
+.meter-fill{height:100%; width:0%; background:linear-gradient(90deg, var(--teal), var(--amber) 75%, var(--red) 92%); transition:width .05s linear}  
+.meter-scale{display:flex; justify-content:space-between; font-size:.68rem; color:var(--ink-dim); margin-top:.3rem; font-family:var(--mono)}  
+  
+/* 모듈 */  
+.module{background:var(--panel); border:1px solid var(--line); border-radius:.75rem; padding:1.1rem 1.25rem; margin:0 0 1.1rem}  
+.module summary{list-style:none; cursor:pointer; display:flex; align-items:center; justify-content:space-between}  
+.module summary::-webkit-details-marker{display:none}  
+.module-title{font-weight:700; font-size:.95rem; color:#fff; display:flex; align-items:center; gap:.6rem}  
+.module-title .dot{width:.5rem; height:.5rem; border-radius:50%; background:var(--teal); display:inline-block}  
+.num{  
+  display:inline-flex; align-items:center; justify-content:center; width:1.5rem; height:1.5rem;  
+  border-radius:50%; background:var(--amber); color:#1a1206; font-family:var(--mono); font-weight:700;  
+  font-size:.78rem; flex:0 0 auto;  
+}  
+.step-eyebrow{  
+  display:flex; align-items:center; gap:.6rem; font-weight:700; color:#fff; font-size:.95rem; margin:1.5rem 0 0;  
+}  
+  
+/* Before/After 데모 */  
+.demo-box{  
+  background:var(--panel); border:1px solid var(--line); border-radius:.75rem; padding:1.1rem 1.25rem;  
+  margin:0 0 1.5rem;  
+}  
+.demo-label{margin:0 0 .8rem; font-size:.92rem; color:var(--ink)}  
+.demo-row{display:flex; align-items:center; gap:.8rem; flex-wrap:wrap}  
+.demo-toggle{display:flex; border:1px solid var(--line); border-radius:.5rem; overflow:hidden}  
+.demo-toggle .btn{border:0; border-radius:0; padding:.55rem 1rem}  
+.demo-toggle .btn + .btn{border-left:1px solid var(--line)}  
+#demo-status{margin:.6rem 0 0}  
+.select{  
+  width:100%; background:var(--panel-raised); color:var(--ink); border:1px solid var(--line); border-radius:.5rem;  
+  padding:.6rem .7rem; font:inherit; font-size:1rem;  
+}  
+.chev{color:var(--ink-dim); transition:transform .15s}  
+details[open] .chev{transform:rotate(180deg)}  
+.module-body{padding-top:1rem}  
+  
+/* EQ */  
+/* 세로 슬라이더는 iOS에서 폭 계산이 깨져 화면 밖으로 넘치므로, 밴드마다 가로 한 줄로 배치 */  
+.eq-grid{display:flex; flex-direction:column; gap:.35rem}  
+.eq-band{display:grid; grid-template-columns:3.6rem minmax(0,1fr) 3rem; align-items:center; gap:.7rem; min-width:0}  
+.eq-label{display:flex; flex-direction:column; line-height:1.25}  
+.eq-name{font-size:.82rem; color:var(--ink); font-weight:700}  
+.eq-freq{font-size:.7rem; color:var(--ink-dim); font-family:var(--mono)}  
+input[type="range"].eq-slider{width:100%; min-width:0; margin:0}  
+.eq-val{font-family:var(--mono); font-size:.8rem; color:var(--amber); text-align:right; font-variant-numeric:tabular-nums}  
+.presets{display:flex; gap:.5rem; flex-wrap:wrap; margin-top:1rem}  
+.presets .btn{padding:.4rem .75rem; font-size:.82rem; font-weight:500}  
+  
+/* 슬라이더 공통(가로) */  
+.hrow{display:grid; grid-template-columns:1fr; gap:.3rem; margin-bottom:1rem}  
+.hrow:last-child{margin-bottom:0}  
+.hrow-top{display:flex; justify-content:space-between; font-size:.85rem}  
+.hrow-top .lbl{color:var(--ink); font-weight:600}  
+.hrow-top .val{font-family:var(--mono); color:var(--amber); font-variant-numeric:tabular-nums}  
+input[type="range"]{  
+  -webkit-appearance:none; width:100%; height:1.4rem; background:transparent;  
+}  
+input[type="range"]::-webkit-slider-runnable-track{height:.35rem; background:var(--line); border-radius:.2rem}  
+input[type="range"]::-webkit-slider-thumb{  
+  -webkit-appearance:none; width:1.05rem; height:1.05rem; border-radius:50%;  
+  background:var(--amber); margin-top:-.35rem; border:2px solid #0c0d10;  
+}  
+input[type="range"]::-moz-range-track{height:.35rem; background:var(--line); border-radius:.2rem}  
+input[type="range"]::-moz-range-thumb{width:1.05rem; height:1.05rem; border-radius:50%; background:var(--amber); border:2px solid #0c0d10}  
+.hint{color:var(--ink-dim); font-size:.82rem; margin:.2rem 0 0}  
+  
+.err{color:var(--red); font-size:.9rem; min-height:1.3rem; margin:.5rem 0 0}  
+.download-row{display:flex; justify-content:center; margin:1.5rem 0 2rem}  
+.download-row .btn{padding:.85rem 1.6rem; font-size:1rem}  
+  
+/* 본문 */  
+article{margin-top:2.5rem}  
+article h2{font-family:var(--mono); font-size:1.15rem; color:#fff; margin:2.25rem 0 .7rem; font-weight:700}  
+article h3{font-size:1rem; color:#fff; margin:1.3rem 0 .3rem; font-weight:700}  
+article p{color:var(--ink-dim); margin:.6rem 0}  
+article ul{color:var(--ink-dim); padding-left:1.2rem; margin:.5rem 0}  
+article li{margin:.35rem 0}  
+article table{width:100%; border-collapse:collapse; margin:.75rem 0; font-size:.92rem}  
+article th,article td{border:1px solid var(--line); padding:.55rem .6rem; text-align:left; color:var(--ink-dim)}  
+article th{background:var(--panel); color:var(--ink)}  
+  
+footer{margin-top:3rem; padding-top:1rem; border-top:1px solid var(--line); color:var(--ink-dim); font-size:.85rem}  
+footer p{margin:.3rem 0}  
+.fl a{margin-right:1rem}  
+</style>  
+</head>  
+<body>  
+<main class="wrap">  
+  
+<nav class="top" aria-label="사이트 이동"><a href="../">생활 계산 도구 모음</a> · <a href="en/">English</a></nav>  
+  
+<header class="hero">  
+  <h1>무료 오디오 마스터링</h1>  
+  <p class="lead">음원 파일을 업로드하면 이 브라우저 안에서만 처리됩니다. 서버로 전송되거나 저장되지 않으며, 파일을 닫는 순간 사라집니다.</p>  
+</header>  
+  
+<div class="demo-box">  
+  <p class="demo-label"><strong>🎧 먼저 들어보세요</strong><br><span class="hint">Suno 음악에 적용되는 마스터링 전후의 차이를 샘플로 확인할 수 있습니다.</span></p>  
+  <div class="demo-row">  
+    <button type="button" class="btn primary demo-play" id="demo-play">▶ 재생</button>  
+    <div class="demo-toggle" role="group" aria-label="Before/After 선택">  
+      <button type="button" class="btn on" id="demo-before-btn" aria-pressed="true">Before</button>  
+      <button type="button" class="btn" id="demo-after-btn" aria-pressed="false">After</button>  
+    </div>  
+  </div>  
+  <p class="hint" id="demo-status">샘플 로딩 중…</p>  
+</div>  
+  
+<p class="step-eyebrow"><span class="num">1</span>Suno 음악 업로드 &amp; 실시간 듣기</p>  
+  
+<div class="drop" id="drop" tabindex="0" role="button" aria-label="음원 파일 선택">  
+  <strong>여기를 누르거나 파일을 끌어다 놓으세요</strong>  
+  <span>MP3, WAV, M4A 등 이 브라우저가 재생할 수 있는 오디오 파일</span>  
+  <input type="file" id="file-input" accept="audio/*">  
+</div>  
+  
+<p class="err" id="err" role="alert"></p>  
+  
+<div class="transport" id="transport">  
+  <button type="button" class="btn primary" id="play-btn">재생</button>  
+  <button type="button" class="btn" id="ab-btn">원본으로 듣기</button>  
+  <span class="fname" id="fname"></span>  
+  <div class="spacer"></div>  
+  <button type="button" class="btn" id="reset-btn">파일 바꾸기</button>  
+</div>  
+  
+<div class="meter-box" id="meter-box" hidden>  
+  <div class="meter-top">  
+    <span class="meter-label">출력 레벨 (dBFS · 참고용 RMS 미터)</span>  
+    <span class="meter-value" id="meter-value">-∞</span>  
+  </div>  
+  <div class="meter-track"><div class="meter-fill" id="meter-fill"></div></div>  
+  <div class="meter-scale"><span>-60</span><span>-40</span><span>-20</span><span>-12</span><span>-6</span><span>-3</span><span>0</span></div>  
+</div>  
+  
+<div id="controls">  
+  
+  <details class="module auto-module" open>
     <summary>
-      <span class="module-title"><span class="num">2</span>EQ — 7밴드 보정</span>
+      <span class="module-title"><span class="num auto-num">✨</span>Suno 자동 마스터링</span>
       <span class="chev">▾</span>
     </summary>
     <div class="module-body">
-      <div class="eq-grid" id="eq-grid"></div>
-      <div class="hrow" style="margin-top:1.1rem">
-        <div class="hrow-top"><span class="lbl">음색 성향 (Character)</span></div>
-        <select id="character-select" class="select">
-          <option value="flat">Standard (기본 밸런스)</option>
-          <option value="warm">Warm (따뜻하게)</option>
-          <option value="bright">Bright (선명하게)</option>
-          <option value="loud">Thick (두껍게, EDM향)</option>
-        </select>
-        <p class="hint">시작점을 잡아주는 프리셋입니다. 고른 뒤에도 위 슬라이더로 세부 조정할 수 있습니다.</p>
+      <p class="auto-title">음악을 잘 몰라도 괜찮아요</p>
+      <p class="hint">Suno에서 생성한 곡을 처음 마스터링한다면 아래 추천 설정부터 적용해보세요. 적용 후에도 고급 설정에서 자유롭게 조절할 수 있습니다.</p>
+      <div class="suno-presets">
+        <button type="button" class="preset-card active" data-suno-preset="standard"><span>🎵</span><strong>Suno 기본</strong><small>균형 잡힌 기본 마스터</small></button>
+        <button type="button" class="preset-card" data-suno-preset="vocal"><span>🎤</span><strong>보컬 선명하게</strong><small>보컬과 존재감 강조</small></button>
+        <button type="button" class="preset-card" data-suno-preset="wide"><span>🎧</span><strong>풍부하고 넓게</strong><small>스테레오감과 공간감 강조</small></button>
+        <button type="button" class="preset-card" data-suno-preset="soft"><span>🌙</span><strong>부드럽게</strong><small>날카로운 고음 완화</small></button>
       </div>
+      <p class="applied-note" id="applied-note">현재 추천: Suno 기본</p>
     </div>
   </details>
 
-  <details class="module">
-    <summary>
-      <span class="module-title"><span class="num">3</span>드라이브 (새추레이션)</span>
-      <span class="chev">▾</span>
-    </summary>
-    <div class="module-body">
-      <div class="hrow">
-        <div class="hrow-top"><span class="lbl">드라이브 양</span><span class="val" id="drive-val">0</span></div>
-        <input type="range" id="drive-slider" min="0" max="100" step="1" value="0">
-        <p class="hint">0에 가까울수록 원음 그대로, 값을 올릴수록 따뜻한 배음이 섞이며 살짝 뭉개지는 질감이 더해집니다.</p>
-      </div>
-    </div>
-  </details>
+  <details class="module" open>  
+    <summary>  
+      <span class="module-title"><span class="num">3</span>EQ — 7밴드 보정</span>  
+      <span class="chev">▾</span>  
+    </summary>  
+    <div class="module-body">  
+      <div class="eq-grid" id="eq-grid"></div>  
+      <div class="hrow" style="margin-top:1.1rem">  
+        <div class="hrow-top"><span class="lbl">음색 성향 (Character)</span></div>  
+        <select id="character-select" class="select">  
+          <option value="flat">Standard (기본 밸런스)</option>  
+          <option value="warm">Warm (따뜻하게)</option>  
+          <option value="bright">Bright (선명하게)</option>  
+          <option value="loud">Thick (두껍게, EDM향)</option>  
+        </select>  
+        <p class="hint">시작점을 잡아주는 프리셋입니다. 고른 뒤에도 위 슬라이더로 세부 조정할 수 있습니다.</p>  
+      </div>  
+    </div>  
+  </details>  
+  
+  <details class="module">  
+    <summary>  
+      <span class="module-title"><span class="num">4</span>드라이브 (새추레이션)</span>  
+      <span class="chev">▾</span>  
+    </summary>  
+    <div class="module-body">  
+      <div class="hrow">  
+        <div class="hrow-top"><span class="lbl">드라이브 양</span><span class="val" id="drive-val">0</span></div>  
+        <input type="range" id="drive-slider" min="0" max="100" step="1" value="0">  
+        <p class="hint">0에 가까울수록 원음 그대로, 값을 올릴수록 따뜻한 배음이 섞이며 살짝 뭉개지는 질감이 더해집니다.</p>  
+      </div>  
+    </div>  
+  </details>  
+  
+  <details class="module">  
+    <summary>  
+      <span class="module-title"><span class="num">5</span>날카로운 고음 다듬기 (De-harsh)</span>  
+      <span class="chev">▾</span>  
+    </summary>  
+    <div class="module-body">  
+      <div class="hrow">  
+        <div class="hrow-top"><span class="lbl">다듬기 강도</span><span class="val" id="deharsh-val">0</span></div>  
+        <input type="range" id="deharsh-slider" min="0" max="100" step="1" value="0">  
+        <p class="hint">3~5kHz 부근의 귀에 거슬리는 날카로운 소리를 눌러줍니다. 보컬이나 하이햇이 따갑게 느껴질 때 올려보세요. 0이면 선명함을 그대로 유지합니다.</p>  
+      </div>  
+    </div>  
+  </details>  
+  
+  <details class="module">  
+    <summary>  
+      <span class="module-title"><span class="num">6</span>스테레오 폭</span>  
+      <span class="chev">▾</span>  
+    </summary>  
+    <div class="module-body">  
+      <div class="hrow">  
+        <div class="hrow-top"><span class="lbl">폭</span><span class="val" id="width-val">100%</span></div>  
+        <input type="range" id="width-slider" min="0" max="200" step="1" value="100">  
+        <p class="hint">0%면 모노, 100%면 원본 그대로, 100%를 넘기면 좌우가 더 넓게 퍼집니다. 너무 높이면 모노로 들을 때(스피커 등) 소리가 얇아질 수 있습니다.</p>  
+      </div>  
+    </div>  
+  </details>  
+  
+  <details class="module">  
+    <summary>  
+      <span class="module-title"><span class="num">7</span>라우드니스 조절 (Maximizer)</span>  
+      <span class="chev">▾</span>  
+    </summary>  
+    <div class="module-body">  
+      <div class="hrow">  
+        <div class="hrow-top"><span class="lbl">얼마나 크게 올릴지</span><span class="val" id="push-val">0 dB</span></div>  
+        <input type="range" id="push-slider" min="0" max="18" step="0.5" value="0">  
+        <p class="hint">전체 볼륨을 얼마나 끌어올릴지 정합니다. 올릴수록 더 크고 압축된 소리가 되지만, 지나치면 다이내믹이 눌려 답답해질 수 있습니다.</p>  
+      </div>  
+      <div class="hrow">  
+        <div class="hrow-top"><span class="lbl">천장(클리핑 방지 상한)</span><span class="val" id="ceiling-val">-1.0 dB</span></div>  
+        <input type="range" id="ceiling-slider" min="-6" max="0" step="0.1" value="-1">  
+        <p class="hint">이 값을 넘지 않도록 순간적으로 소리를 눌러줍니다. 보통 -1dB 안팎이 안전합니다.</p>  
+      </div>  
+    </div>  
+  </details>  
+  
+  <div class="err" id="export-err" role="alert"></div>  
+  <div class="download-row">  
+    <button type="button" class="btn primary" id="export-btn" disabled>Suno 마스터링 WAV 다운로드</button>  
+  </div>  
+</div>  
+  
+<article>  
+<h2>Suno AI 음악을 무료로 마스터링하는 방법</h2>  
+<ol>  
+<li><strong>음원 업로드</strong>: 위쪽 박스를 눌러 파일을 고르거나 끌어다 놓습니다.</li>  
+<li><strong>Suno 자동 마스터링 선택</strong>: 처음이라면 'Suno 기본' 프리셋을 먼저 적용합니다.</li>
+<li><strong>EQ로 톤 다듬기</strong>: 필요하면 '음색 성향' 드롭다운으로 시작점을 잡고 7개 밴드를 직접 조정합니다.</li>  
+<li><strong>드라이브로 질감 더하기</strong>: 살짝 따뜻한 배음이 필요하면 드라이브를 올립니다.</li>  
+<li><strong>De-harsh로 날카로운 소리 다듬기</strong>: 보컬이나 하이햇이 따갑게 느껴지면 다듬기 강도를 올립니다.</li>  
+<li><strong>스테레오 폭 조절</strong>: 소리를 더 넓게 혹은 좁게 만듭니다.</li>  
+<li><strong>라우드니스 조절</strong>: 천장(dB)과 밀어넣는 세기를 정해 전체 음량을 높입니다.</li>  
+<li><strong>WAV로 다운로드</strong>: 설정이 마음에 들면 'Suno 마스터링 WAV 다운로드' 버튼을 누릅니다.</li>  
+</ol>  
+  
+<div class="suno-callout"><strong>💡 Suno 음악에 특히 유용한 이유</strong><br><span class="hint">Suno에서 만든 곡을 별도의 오디오 프로그램 없이 브라우저에서 바로 정리할 수 있도록 자동 프리셋과 고급 수동 설정을 함께 제공합니다.</span></div>
 
-  <details class="module">
-    <summary>
-      <span class="module-title"><span class="num">4</span>날카로운 고음 다듬기 (De-harsh)</span>
-      <span class="chev">▾</span>
-    </summary>
-    <div class="module-body">
-      <div class="hrow">
-        <div class="hrow-top"><span class="lbl">다듬기 강도</span><span class="val" id="deharsh-val">0</span></div>
-        <input type="range" id="deharsh-slider" min="0" max="100" step="1" value="0">
-        <p class="hint">3~5kHz 부근의 귀에 거슬리는 날카로운 소리를 눌러줍니다. 보컬이나 하이햇이 따갑게 느껴질 때 올려보세요. 0이면 선명함을 그대로 유지합니다.</p>
-      </div>
-    </div>
-  </details>
-
-  <details class="module">
-    <summary>
-      <span class="module-title"><span class="num">5</span>스테레오 폭</span>
-      <span class="chev">▾</span>
-    </summary>
-    <div class="module-body">
-      <div class="hrow">
-        <div class="hrow-top"><span class="lbl">폭</span><span class="val" id="width-val">100%</span></div>
-        <input type="range" id="width-slider" min="0" max="200" step="1" value="100">
-        <p class="hint">0%면 모노, 100%면 원본 그대로, 100%를 넘기면 좌우가 더 넓게 퍼집니다. 너무 높이면 모노로 들을 때(스피커 등) 소리가 얇아질 수 있습니다.</p>
-      </div>
-    </div>
-  </details>
-
-  <details class="module">
-    <summary>
-      <span class="module-title"><span class="num">6</span>라우드니스 조절 (Maximizer)</span>
-      <span class="chev">▾</span>
-    </summary>
-    <div class="module-body">
-      <div class="hrow">
-        <div class="hrow-top"><span class="lbl">얼마나 크게 올릴지</span><span class="val" id="push-val">0 dB</span></div>
-        <input type="range" id="push-slider" min="0" max="18" step="0.5" value="0">
-        <p class="hint">전체 볼륨을 얼마나 끌어올릴지 정합니다. 올릴수록 더 크고 압축된 소리가 되지만, 지나치면 다이내믹이 눌려 답답해질 수 있습니다.</p>
-      </div>
-      <div class="hrow">
-        <div class="hrow-top"><span class="lbl">천장(클리핑 방지 상한)</span><span class="val" id="ceiling-val">-1.0 dB</span></div>
-        <input type="range" id="ceiling-slider" min="-6" max="0" step="0.1" value="-1">
-        <p class="hint">이 값을 넘지 않도록 순간적으로 소리를 눌러줍니다. 보통 -1dB 안팎이 안전합니다.</p>
-      </div>
-    </div>
-  </details>
-
-  <div class="err" id="export-err" role="alert"></div>
-  <div class="download-row">
-    <button type="button" class="btn primary" id="export-btn" disabled>마스터링된 WAV 다운로드</button>
-  </div>
-</div>
-
-<article>
-<h2>사용 방법</h2>
-<ol>
-<li><strong>음원 업로드</strong>: 위쪽 박스를 눌러 파일을 고르거나 끌어다 놓습니다.</li>
-<li><strong>EQ로 톤 다듬기</strong>: '음색 성향' 드롭다운으로 시작점을 잡고, 필요하면 7개 밴드를 직접 조정합니다.</li>
-<li><strong>드라이브로 질감 더하기</strong>: 살짝 따뜻한 배음이 필요하면 드라이브를 올립니다.</li>
-<li><strong>De-harsh로 날카로운 소리 다듬기</strong>: 보컬이나 하이햇이 따갑게 느껴지면 다듬기 강도를 올립니다.</li>
-<li><strong>스테레오 폭 조절</strong>: 소리를 더 넓게 혹은 좁게 만듭니다.</li>
-<li><strong>라우드니스 조절</strong>: 천장(dB)과 밀어넣는 세기를 정해 전체 음량을 높입니다.</li>
-<li><strong>WAV로 다운로드</strong>: 설정이 마음에 들면 '마스터링된 WAV 다운로드' 버튼을 누릅니다.</li>
-</ol>
-
-<h2>이 도구가 하는 일</h2>
-<p>음원을 EQ, 드라이브(새추레이션), 디하시, 스테레오 폭, 라우드니스 조절(리미터)을 거쳐 한 번에 다듬고, 처리된 결과를 WAV 파일로 내려받을 수 있습니다. 모든 처리는 브라우저 안(Web Audio API)에서 이루어지며 파일을 서버로 보내지 않습니다.</p>
-
-<h2>각 단계는 무엇을 하나요</h2>
-<h3>EQ 7밴드 (Sub·Bass·L-Mid·Mid·H-Mid·Pres·Air)</h3>
-<p>60Hz(저음의 무게감)부터 12kHz(공기감·선명도)까지 7개 대역을 올리거나 내려 톤을 조정합니다. '음색 성향' 드롭다운으로 시작점을 잡고 세부 조정하는 것을 추천합니다.</p>
-<h3>드라이브(새추레이션)</h3>
-<p>신호를 살짝 비선형으로 왜곡시켜 아날로그 장비 특유의 따뜻한 배음을 더합니다. 과하게 걸면 음이 거칠어지니 조금씩 올려보며 확인하세요.</p>
-<h3>De-harsh</h3>
-<p>3.8kHz 부근을 살짝 눌러 귀에 거슬리는 날카로운 소리를 다듬습니다. 보컬 치찰음이나 하이햇이 따갑게 느껴질 때 사용해보세요.</p>
-<h3>스테레오 폭</h3>
-<p>좌우 채널의 차이(사이드 성분)를 늘리거나 줄여 스테레오감을 조정합니다. 100%가 원본이고, 낮추면 모노에 가까워지며 중앙이 또렷해집니다.</p>
-<h3>라우드니스 조절 (Maximizer)</h3>
-<p>설정한 천장(dB)을 넘지 않도록 순간적으로 소리를 눌러 전체 음량을 높이는 역할을 합니다. '얼마나 크게 올릴지'로 세기를 정합니다.</p>
-
-<h2>레벨미터에 대해 정직하게 말씀드리면</h2>
-<p>화면의 미터는 방송·유통사에서 쓰는 정식 LUFS 표준(K-weighting과 게이팅을 포함하는 ITU-R BS.1770)이 아니라, <strong>단순 RMS를 dBFS로 환산한 참고용 수치</strong>입니다. 정확한 유통용 라우드니스 값이 필요하다면 별도의 라우드니스 측정 프로그램으로 최종 확인하시길 권장합니다.</p>
-
-<h2>자주 묻는 질문</h2>
-<h3>업로드한 파일이 어딘가에 저장되나요?</h3>
-<p>아니요. 파일은 이 브라우저 메모리 안에서만 처리되며, 서버로 전송되거나 저장되지 않습니다. 탭을 닫으면 사라집니다.</p>
-<h3>왜 내려받기 버튼을 누르면 시간이 좀 걸리나요?</h3>
-<p>다운로드 시점에 곡 전체를 처음부터 끝까지 다시 한번 정밀하게 처리해서 파일로 만들기 때문입니다. 곡 길이에 따라 몇 초에서 수십 초 걸릴 수 있습니다.</p>
-<h3>결과물이 유료 마스터링 서비스만큼 좋을까요?</h3>
-<p>전문 마스터링 엔지니어나 대형 AI 학습 기반 서비스만큼의 정교함은 어렵습니다. 다만 러프 믹스를 빠르게 다듬거나, 데모·가이드 음원 수준의 마무리에는 충분히 쓸모가 있습니다.</p>
-<h3>회원가입이나 로그인이 필요한가요?</h3>
-<p>아니요. 회원가입, 로그인 없이 바로 쓸 수 있습니다.</p>
-<h3>어떤 파일 형식을 올릴 수 있나요?</h3>
-<p>MP3, WAV, M4A 등 이용 중인 브라우저가 재생할 수 있는 오디오 형식이면 대부분 가능합니다. 재생이 안 된다면 WAV나 MP3로 바꿔서 다시 시도해 보세요.</p>
-<h3>내려받은 파일은 어떤 형식인가요?</h3>
-<p>16비트 WAV 파일로 내려받습니다. 무손실 형식이라 음질 손실 없이 보관하거나 다른 프로그램에서 추가로 편집할 수 있습니다.</p>
-<h3>모바일에서도 쓸 수 있나요?</h3>
-<p>네, 스마트폰·태블릿 브라우저에서도 동작합니다. 다만 기기 성능과 파일 길이에 따라 처리 속도가 다를 수 있습니다.</p>
-
-<h2>더 알아보기</h2>
-<ul>
-<li><a href="../info/audio/mixing-vs-mastering/">믹싱과 마스터링 차이 (순서와 하는 일)</a></li><li><a href="../info/audio/eq-frequency-guide/">EQ 주파수 대역별 역할 (60Hz부터 12kHz까지)</a></li><li><a href="../info/audio/compressor-vs-limiter/">컴프레서와 리미터 차이</a></li><li><a href="../info/audio/stereo-width-mono-compatibility/">스테레오 폭과 모노 호환성</a></li><li><a href="../info/audio/mix-checklist-before-mastering/">마스터링 전 믹스 파일 준비 체크리스트</a></li>
-<li><a href="../info/it/streaming-loudness-lufs/">스트리밍 음원 음량 기준 (-14 LUFS)</a></li>
-</ul>
-
-<h2>유의사항</h2>
-<ul>
-<li>브라우저와 파일 형식에 따라 재생·처리가 되지 않을 수 있습니다. 이 경우 WAV나 MP3처럼 널리 쓰이는 형식으로 바꿔 다시 시도해 보세요.</li>
-<li>큰 파일이나 긴 곡은 처리에 시간이 더 걸리거나 기기 성능에 따라 버벅일 수 있습니다.</li>
-<li>이 도구는 참고용이며, 결과물의 음질이나 특정 용도 적합성을 보장하지 않습니다.</li>
-</ul>
-</article>
-
-<footer>
-<p>무료 오디오 마스터링</p>
-<p class="fl"><a href="../about/">소개</a><a href="../privacy/">개인정보처리방침</a><a href="../contact/">문의</a></p>
-</footer>
-</main>
-
-<script>
-'use strict';
-// ==CORE START==
-function dbToLinear(db){ return Math.pow(10, db / 20); }
-function linearToDb(lin){ return lin <= 0 ? -Infinity : 20 * Math.log10(lin); }
-
-function makeDistortionCurve(amount, nSamples){
-  nSamples = nSamples || 2048;
-  const k = typeof amount === 'number' ? amount : 0;
-  const curve = new Float32Array(nSamples);
-  const deg = Math.PI / 180;
-  for(let i = 0; i < nSamples; i++){
-    const x = (i * 2) / nSamples - 1;
-    curve[i] = ((3 + k) * x * 20 * deg) / (Math.PI + k * Math.abs(x));
+<h2>이 도구가 하는 일</h2>  
+<p>Suno AI 등에서 만든 음원을 EQ, 드라이브(새추레이션), 디하시, 스테레오 폭, 라우드니스 조절(리미터)을 거쳐 한 번에 다듬고, 처리된 결과를 WAV 파일로 내려받을 수 있습니다. 모든 처리는 브라우저 안(Web Audio API)에서 이루어지며 파일을 서버로 보내지 않습니다.</p>  
+  
+<h2>각 단계는 무엇을 하나요</h2>  
+<h3>EQ 7밴드 (Sub·Bass·L-Mid·Mid·H-Mid·Pres·Air)</h3>  
+<p>60Hz(저음의 무게감)부터 12kHz(공기감·선명도)까지 7개 대역을 올리거나 내려 톤을 조정합니다. '음색 성향' 드롭다운으로 시작점을 잡고 세부 조정하는 것을 추천합니다.</p>  
+<h3>드라이브(새추레이션)</h3>  
+<p>신호를 살짝 비선형으로 왜곡시켜 아날로그 장비 특유의 따뜻한 배음을 더합니다. 과하게 걸면 음이 거칠어지니 조금씩 올려보며 확인하세요.</p>  
+<h3>De-harsh</h3>  
+<p>3.8kHz 부근을 살짝 눌러 귀에 거슬리는 날카로운 소리를 다듬습니다. 보컬 치찰음이나 하이햇이 따갑게 느껴질 때 사용해보세요.</p>  
+<h3>스테레오 폭</h3>  
+<p>좌우 채널의 차이(사이드 성분)를 늘리거나 줄여 스테레오감을 조정합니다. 100%가 원본이고, 낮추면 모노에 가까워지며 중앙이 또렷해집니다.</p>  
+<h3>라우드니스 조절 (Maximizer)</h3>  
+<p>설정한 천장(dB)을 넘지 않도록 순간적으로 소리를 눌러 전체 음량을 높이는 역할을 합니다. '얼마나 크게 올릴지'로 세기를 정합니다.</p>  
+  
+<h2>레벨미터에 대해 정직하게 말씀드리면</h2>  
+<p>화면의 미터는 방송·유통사에서 쓰는 정식 LUFS 표준(K-weighting과 게이팅을 포함하는 ITU-R BS.1770)이 아니라, <strong>단순 RMS를 dBFS로 환산한 참고용 수치</strong>입니다. 정확한 유통용 라우드니스 값이 필요하다면 별도의 라우드니스 측정 프로그램으로 최종 확인하시길 권장합니다.</p>  
+  
+<h2>자주 묻는 질문</h2>  
+<h3>업로드한 파일이 어딘가에 저장되나요?</h3>  
+<p>아니요. 파일은 이 브라우저 메모리 안에서만 처리되며, 서버로 전송되거나 저장되지 않습니다. 탭을 닫으면 사라집니다.</p>  
+<h3>왜 내려받기 버튼을 누르면 시간이 좀 걸리나요?</h3>  
+<p>다운로드 시점에 곡 전체를 처음부터 끝까지 다시 한번 정밀하게 처리해서 파일로 만들기 때문입니다. 곡 길이에 따라 몇 초에서 수십 초 걸릴 수 있습니다.</p>  
+<h3>결과물이 유료 마스터링 서비스만큼 좋을까요?</h3>  
+<p>전문 마스터링 엔지니어나 대형 AI 학습 기반 서비스만큼의 정교함은 어렵습니다. 다만 러프 믹스를 빠르게 다듬거나, 데모·가이드 음원 수준의 마무리에는 충분히 쓸모가 있습니다.</p>  
+<h3>회원가입이나 로그인이 필요한가요?</h3>  
+<p>아니요. 회원가입, 로그인 없이 바로 쓸 수 있습니다.</p>  
+<h3>Suno에서 받은 MP3나 WAV도 사용할 수 있나요?</h3>  
+<p>MP3, WAV, M4A 등 이용 중인 브라우저가 재생할 수 있는 오디오 형식이면 대부분 가능합니다. 재생이 안 된다면 WAV나 MP3로 바꿔서 다시 시도해 보세요.</p>  
+<h3>내려받은 파일은 어떤 형식인가요?</h3>  
+<p>16비트 WAV 파일로 내려받습니다. 무손실 형식이라 음질 손실 없이 보관하거나 다른 프로그램에서 추가로 편집할 수 있습니다.</p>  
+<h3>모바일에서도 쓸 수 있나요?</h3>  
+<p>네, 스마트폰·태블릿 브라우저에서도 동작합니다. 다만 기기 성능과 파일 길이에 따라 처리 속도가 다를 수 있습니다.</p>  
+  
+<h2>더 알아보기</h2>  
+<ul>  
+<li><a href="../info/audio/mixing-vs-mastering/">믹싱과 마스터링 차이 (순서와 하는 일)</a></li><li><a href="../info/audio/eq-frequency-guide/">EQ 주파수 대역별 역할 (60Hz부터 12kHz까지)</a></li><li><a href="../info/audio/compressor-vs-limiter/">컴프레서와 리미터 차이</a></li><li><a href="../info/audio/stereo-width-mono-compatibility/">스테레오 폭과 모노 호환성</a></li><li><a href="../info/audio/mix-checklist-before-mastering/">마스터링 전 믹스 파일 준비 체크리스트</a></li>  
+<li><a href="../info/it/streaming-loudness-lufs/">스트리밍 음원 음량 기준 (-14 LUFS)</a></li>  
+</ul>  
+  
+<h2>유의사항</h2>  
+<ul>  
+<li>브라우저와 파일 형식에 따라 재생·처리가 되지 않을 수 있습니다. 이 경우 WAV나 MP3처럼 널리 쓰이는 형식으로 바꿔 다시 시도해 보세요.</li>  
+<li>큰 파일이나 긴 곡은 처리에 시간이 더 걸리거나 기기 성능에 따라 버벅일 수 있습니다.</li>  
+<li>이 도구는 참고용이며, 결과물의 음질이나 특정 용도 적합성을 보장하지 않습니다.</li>  
+</ul>  
+</article>  
+  
+<footer>  
+<p>Suno AI 무료 마스터링</p>  
+<p class="fl"><a href="../about/">소개</a><a href="../privacy/">개인정보처리방침</a><a href="../contact/">문의</a></p>  
+</footer>  
+</main>  
+  
+<script>  
+'use strict';  
+// ==CORE START==  
+function dbToLinear(db){ return Math.pow(10, db / 20); }  
+function linearToDb(lin){ return lin <= 0 ? -Infinity : 20 * Math.log10(lin); }  
+  
+function makeDistortionCurve(amount, nSamples){  
+  nSamples = nSamples || 2048;  
+  const k = typeof amount === 'number' ? amount : 0;  
+  const curve = new Float32Array(nSamples);  
+  const deg = Math.PI / 180;  
+  for(let i = 0; i < nSamples; i++){  
+    const x = (i * 2) / nSamples - 1;  
+    curve[i] = ((3 + k) * x * 20 * deg) / (Math.PI + k * Math.abs(x));  
+  }  
+  return curve;  
+}  
+  
+function writeAsciiString(view, offset, str){  
+  for(let i = 0; i < str.length; i++) view.setUint8(offset + i, str.charCodeAt(i));  
+}  
+  
+// AudioBuffer 또는 {numberOfChannels, length, sampleRate, getChannelData(ch)} 형태를  
+// 받아 16비트 PCM WAV Blob으로 인코딩  
+function bufferToWaveBlob(abuffer){  
+  const numCh = abuffer.numberOfChannels;  
+  const len = abuffer.length;  
+  const bytesPerSample = 2;  
+  const blockAlign = numCh * bytesPerSample;  
+  const dataSize = len * blockAlign;  
+  const buffer = new ArrayBuffer(44 + dataSize);  
+  const view = new DataView(buffer);  
+  
+  writeAsciiString(view, 0, 'RIFF');  
+  view.setUint32(4, 36 + dataSize, true);  
+  writeAsciiString(view, 8, 'WAVE');  
+  writeAsciiString(view, 12, 'fmt ');  
+  view.setUint32(16, 16, true);  
+  view.setUint16(20, 1, true);  
+  view.setUint16(22, numCh, true);  
+  view.setUint32(24, abuffer.sampleRate, true);  
+  view.setUint32(28, abuffer.sampleRate * blockAlign, true);  
+  view.setUint16(32, blockAlign, true);  
+  view.setUint16(34, 16, true);  
+  writeAsciiString(view, 36, 'data');  
+  view.setUint32(40, dataSize, true);  
+  
+  const channelData = [];  
+  for(let ch = 0; ch < numCh; ch++) channelData.push(abuffer.getChannelData(ch));  
+  
+  let offset = 44;  
+  for(let i = 0; i < len; i++){  
+    for(let ch = 0; ch < numCh; ch++){  
+      let s = channelData[ch][i];  
+      s = Math.max(-1, Math.min(1, s));  
+      view.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true);  
+      offset += 2;  
+    }  
+  }  
+  return new Blob([buffer], { type: 'audio/wav' });  
+}  
+  
+const EQ_BANDS = [  
+  { freq: 60,    type: 'lowshelf',  name: 'Sub' },  
+  { freq: 150,   type: 'peaking',   name: 'Bass' },  
+  { freq: 400,   type: 'peaking',   name: 'L-Mid' },  
+  { freq: 1000,  type: 'peaking',   name: 'Mid' },  
+  { freq: 2500,  type: 'peaking',   name: 'H-Mid' },  
+  { freq: 6000,  type: 'peaking',   name: 'Pres' },  
+  { freq: 12000, type: 'highshelf', name: 'Air' }  
+];  
+  
+const EQ_PRESETS = {  
+  flat: [0, 0, 0, 0, 0, 0, 0],  
+  warm: [2, 1.5, 0.5, -1, -1.5, -1, 0.5],  
+  bright: [-1, -0.5, 0, 0.5, 1.5, 2.5, 3],  
+  loud: [3, 1, -1, 0.5, 1, 2, 2.5]  
+};  
+  
+// 재생/오프라인 렌더 양쪽에서 재사용하는 신호 체인 구성 함수.  
+// ctx: AudioContext 또는 OfflineAudioContext, source: 체인의 시작 노드  
+// params: { eqGains:number[7], drive:number(0~100), width:number(0~200, 100=원본),  
+//           ceilingDb:number, pushDb:number }  
+// 반환값: 체인의 마지막(출력) 노드  
+function makeSafetyClipCurve(){
+  const n = 2048;
+  const curve = new Float32Array(n);
+  const threshold = dbToLinear(-0.3);
+  for(let i = 0; i < n; i++){
+    const x = (i / (n - 1)) * 2 - 1;
+    const ax = Math.abs(x);
+    if(ax <= threshold){
+      curve[i] = x;
+    } else {
+      const sign = x < 0 ? -1 : 1;
+      const excess = (ax - threshold) / (1 - threshold);
+      const softened = threshold + (1 - threshold) * (1 - Math.exp(-3 * excess)) / (1 - Math.exp(-3));
+      curve[i] = sign * Math.min(1, softened);
+    }
   }
   return curve;
 }
 
-function writeAsciiString(view, offset, str){
-  for(let i = 0; i < str.length; i++) view.setUint8(offset + i, str.charCodeAt(i));
-}
+function buildMasterChain(ctx, source, params){  
+  const filters = EQ_BANDS.map((b, i) => {  
+    const f = ctx.createBiquadFilter();  
+    f.type = b.type;  
+    f.frequency.value = b.freq;  
+    f.Q.value = 1.0;  
+    f.gain.value = params.eqGains[i] || 0;  
+    return f;  
+  });  
+  let node = source;  
+  filters.forEach(f => { node.connect(f); node = f; });  
+  
+  const shaper = ctx.createWaveShaper();  
+  shaper.curve = makeDistortionCurve(params.drive || 0);  
+  shaper.oversample = '2x';  
+  node.connect(shaper);  
+  node = shaper;  
+  
+  // --- De-harsh: 3.8kHz 부근을 다듬는 필터 ---  
+  const deharsh = ctx.createBiquadFilter();  
+  deharsh.type = 'peaking';  
+  deharsh.frequency.value = 3800;  
+  deharsh.Q.value = 1.4;  
+  deharsh.gain.value = -((params.deharsh || 0) / 100) * 9;  
+  node.connect(deharsh);  
+  node = deharsh;  
+  
+  // --- 스테레오 폭 (Mid-Side) ---  
+  const splitter = ctx.createChannelSplitter(2);  
+  node.connect(splitter);  
+  const widthRatio = (params.width != null ? params.width : 100) / 100;  
+  
+  const midGain = ctx.createGain(); midGain.gain.value = 0.5;  
+  const sideL = ctx.createGain(); sideL.gain.value = 0.5;  
+  const sideR = ctx.createGain(); sideR.gain.value = -0.5;  
+  splitter.connect(midGain, 0); splitter.connect(midGain, 1);  
+  splitter.connect(sideL, 0); splitter.connect(sideR, 1);  
+  
+  const sideSum = ctx.createGain(); sideSum.gain.value = 1;  
+  sideL.connect(sideSum); sideR.connect(sideSum);  
+  
+  const widthPos = ctx.createGain(); widthPos.gain.value = widthRatio;  
+  const widthNeg = ctx.createGain(); widthNeg.gain.value = -widthRatio;  
+  sideSum.connect(widthPos); sideSum.connect(widthNeg);  
+  
+  const merger = ctx.createChannelMerger(2);  
+  midGain.connect(merger, 0, 0); widthPos.connect(merger, 0, 0);  
+  midGain.connect(merger, 0, 1); widthNeg.connect(merger, 0, 1);  
+  node = merger;  
+  
+  // --- 리미터 ---  
+  const pushGain = ctx.createGain();  
+  pushGain.gain.value = dbToLinear(params.pushDb || 0);  
+  node.connect(pushGain);  
+  
+  const comp = ctx.createDynamicsCompressor();  
+  comp.threshold.value = params.ceilingDb != null ? params.ceilingDb : -1;  
+  comp.knee.value = 0;  
+  comp.ratio.value = 20;  
+  comp.attack.value = 0.001;  
+  comp.release.value = 0.15;  
+  pushGain.connect(comp);  
+  
+  // --- 최종 출력 안전단 ---
+  // 컴프레서의 아주 짧은 트랜지언트 피크로 인한 미리듣기 클리핑을 방지한다.
+  const safetyGain = ctx.createGain();
+  safetyGain.gain.value = dbToLinear(-1.5);
+  comp.connect(safetyGain);
 
-// AudioBuffer 또는 {numberOfChannels, length, sampleRate, getChannelData(ch)} 형태를
-// 받아 16비트 PCM WAV Blob으로 인코딩
-function bufferToWaveBlob(abuffer){
-  const numCh = abuffer.numberOfChannels;
-  const len = abuffer.length;
-  const bytesPerSample = 2;
-  const blockAlign = numCh * bytesPerSample;
-  const dataSize = len * blockAlign;
-  const buffer = new ArrayBuffer(44 + dataSize);
-  const view = new DataView(buffer);
+  // 극단적인 피크만 부드럽게 눌러주는 최종 안전 클리퍼.
+  const safetyClip = ctx.createWaveShaper();
+  safetyClip.curve = makeSafetyClipCurve();
+  safetyClip.oversample = '4x';
+  safetyGain.connect(safetyClip);
 
-  writeAsciiString(view, 0, 'RIFF');
-  view.setUint32(4, 36 + dataSize, true);
-  writeAsciiString(view, 8, 'WAVE');
-  writeAsciiString(view, 12, 'fmt ');
-  view.setUint32(16, 16, true);
-  view.setUint16(20, 1, true);
-  view.setUint16(22, numCh, true);
-  view.setUint32(24, abuffer.sampleRate, true);
-  view.setUint32(28, abuffer.sampleRate * blockAlign, true);
-  view.setUint16(32, blockAlign, true);
-  view.setUint16(34, 16, true);
-  writeAsciiString(view, 36, 'data');
-  view.setUint32(40, dataSize, true);
-
-  const channelData = [];
-  for(let ch = 0; ch < numCh; ch++) channelData.push(abuffer.getChannelData(ch));
-
-  let offset = 44;
-  for(let i = 0; i < len; i++){
-    for(let ch = 0; ch < numCh; ch++){
-      let s = channelData[ch][i];
-      s = Math.max(-1, Math.min(1, s));
-      view.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
-      offset += 2;
-    }
-  }
-  return new Blob([buffer], { type: 'audio/wav' });
-}
-
-const EQ_BANDS = [
-  { freq: 60,    type: 'lowshelf',  name: 'Sub' },
-  { freq: 150,   type: 'peaking',   name: 'Bass' },
-  { freq: 400,   type: 'peaking',   name: 'L-Mid' },
-  { freq: 1000,  type: 'peaking',   name: 'Mid' },
-  { freq: 2500,  type: 'peaking',   name: 'H-Mid' },
-  { freq: 6000,  type: 'peaking',   name: 'Pres' },
-  { freq: 12000, type: 'highshelf', name: 'Air' }
-];
-
-const EQ_PRESETS = {
-  flat: [0, 0, 0, 0, 0, 0, 0],
-  warm: [2, 1.5, 0.5, -1, -1.5, -1, 0.5],
-  bright: [-1, -0.5, 0, 0.5, 1.5, 2.5, 3],
-  loud: [3, 1, -1, 0.5, 1, 2, 2.5]
-};
-
-// 재생/오프라인 렌더 양쪽에서 재사용하는 신호 체인 구성 함수.
-// ctx: AudioContext 또는 OfflineAudioContext, source: 체인의 시작 노드
-// params: { eqGains:number[7], drive:number(0~100), width:number(0~200, 100=원본),
-//           ceilingDb:number, pushDb:number }
-// 반환값: 체인의 마지막(출력) 노드
-function buildMasterChain(ctx, source, params){
-  const filters = EQ_BANDS.map((b, i) => {
-    const f = ctx.createBiquadFilter();
-    f.type = b.type;
-    f.frequency.value = b.freq;
-    f.Q.value = 1.0;
-    f.gain.value = params.eqGains[i] || 0;
-    return f;
-  });
-  let node = source;
-  filters.forEach(f => { node.connect(f); node = f; });
-
-  const shaper = ctx.createWaveShaper();
-  shaper.curve = makeDistortionCurve(params.drive || 0);
-  shaper.oversample = '2x';
-  node.connect(shaper);
-  node = shaper;
-
-  // --- De-harsh: 3.8kHz 부근을 다듬는 필터 ---
-  const deharsh = ctx.createBiquadFilter();
-  deharsh.type = 'peaking';
-  deharsh.frequency.value = 3800;
-  deharsh.Q.value = 1.4;
-  deharsh.gain.value = -((params.deharsh || 0) / 100) * 9;
-  node.connect(deharsh);
-  node = deharsh;
-
-  // --- 스테레오 폭 (Mid-Side) ---
-  const splitter = ctx.createChannelSplitter(2);
-  node.connect(splitter);
-  const widthRatio = (params.width != null ? params.width : 100) / 100;
-
-  const midGain = ctx.createGain(); midGain.gain.value = 0.5;
-  const sideL = ctx.createGain(); sideL.gain.value = 0.5;
-  const sideR = ctx.createGain(); sideR.gain.value = -0.5;
-  splitter.connect(midGain, 0); splitter.connect(midGain, 1);
-  splitter.connect(sideL, 0); splitter.connect(sideR, 1);
-
-  const sideSum = ctx.createGain(); sideSum.gain.value = 1;
-  sideL.connect(sideSum); sideR.connect(sideSum);
-
-  const widthPos = ctx.createGain(); widthPos.gain.value = widthRatio;
-  const widthNeg = ctx.createGain(); widthNeg.gain.value = -widthRatio;
-  sideSum.connect(widthPos); sideSum.connect(widthNeg);
-
-  const merger = ctx.createChannelMerger(2);
-  midGain.connect(merger, 0, 0); widthPos.connect(merger, 0, 0);
-  midGain.connect(merger, 0, 1); widthNeg.connect(merger, 0, 1);
-  node = merger;
-
-  // --- 리미터 ---
-  const pushGain = ctx.createGain();
-  pushGain.gain.value = dbToLinear(params.pushDb || 0);
-  node.connect(pushGain);
-
-  const comp = ctx.createDynamicsCompressor();
-  comp.threshold.value = params.ceilingDb != null ? params.ceilingDb : -1;
-  comp.knee.value = 0;
-  comp.ratio.value = 20;
-  comp.attack.value = 0.001;
-  comp.release.value = 0.15;
-  pushGain.connect(comp);
-
-  const ceilingGain = ctx.createGain();
-  ceilingGain.gain.value = 1;
-  comp.connect(ceilingGain);
-
-  return ceilingGain;
-}
-// ==CORE END==
-
-const $ = id => document.getElementById(id);
-let audioCtx = null;
-let originalBuffer = null;
-let sourceNode = null;
-let chainOutput = null;
-let bypassGain = null;
-let liveGain = null;
-let analyser = null;
-let isPlaying = false;
-let isBypassed = false;
-let rafId = null;
-let peakHold = -Infinity;
-let fileNameBase = 'mastered';
-
-const state = {
-  eqGains: EQ_PRESETS.flat.slice(),
-  drive: 0,
-  deharsh: 0,
-  width: 100,
-  ceilingDb: -1,
-  pushDb: 0
-};
-
-function ensureCtx(){
-  if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  return audioCtx;
-}
-
-function buildEqUI(){
-  const grid = $('eq-grid');
-  grid.innerHTML = '';
-  EQ_BANDS.forEach((b, i) => {
-    const col = document.createElement('div');
-    col.className = 'eq-band';
-    const nameLbl = document.createElement('span');
-    nameLbl.className = 'eq-name';
-    nameLbl.textContent = b.name;
-    const val = document.createElement('span');
-    val.className = 'eq-val';
-    val.id = 'eqv-' + i;
-    val.textContent = '0 dB';
-    const slider = document.createElement('input');
-    slider.type = 'range';
-    slider.className = 'eq-slider';
-    slider.min = '-12'; slider.max = '12'; slider.step = '0.5'; slider.value = '0';
-    slider.id = 'eq-' + i;
-    slider.addEventListener('input', () => {
-      state.eqGains[i] = parseFloat(slider.value);
-      val.textContent = (state.eqGains[i] > 0 ? '+' : '') + state.eqGains[i] + ' dB';
-      rebuildLiveChain();
-    });
-    const freqLbl = document.createElement('span');
-    freqLbl.className = 'eq-freq';
-    freqLbl.textContent = b.freq >= 1000 ? (b.freq/1000) + 'k' : String(b.freq);
-    const label = document.createElement('div');
-    label.className = 'eq-label';
-    label.appendChild(nameLbl); label.appendChild(freqLbl);
-    col.appendChild(label); col.appendChild(slider); col.appendChild(val);
-    grid.appendChild(col);
-  });
-}
-
-function applyEqPreset(name){
-  const g = EQ_PRESETS[name] || EQ_PRESETS.flat;
-  state.eqGains = g.slice();
-  g.forEach((v, i) => {
-    $('eq-' + i).value = v;
-    $('eqv-' + i).textContent = (v > 0 ? '+' : '') + v + ' dB';
-  });
-  rebuildLiveChain();
-}
-
-function disconnectChain(){
-  if(sourceNode){ try{ sourceNode.disconnect(); }catch(e){} }
-}
-
-function rebuildLiveChain(){
-  if(!audioCtx || !sourceNode) return;
-  disconnectAllExceptSource();
-  if(isBypassed){
-    sourceNode.connect(liveGain);
-  } else {
-    const out = buildMasterChain(audioCtx, sourceNode, state);
-    out.connect(liveGain);
-  }
-}
-function disconnectAllExceptSource(){
-  try{ sourceNode.disconnect(); }catch(e){}
-}
-
-function resetUIForNewFile(){
-  $('transport').classList.add('show');
-  $('meter-box').hidden = false;
-  $('export-btn').disabled = false;
-  $('err').textContent = '';
-}
-
-async function loadFile(file){
-  $('err').textContent = '';
-  fileNameBase = file.name.replace(/\.[^.]+$/, '') || 'mastered';
-  $('fname').textContent = file.name;
-  try{
-    ensureCtx();
-    const arrBuf = await file.arrayBuffer();
-    originalBuffer = await audioCtx.decodeAudioData(arrBuf.slice(0));
-    resetUIForNewFile();
-    startGraphIdle();
-  }catch(e){
-    $('err').textContent = '이 파일을 재생할 수 없습니다. 다른 형식(WAV, MP3 등)으로 다시 시도해 주세요.';
-    console.error(e);
-  }
-}
-
-function startGraphIdle(){
-  liveGain = audioCtx.createGain();
-  analyser = audioCtx.createAnalyser();
-  analyser.fftSize = 2048;
-  liveGain.connect(analyser);
-  analyser.connect(audioCtx.destination);
-}
-
-function stopPlayback(){
-  if(sourceNode){
-    try{ sourceNode.stop(); }catch(e){}
-    try{ sourceNode.disconnect(); }catch(e){}
-    sourceNode = null;
-  }
-  isPlaying = false;
-  $('play-btn').textContent = '재생';
-  if(rafId){ cancelAnimationFrame(rafId); rafId = null; }
-}
-
-function playFromStart(){
-  if(!originalBuffer) return;
-  stopPlayback();
-  stopDemo();
-  sourceNode = audioCtx.createBufferSource();
-  sourceNode.buffer = originalBuffer;
-  sourceNode.loop = true;
-  rebuildLiveChain();
-  sourceNode.start();
-  isPlaying = true;
-  $('play-btn').textContent = '일시정지';
-  peakHold = -Infinity;
-  updateMeter();
-}
-
-function togglePlay(){
-  if(!originalBuffer) return;
-  if(audioCtx.state === 'suspended') audioCtx.resume();
-  if(isPlaying){
-    stopPlayback();
-  } else {
-    playFromStart();
-  }
-}
-
-function updateMeter(){
-  if(!isPlaying || !analyser) return;
-  const data = new Float32Array(analyser.fftSize);
-  analyser.getFloatTimeDomainData(data);
-  let sumSq = 0;
-  for(let i = 0; i < data.length; i++) sumSq += data[i] * data[i];
-  const rms = Math.sqrt(sumSq / data.length);
-  const db = linearToDb(rms);
-  if(db > peakHold) peakHold = db;
-  const shown = Math.max(-60, isFinite(db) ? db : -60);
-  const pct = Math.max(0, Math.min(100, (shown + 60) * (100 / 60)));
-  $('meter-fill').style.width = pct + '%';
-  $('meter-value').textContent = (isFinite(db) ? db.toFixed(1) : '-∞');
-  $('meter-value').className = 'meter-value' + (db > -1 ? ' peak-hot' : '');
-  rafId = requestAnimationFrame(updateMeter);
-}
-
-function bindSliderPair(sliderId, labelId, fmt, onChange){
-  const el = $(sliderId);
-  el.addEventListener('input', () => {
-    const v = parseFloat(el.value);
-    $(labelId).textContent = fmt(v);
-    onChange(v);
-    rebuildLiveChain();
-  });
-}
-
-function initUI(){
+  return safetyClip;  
+}  
+// ==CORE END==  
+  
+const $ = id => document.getElementById(id);  
+let audioCtx = null;  
+let originalBuffer = null;  
+let sourceNode = null;  
+let chainOutput = null;  
+let bypassGain = null;  
+let liveGain = null;  
+let analyser = null;  
+let isPlaying = false;  
+let isBypassed = false;  
+let rafId = null;  
+let peakHold = -Infinity;  
+let fileNameBase = 'suno-mastered';  
+  
+const state = {  
+  eqGains: EQ_PRESETS.flat.slice(),  
+  drive: 0,  
+  deharsh: 0,  
+  width: 100,  
+  ceilingDb: -1,  
+  pushDb: 0  
+};  
+  
+function ensureCtx(){  
+  if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();  
+  return audioCtx;  
+}  
+  
+function buildEqUI(){  
+  const grid = $('eq-grid');  
+  grid.innerHTML = '';  
+  EQ_BANDS.forEach((b, i) => {  
+    const col = document.createElement('div');  
+    col.className = 'eq-band';  
+    const nameLbl = document.createElement('span');  
+    nameLbl.className = 'eq-name';  
+    nameLbl.textContent = b.name;  
+    const val = document.createElement('span');  
+    val.className = 'eq-val';  
+    val.id = 'eqv-' + i;  
+    val.textContent = '0 dB';  
+    const slider = document.createElement('input');  
+    slider.type = 'range';  
+    slider.className = 'eq-slider';  
+    slider.min = '-12'; slider.max = '12'; slider.step = '0.5'; slider.value = '0';  
+    slider.id = 'eq-' + i;  
+    slider.addEventListener('input', () => {  
+      state.eqGains[i] = parseFloat(slider.value);  
+      val.textContent = (state.eqGains[i] > 0 ? '+' : '') + state.eqGains[i] + ' dB';  
+      rebuildLiveChain();  
+    });  
+    const freqLbl = document.createElement('span');  
+    freqLbl.className = 'eq-freq';  
+    freqLbl.textContent = b.freq >= 1000 ? (b.freq/1000) + 'k' : String(b.freq);  
+    const label = document.createElement('div');  
+    label.className = 'eq-label';  
+    label.appendChild(nameLbl); label.appendChild(freqLbl);  
+    col.appendChild(label); col.appendChild(slider); col.appendChild(val);  
+    grid.appendChild(col);  
+  });  
+}  
+  
+function applyEqPreset(name){  
+  const g = EQ_PRESETS[name] || EQ_PRESETS.flat;  
+  state.eqGains = g.slice();  
+  g.forEach((v, i) => {  
+    $('eq-' + i).value = v;  
+    $('eqv-' + i).textContent = (v > 0 ? '+' : '') + v + ' dB';  
+  });  
+  rebuildLiveChain();  
+}  
+  
+function disconnectChain(){  
+  if(sourceNode){ try{ sourceNode.disconnect(); }catch(e){} }  
+}  
+  
+function rebuildLiveChain(){  
+  if(!audioCtx || !sourceNode) return;  
+  disconnectAllExceptSource();  
+  if(isBypassed){  
+    sourceNode.connect(liveGain);  
+  } else {  
+    const out = buildMasterChain(audioCtx, sourceNode, state);  
+    out.connect(liveGain);  
+  }  
+}  
+function disconnectAllExceptSource(){  
+  try{ sourceNode.disconnect(); }catch(e){}  
+}  
+  
+function resetUIForNewFile(){  
+  $('transport').classList.add('show');  
+  $('meter-box').hidden = false;  
+  $('export-btn').disabled = false;  
+  $('err').textContent = '';  
+}  
+  
+async function loadFile(file){  
+  $('err').textContent = '';  
+  fileNameBase = file.name.replace(/\.[^.]+$/, '') || 'suno-mastered';  
+  $('fname').textContent = file.name;  
+  try{  
+    ensureCtx();  
+    const arrBuf = await file.arrayBuffer();  
+    originalBuffer = await audioCtx.decodeAudioData(arrBuf.slice(0));  
+    resetUIForNewFile();  
+    startGraphIdle();  
+  }catch(e){  
+    $('err').textContent = '이 파일을 재생할 수 없습니다. 다른 형식(WAV, MP3 등)으로 다시 시도해 주세요.';  
+    console.error(e);  
+  }  
+}  
+  
+function startGraphIdle(){  
+  liveGain = audioCtx.createGain();  
+  analyser = audioCtx.createAnalyser();  
+  analyser.fftSize = 2048;  
+  liveGain.connect(analyser);  
+  analyser.connect(audioCtx.destination);  
+}  
+  
+function stopPlayback(){  
+  if(sourceNode){  
+    try{ sourceNode.stop(); }catch(e){}  
+    try{ sourceNode.disconnect(); }catch(e){}  
+    sourceNode = null;  
+  }  
+  isPlaying = false;  
+  $('play-btn').textContent = '재생';  
+  if(rafId){ cancelAnimationFrame(rafId); rafId = null; }  
+}  
+  
+function playFromStart(){  
+  if(!originalBuffer) return;  
+  stopPlayback();  
+  stopDemo();  
+  sourceNode = audioCtx.createBufferSource();  
+  sourceNode.buffer = originalBuffer;  
+  sourceNode.loop = true;  
+  rebuildLiveChain();  
+  sourceNode.start();  
+  isPlaying = true;  
+  $('play-btn').textContent = '일시정지';  
+  peakHold = -Infinity;  
+  updateMeter();  
+}  
+  
+function togglePlay(){  
+  if(!originalBuffer) return;  
+  if(audioCtx.state === 'suspended') audioCtx.resume();  
+  if(isPlaying){  
+    stopPlayback();  
+  } else {  
+    playFromStart();  
+  }  
+}  
+  
+function updateMeter(){  
+  if(!isPlaying || !analyser) return;  
+  const data = new Float32Array(analyser.fftSize);  
+  analyser.getFloatTimeDomainData(data);  
+  let sumSq = 0;  
+  for(let i = 0; i < data.length; i++) sumSq += data[i] * data[i];  
+  const rms = Math.sqrt(sumSq / data.length);  
+  const db = linearToDb(rms);  
+  if(db > peakHold) peakHold = db;  
+  const shown = Math.max(-60, isFinite(db) ? db : -60);  
+  const pct = Math.max(0, Math.min(100, (shown + 60) * (100 / 60)));  
+  $('meter-fill').style.width = pct + '%';  
+  $('meter-value').textContent = (isFinite(db) ? db.toFixed(1) : '-∞');  
+  $('meter-value').className = 'meter-value' + (db > -1 ? ' peak-hot' : '');  
+  rafId = requestAnimationFrame(updateMeter);  
+}  
+  
+function bindSliderPair(sliderId, labelId, fmt, onChange){  
+  const el = $(sliderId);  
+  el.addEventListener('input', () => {  
+    const v = parseFloat(el.value);  
+    $(labelId).textContent = fmt(v);  
+    onChange(v);  
+    rebuildLiveChain();  
+  });  
+}  
+  
+const SUNO_PRESETS={standard:{label:'Suno 기본',eq:'flat',drive:8,deharsh:10,width:110,push:6,ceiling:-1},vocal:{label:'보컬 선명하게',eq:'bright',drive:5,deharsh:18,width:105,push:5,ceiling:-1},wide:{label:'풍부하고 넓게',eq:'warm',drive:10,deharsh:8,width:135,push:6,ceiling:-1},soft:{label:'부드럽게',eq:'warm',drive:4,deharsh:32,width:105,push:5,ceiling:-1.2}};
+function applySunoPreset(name){const p=SUNO_PRESETS[name]||SUNO_PRESETS.standard;applyEqPreset(p.eq);state.drive=p.drive;state.deharsh=p.deharsh;state.width=p.width;state.pushDb=p.push;state.ceilingDb=p.ceiling;$('drive-slider').value=p.drive;$('drive-val').textContent=String(p.drive);$('deharsh-slider').value=p.deharsh;$('deharsh-val').textContent=String(p.deharsh);$('width-slider').value=p.width;$('width-val').textContent=p.width+'%';$('push-slider').value=p.push;$('push-val').textContent=p.push.toFixed(1)+' dB';$('ceiling-slider').value=p.ceiling;$('ceiling-val').textContent=p.ceiling.toFixed(1)+' dB';document.querySelectorAll('[data-suno-preset]').forEach(btn=>btn.classList.toggle('active',btn.dataset.sunoPreset===name));$('applied-note').textContent='현재 추천: '+p.label;rebuildLiveChain();}
+function initSunoPresets(){document.querySelectorAll('[data-suno-preset]').forEach(btn=>btn.addEventListener('click',()=>applySunoPreset(btn.dataset.sunoPreset)));}
+function initUI(){  
   buildEqUI();
-
-  document.getElementById('character-select').addEventListener('change', (e) => applyEqPreset(e.target.value));
-
-  bindSliderPair('drive-slider', 'drive-val', v => String(v), v => { state.drive = v; });
-  bindSliderPair('deharsh-slider', 'deharsh-val', v => String(v), v => { state.deharsh = v; });
-  bindSliderPair('width-slider', 'width-val', v => v + '%', v => { state.width = v; });
-  bindSliderPair('ceiling-slider', 'ceiling-val', v => v.toFixed(1) + ' dB', v => { state.ceilingDb = v; });
-  bindSliderPair('push-slider', 'push-val', v => v.toFixed(1) + ' dB', v => { state.pushDb = v; });
-
-  $('play-btn').addEventListener('click', togglePlay);
-  $('ab-btn').addEventListener('click', () => {
-    isBypassed = !isBypassed;
-    $('ab-btn').textContent = isBypassed ? '마스터링본으로 듣기' : '원본으로 듣기';
-    $('ab-btn').classList.toggle('on', isBypassed);
-    rebuildLiveChain();
-  });
-  $('reset-btn').addEventListener('click', () => {
-    stopPlayback();
-    originalBuffer = null;
-    $('transport').classList.remove('show');
-    $('meter-box').hidden = true;
-    $('export-btn').disabled = true;
-    $('file-input').value = '';
-  });
-
-  const drop = $('drop');
-  drop.addEventListener('click', () => $('file-input').click());
-  drop.addEventListener('keydown', e => { if(e.key === 'Enter' || e.key === ' ') $('file-input').click(); });
-  $('file-input').addEventListener('change', e => { if(e.target.files[0]) loadFile(e.target.files[0]); });
-  ['dragenter','dragover'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add('drag'); }));
-  ['dragleave','drop'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove('drag'); }));
-  drop.addEventListener('drop', e => { if(e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]); });
-
-  $('export-btn').addEventListener('click', exportMastered);
-}
-
-async function exportMastered(){
-  if(!originalBuffer){ $('export-err').textContent = '먼저 음원 파일을 업로드해 주세요.'; return; }
-  $('export-err').textContent = '';
-  const btn = $('export-btn');
-  const original = btn.textContent;
-  btn.textContent = '처리 중… 잠시만 기다려 주세요';
-  btn.disabled = true;
-  try{
-    const offlineCtx = new (window.OfflineAudioContext || window.webkitOfflineAudioContext)(
-      originalBuffer.numberOfChannels, originalBuffer.length, originalBuffer.sampleRate
-    );
-    const src = offlineCtx.createBufferSource();
-    src.buffer = originalBuffer;
-    const out = buildMasterChain(offlineCtx, src, state);
-    out.connect(offlineCtx.destination);
-    src.start();
-    const rendered = await offlineCtx.startRendering();
-    const blob = bufferToWaveBlob(rendered);
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = fileNameBase + '_mastered.wav';
-    document.body.appendChild(a); a.click(); a.remove();
-    setTimeout(() => URL.revokeObjectURL(url), 2000);
-  }catch(e){
-    $('export-err').textContent = '내보내기 중 문제가 발생했습니다. 파일을 다시 불러온 뒤 시도해 주세요.';
-    console.error(e);
-  }finally{
-    btn.textContent = original;
-    btn.disabled = false;
-  }
-}
-
-// ---------------------------------------------------------------
-// Before/After 데모 플레이어 (업로드 전에 효과를 미리 들어볼 수 있는 샘플)
-// ---------------------------------------------------------------
-let demoBuffer = null;
-let demoSource = null;
-let demoPlaying = false;
-let demoMode = 'before'; // 'before' | 'after'
-
-const DEMO_PARAMS = {
-  eqGains: EQ_PRESETS.warm.slice(),
-  drive: 25,
-  deharsh: 30,
-  width: 140,
-  ceilingDb: -1,
-  pushDb: 9
-};
-
-async function loadDemo(){
-  try{
-    ensureCtx();
-    const res = await fetch('demo-before.wav');
-    const arrBuf = await res.arrayBuffer();
-    demoBuffer = await audioCtx.decodeAudioData(arrBuf);
-    $('demo-status').textContent = '샘플 사운드 준비 완료 — Before/After를 눌러 바로 들어보세요.';
-  }catch(e){
-    $('demo-status').textContent = '샘플 사운드를 불러오지 못했습니다.';
-    console.error(e);
-  }
-}
-
-function stopDemo(){
-  if(demoSource){
-    try{ demoSource.stop(); }catch(e){}
-    try{ demoSource.disconnect(); }catch(e){}
-    demoSource = null;
-  }
-  demoPlaying = false;
-  $('demo-play').textContent = '▶ 재생';
-}
-
-function playDemo(){
-  if(!demoBuffer) return;
-  stopPlayback(); // 업로드 파일 재생 중이었다면 중단(동시 재생 방지)
-  stopDemo();
-  if(audioCtx.state === 'suspended') audioCtx.resume();
-  demoSource = audioCtx.createBufferSource();
-  demoSource.buffer = demoBuffer;
-  demoSource.loop = true;
-  if(demoMode === 'after'){
-    const out = buildMasterChain(audioCtx, demoSource, DEMO_PARAMS);
-    out.connect(audioCtx.destination);
-  } else {
-    demoSource.connect(audioCtx.destination);
-  }
-  demoSource.start();
-  demoPlaying = true;
-  $('demo-play').textContent = '⏸ 정지';
-}
-
-function setDemoMode(mode){
-  demoMode = mode;
-  $('demo-before-btn').classList.toggle('on', mode === 'before');
-  $('demo-before-btn').setAttribute('aria-pressed', String(mode === 'before'));
-  $('demo-after-btn').classList.toggle('on', mode === 'after');
-  $('demo-after-btn').setAttribute('aria-pressed', String(mode === 'after'));
-  if(demoPlaying) playDemo(); // 재생 중이면 바로 전환해서 들려줌
-}
-
-function initDemo(){
-  $('demo-play').addEventListener('click', () => {
-    if(demoPlaying) stopDemo(); else playDemo();
-  });
-  $('demo-before-btn').addEventListener('click', () => setDemoMode('before'));
-  $('demo-after-btn').addEventListener('click', () => setDemoMode('after'));
-  loadDemo();
-}
-
-initUI();
-initDemo();
-</script>
-</body>
-</html>
+  initSunoPresets();
+  applySunoPreset('standard');  
+  
+  document.getElementById('character-select').addEventListener('change', (e) => applyEqPreset(e.target.value));  
+  
+  bindSliderPair('drive-slider', 'drive-val', v => String(v), v => { state.drive = v; });  
+  bindSliderPair('deharsh-slider', 'deharsh-val', v => String(v), v => { state.deharsh = v; });  
+  bindSliderPair('width-slider', 'width-val', v => v + '%', v => { state.width = v; });  
+  bindSliderPair('ceiling-slider', 'ceiling-val', v => v.toFixed(1) + ' dB', v => { state.ceilingDb = v; });  
+  bindSliderPair('push-slider', 'push-val', v => v.toFixed(1) + ' dB', v => { state.pushDb = v; });  
+  
+  $('play-btn').addEventListener('click', togglePlay);  
+  $('ab-btn').addEventListener('click', () => {  
+    isBypassed = !isBypassed;  
+    $('ab-btn').textContent = isBypassed ? '마스터링본으로 듣기' : '원본으로 듣기';  
+    $('ab-btn').classList.toggle('on', isBypassed);  
+    rebuildLiveChain();  
+  });  
+  $('reset-btn').addEventListener('click', () => {  
+    stopPlayback();  
+    originalBuffer = null;  
+    $('transport').classList.remove('show');  
+    $('meter-box').hidden = true;  
+    $('export-btn').disabled = true;  
+    $('file-input').value = '';  
+  });  
+  
+  const drop = $('drop');  
+  drop.addEventListener('click', () => $('file-input').click());  
+  drop.addEventListener('keydown', e => { if(e.key === 'Enter' || e.key === ' ') $('file-input').click(); });  
+  $('file-input').addEventListener('change', e => { if(e.target.files[0]) loadFile(e.target.files[0]); });  
+  ['dragenter','dragover'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add('drag'); }));  
+  ['dragleave','drop'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove('drag'); }));  
+  drop.addEventListener('drop', e => { if(e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]); });  
+  
+  $('export-btn').addEventListener('click', exportMastered);  
+}  
+  
+async function exportMastered(){  
+  if(!originalBuffer){ $('export-err').textContent = '먼저 음원 파일을 업로드해 주세요.'; return; }  
+  $('export-err').textContent = '';  
+  const btn = $('export-btn');  
+  const original = btn.textContent;  
+  btn.textContent = '처리 중… 잠시만 기다려 주세요';  
+  btn.disabled = true;  
+  try{  
+    const offlineCtx = new (window.OfflineAudioContext || window.webkitOfflineAudioContext)(  
+      originalBuffer.numberOfChannels, originalBuffer.length, originalBuffer.sampleRate  
+    );  
+    const src = offlineCtx.createBufferSource();  
+    src.buffer = originalBuffer;  
+    const out = buildMasterChain(offlineCtx, src, state);  
+    out.connect(offlineCtx.destination);  
+    src.start();  
+    const rendered = await offlineCtx.startRendering();  
+    const blob = bufferToWaveBlob(rendered);  
+    const url = URL.createObjectURL(blob);  
+    const a = document.createElement('a');  
+    a.href = url;  
+    a.download = fileNameBase + '_mastered.wav';  
+    document.body.appendChild(a); a.click(); a.remove();  
+    setTimeout(() => URL.revokeObjectURL(url), 2000);  
+  }catch(e){  
+    $('export-err').textContent = '내보내기 중 문제가 발생했습니다. 파일을 다시 불러온 뒤 시도해 주세요.';  
+    console.error(e);  
+  }finally{  
+    btn.textContent = original;  
+    btn.disabled = false;  
+  }  
+}  
+  
+// ---------------------------------------------------------------  
+// Before/After 데모 플레이어 (업로드 전에 효과를 미리 들어볼 수 있는 샘플)  
+// ---------------------------------------------------------------  
+let demoBuffer = null;  
+let demoSource = null;  
+let demoPlaying = false;  
+let demoMode = 'before'; // 'before' | 'after'  
+  
+const DEMO_PARAMS = {  
+  eqGains: EQ_PRESETS.warm.slice(),  
+  drive: 25,  
+  deharsh: 30,  
+  width: 140,  
+  ceilingDb: -1,  
+  pushDb: 9  
+};  
+  
+async function loadDemo(){  
+  try{  
+    ensureCtx();  
+    const res = await fetch('demo-before.wav');  
+    const arrBuf = await res.arrayBuffer();  
+    demoBuffer = await audioCtx.decodeAudioData(arrBuf);  
+    $('demo-status').textContent = '샘플 사운드 준비 완료 — Before/After를 눌러 바로 들어보세요.';  
+  }catch(e){  
+    $('demo-status').textContent = '샘플 사운드를 불러오지 못했습니다.';  
+    console.error(e);  
+  }  
+}  
+  
+function stopDemo(){  
+  if(demoSource){  
+    try{ demoSource.stop(); }catch(e){}  
+    try{ demoSource.disconnect(); }catch(e){}  
+    demoSource = null;  
+  }  
+  demoPlaying = false;  
+  $('demo-play').textContent = '▶ 재생';  
+}  
+  
+function playDemo(){  
+  if(!demoBuffer) return;  
+  stopPlayback(); // 업로드 파일 재생 중이었다면 중단(동시 재생 방지)  
+  stopDemo();  
+  if(audioCtx.state === 'suspended') audioCtx.resume();  
+  demoSource = audioCtx.createBufferSource();  
+  demoSource.buffer = demoBuffer;  
+  demoSource.loop = true;  
+  if(demoMode === 'after'){  
+    const out = buildMasterChain(audioCtx, demoSource, DEMO_PARAMS);  
+    out.connect(audioCtx.destination);  
+  } else {  
+    demoSource.connect(audioCtx.destination);  
+  }  
+  demoSource.start();  
+  demoPlaying = true;  
+  $('demo-play').textContent = '⏸ 정지';  
+}  
+  
+function setDemoMode(mode){  
+  demoMode = mode;  
+  $('demo-before-btn').classList.toggle('on', mode === 'before');  
+  $('demo-before-btn').setAttribute('aria-pressed', String(mode === 'before'));  
+  $('demo-after-btn').classList.toggle('on', mode === 'after');  
+  $('demo-after-btn').setAttribute('aria-pressed', String(mode === 'after'));  
+  if(demoPlaying) playDemo(); // 재생 중이면 바로 전환해서 들려줌  
+}  
+  
+function initDemo(){  
+  $('demo-play').addEventListener('click', () => {  
+    if(demoPlaying) stopDemo(); else playDemo();  
+  });  
+  $('demo-before-btn').addEventListener('click', () => setDemoMode('before'));  
+  $('demo-after-btn').addEventListener('click', () => setDemoMode('after'));  
+  loadDemo();  
+}  
+  
+initUI();  
+initDemo();  
+</script>  
+</body>  
+</html>  
