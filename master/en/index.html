@@ -1,5 +1,5 @@
 <!doctype html>  
-<html lang="ko">  
+<html lang="en">  
 <head>  
 <meta charset="utf-8">  
 <meta name="viewport" content="width=device-width, initial-scale=1">  
@@ -87,7 +87,7 @@ h1{
 }  
 .lead{color:var(--ink-dim); margin:0 0 0; font-size:.98rem; max-width:34rem}  
   
-/* 드롭존 / 트랜스포트 */  
+/* Drop zone / transport */  
 .drop{  
   border:1.5px dashed var(--line); border-radius:.75rem; background:var(--panel);  
   padding:2rem 1.25rem; text-align:center; margin:1.5rem 0 1.25rem; cursor:pointer;  
@@ -116,7 +116,7 @@ button{font:inherit; cursor:pointer}
 .btn:disabled{opacity:.4; cursor:not-allowed}  
 .spacer{flex:1 1 auto}  
   
-/* 미터 */  
+/* Meters */  
 .meter-box{  
   background:var(--panel); border:1px solid var(--line); border-radius:.75rem; padding:1.1rem 1.25rem;  
   margin:0 0 1.5rem;  
@@ -129,7 +129,7 @@ button{font:inherit; cursor:pointer}
 .meter-fill{height:100%; width:0%; background:linear-gradient(90deg, var(--teal), var(--amber) 75%, var(--red) 92%); transition:width .05s linear}  
 .meter-scale{display:flex; justify-content:space-between; font-size:.68rem; color:var(--ink-dim); margin-top:.3rem; font-family:var(--mono)}  
   
-/* 모듈 */  
+/* Modules */  
 .module{background:var(--panel); border:1px solid var(--line); border-radius:.75rem; padding:1.1rem 1.25rem; margin:0 0 1.1rem}  
 .module summary{list-style:none; cursor:pointer; display:flex; align-items:center; justify-content:space-between}  
 .module summary::-webkit-details-marker{display:none}  
@@ -144,7 +144,7 @@ button{font:inherit; cursor:pointer}
   display:flex; align-items:center; gap:.6rem; font-weight:700; color:#fff; font-size:.95rem; margin:1.5rem 0 0;  
 }  
   
-/* Before/After 데모 */  
+/* Before/After demo */  
 .demo-box{  
   background:var(--panel); border:1px solid var(--line); border-radius:.75rem; padding:1.1rem 1.25rem;  
   margin:0 0 1.5rem;  
@@ -164,7 +164,7 @@ details[open] .chev{transform:rotate(180deg)}
 .module-body{padding-top:1rem}  
   
 /* EQ */  
-/* 세로 슬라이더는 iOS에서 Width 계산이 깨져 화면 밖으로 넘치므로, 밴드마다 가로 한 줄로 배치 */  
+/* Use horizontal rows because vertical sliders can overflow on iOS when width is calculated. */  
 .eq-grid{display:flex; flex-direction:column; gap:.35rem}  
 .eq-band{display:grid; grid-template-columns:3.6rem minmax(0,1fr) 3rem; align-items:center; gap:.7rem; min-width:0}  
 .eq-label{display:flex; flex-direction:column; line-height:1.25}  
@@ -175,7 +175,7 @@ input[type="range"].eq-slider{width:100%; min-width:0; margin:0}
 .presets{display:flex; gap:.5rem; flex-wrap:wrap; margin-top:1rem}  
 .presets .btn{padding:.4rem .75rem; font-size:.82rem; font-weight:500}  
   
-/* 슬라이더 공통(가로) */  
+/* Shared horizontal slider styles */  
 .hrow{display:grid; grid-template-columns:1fr; gap:.3rem; margin-bottom:1rem}  
 .hrow:last-child{margin-bottom:0}  
 .hrow-top{display:flex; justify-content:space-between; font-size:.85rem}  
@@ -197,7 +197,7 @@ input[type="range"]::-moz-range-thumb{width:1.05rem; height:1.05rem; border-radi
 .download-row{display:flex; justify-content:center; margin:1.5rem 0 2rem}  
 .download-row .btn{padding:.85rem 1.6rem; font-size:1rem}  
   
-/* 본문 */  
+/* Main content */  
 article{margin-top:2.5rem}  
 article h2{font-family:var(--mono); font-size:1.15rem; color:#fff; margin:2.25rem 0 .7rem; font-weight:700}  
 article h3{font-size:1rem; color:#fff; margin:1.3rem 0 .3rem; font-weight:700}  
@@ -216,7 +216,7 @@ footer p{margin:.3rem 0}
 <body>  
 <main class="wrap">  
   
-<nav class="top" aria-label="Site navigation"><a href="../">Daily Life Tools</a> · <a href="en/">English</a></nav>  
+<nav class="top" aria-label="Language navigation"><a href="../" lang="ko">🇰🇷 한국어</a></nav>  
   
 <header class="hero">  
   <h1>Free Audio Mastering</h1>  
@@ -460,8 +460,8 @@ function writeAsciiString(view, offset, str){
   for(let i = 0; i < str.length; i++) view.setUint8(offset + i, str.charCodeAt(i));  
 }  
   
-// AudioBuffer 또는 {numberOfChannels, length, sampleRate, getChannelData(ch)} 형태를  
-// 받아 16비트 PCM WAV Blob으로 인코딩  
+// Accept an AudioBuffer or an object with {numberOfChannels, length, sampleRate, getChannelData(ch)} and  
+// Encode the result as a 16-bit PCM WAV Blob  
 function bufferToWaveBlob(abuffer){  
   const numCh = abuffer.numberOfChannels;  
   const len = abuffer.length;  
@@ -517,11 +517,11 @@ const EQ_PRESETS = {
   loud: [3, 1, -1, 0.5, 1, 2, 2.5]  
 };  
   
-// Play/오프라인 렌더 양쪽에서 재사용하는 신호 체인 구성 함수.  
-// ctx: AudioContext 또는 OfflineAudioContext, source: 체인의 시작 노드  
+// Shared signal-chain builder for live playback and offline rendering.  
+// ctx: AudioContext or OfflineAudioContext; source: the first node in the chain  
 // params: { eqGains:number[7], drive:number(0~100), width:number(0~200, 100=Original),  
 //           ceilingDb:number, pushDb:number }  
-// 반환값: 체인의 마지막(출력) 노드  
+// Returns the final output node of the chain  
 function makeSafetyClipCurve(){
   const n = 2048;
   const curve = new Float32Array(n);
@@ -559,7 +559,7 @@ function buildMasterChain(ctx, source, params){
   node.connect(shaper);  
   node = shaper;  
   
-  // --- De-harsh: 3.8kHz 부근을 다듬는 필터 ---  
+  // --- De-harsh: smooth the area around 3.8 kHz ---  
   const deharsh = ctx.createBiquadFilter();  
   deharsh.type = 'peaking';  
   deharsh.frequency.value = 3800;  
@@ -591,7 +591,7 @@ function buildMasterChain(ctx, source, params){
   midGain.connect(merger, 0, 1); widthNeg.connect(merger, 0, 1);  
   node = merger;  
   
-  // --- 리미터 ---  
+  // --- Limiter ---  
   const pushGain = ctx.createGain();  
   pushGain.gain.value = dbToLinear(params.pushDb || 0);  
   node.connect(pushGain);  
@@ -604,13 +604,13 @@ function buildMasterChain(ctx, source, params){
   comp.release.value = 0.15;  
   pushGain.connect(comp);  
   
-  // --- 최종 출력 안전단 ---
-  // 컴프레서의 아주 짧은 트랜지언트 피크로 인한 Preview 클리핑을 방지한다.
+  // --- Final output safety stage ---
+  // Prevent preview clipping from very short transient peaks after compression.
   const safetyGain = ctx.createGain();
   safetyGain.gain.value = dbToLinear(-2.0);
   comp.connect(safetyGain);
 
-  // 극단적인 피크만 Smooth & Soft 눌러주는 최종 안전 클리퍼.
+  // A final soft safety clipper that only catches extreme peaks.
   const safetyClip = ctx.createWaveShaper();
   safetyClip.curve = makeSafetyClipCurve();
   safetyClip.oversample = '4x';
@@ -805,7 +805,7 @@ function bindSliderPair(sliderId, labelId, fmt, onChange){
 }  
   
 const SUNO_PRESETS={standard:{label:'Suno Standard',eq:'flat',drive:8,deharsh:10,width:110,push:6,ceiling:-1},vocal:{label:'Clear Vocals',eq:'bright',drive:5,deharsh:18,width:105,push:5,ceiling:-1},wide:{label:'Rich & Wide',eq:'warm',drive:10,deharsh:8,width:135,push:6,ceiling:-1},soft:{label:'Smooth & Soft',eq:'warm',drive:4,deharsh:32,width:105,push:5,ceiling:-1.2}};
-function applySunoPreset(name){const p=SUNO_PRESETS[name]||SUNO_PRESETS.standard;applyEqPreset(p.eq);state.drive=p.drive;state.deharsh=p.deharsh;state.width=p.width;state.pushDb=p.push;state.ceilingDb=p.ceiling;$('drive-slider').value=p.drive;$('drive-val').textContent=String(p.drive);$('deharsh-slider').value=p.deharsh;$('deharsh-val').textContent=String(p.deharsh);$('width-slider').value=p.width;$('width-val').textContent=p.width+'%';$('push-slider').value=p.push;$('push-val').textContent=p.push.toFixed(1)+' dB';$('ceiling-slider').value=p.ceiling;$('ceiling-val').textContent=p.ceiling.toFixed(1)+' dB';document.querySelectorAll('[data-suno-preset]').forEach(btn=>btn.classList.toggle('active',btn.dataset.sunoPreset===name));$('applied-note').textContent='현재 추천: '+p.label;rebuildLiveChain();}
+function applySunoPreset(name){const p=SUNO_PRESETS[name]||SUNO_PRESETS.standard;applyEqPreset(p.eq);state.drive=p.drive;state.deharsh=p.deharsh;state.width=p.width;state.pushDb=p.push;state.ceilingDb=p.ceiling;$('drive-slider').value=p.drive;$('drive-val').textContent=String(p.drive);$('deharsh-slider').value=p.deharsh;$('deharsh-val').textContent=String(p.deharsh);$('width-slider').value=p.width;$('width-val').textContent=p.width+'%';$('push-slider').value=p.push;$('push-val').textContent=p.push.toFixed(1)+' dB';$('ceiling-slider').value=p.ceiling;$('ceiling-val').textContent=p.ceiling.toFixed(1)+' dB';document.querySelectorAll('[data-suno-preset]').forEach(btn=>btn.classList.toggle('active',btn.dataset.sunoPreset===name));$('applied-note').textContent='Current preset: '+p.label;rebuildLiveChain();}
 function initSunoPresets(){document.querySelectorAll('[data-suno-preset]').forEach(btn=>btn.addEventListener('click',()=>applySunoPreset(btn.dataset.sunoPreset)));}
 function initUI(){  
   buildEqUI();
@@ -881,7 +881,7 @@ async function exportMastered(){
 }  
   
 // ---------------------------------------------------------------  
-// Before/After 데모 플레이어 (Upload 전에 효과를 미리 들어볼 수 있는 Sample)  
+// Before/After demo player (listen to the effect before uploading a file)  
 // ---------------------------------------------------------------  
 let demoBuffer = null;  
 let demoSource = null;  
@@ -922,7 +922,7 @@ function stopDemo(){
   
 function playDemo(){  
   if(!demoBuffer) return;  
-  stopPlayback(); // Upload File Play 중이었다면 중단(동시 Play 방지)  
+  stopPlayback(); // Stop any uploaded-file playback to prevent simultaneous playback  
   stopDemo();  
   if(audioCtx.state === 'suspended') audioCtx.resume();  
   demoSource = audioCtx.createBufferSource();  
@@ -945,7 +945,7 @@ function setDemoMode(mode){
   $('demo-before-btn').setAttribute('aria-pressed', String(mode === 'before'));  
   $('demo-after-btn').classList.toggle('on', mode === 'after');  
   $('demo-after-btn').setAttribute('aria-pressed', String(mode === 'after'));  
-  if(demoPlaying) playDemo(); // Play 중이면 바로 전환해서 들려줌  
+  if(demoPlaying) playDemo(); // Switch immediately when playback is already active  
 }  
   
 function initDemo(){  
