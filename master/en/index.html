@@ -607,7 +607,7 @@ function buildMasterChain(ctx, source, params){
   // --- 최종 출력 안전단 ---
   // 컴프레서의 아주 짧은 트랜지언트 피크로 인한 Preview 클리핑을 방지한다.
   const safetyGain = ctx.createGain();
-  safetyGain.gain.value = dbToLinear(-1.5);
+  safetyGain.gain.value = dbToLinear(-2.0);
   comp.connect(safetyGain);
 
   // 극단적인 피크만 Smooth & Soft 눌러주는 최종 안전 클리퍼.
@@ -888,13 +888,13 @@ let demoSource = null;
 let demoPlaying = false;  
 let demoMode = 'before'; // 'before' | 'after'  
   
-const DEMO_PARAMS = {  
-  eqGains: EQ_PRESETS.warm.slice(),  
-  drive: 25,  
-  deharsh: 30,  
-  width: 140,  
-  ceilingDb: -1,  
-  pushDb: 9  
+const DEMO_PARAMS = {
+  eqGains: EQ_PRESETS.warm.slice(),
+  drive: 8,
+  deharsh: 12,
+  width: 108,
+  ceilingDb: -1.5,
+  pushDb: 2
 };  
   
 async function loadDemo(){  
