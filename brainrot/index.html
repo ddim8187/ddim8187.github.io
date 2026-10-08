@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3950528589828430" crossorigin="anonymous"></script>
+<meta charset="UTF-8">
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
+<link rel="apple-touch-icon" href="/favicon.png">
+<meta name="google-site-verification" content="zwCpUdfCWwRBVa0vwLoOv7jPIo5nC3mv9Im_DfojCVM" />
+<meta name="naver-site-verification" content="c75f1f11dca6d41ed47e83a590778bcf2aa8247b" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>뇌썩음 테스트 - 내 뇌는 얼마나 썩었을까? (숏폼·스마트폰 중독 테스트)</title>
+<meta name="description" content="릴스, 쇼츠, 틱톡에 스마트폰까지. 12문항으로 알아보는 내 뇌썩음 지수! 결과를 친구에게 공유해보세요.">
+<meta property="og:title" content="뇌썩음 테스트 - 내 뇌는 몇 % 썩었을까?">
+<meta property="og:description" content="숏폼·스마트폰 사용 습관으로 보는 뇌썩음 지수 테스트 (재미용)">
+<meta property="og:type" content="website">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jua&display=swap">
+<style>
+:root{--bg:#1b1035;--card:#2a1a4d;--pink:#ff5fa2;--yellow:#ffd23f;--mint:#7cf0d4;--text:#f6f0ff;--sub:#b9a9de}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100%}
+body{background:radial-gradient(circle at 20% 0,#3a1f6e 0,var(--bg) 55%);color:var(--text);font-family:'Jua','Apple SD Gothic Neo','Malgun Gothic',sans-serif;line-height:1.6;overflow-x:hidden;padding:env(safe-area-inset-top,0) 0 env(safe-area-inset-bottom,0)}
+#feed{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0}
+#feed span{position:absolute;bottom:-60px;font-size:28px;opacity:.22;animation:rise linear infinite}
+@keyframes rise{to{transform:translateY(-115vh) rotate(40deg)}}
+main{position:relative;z-index:1;max-width:520px;margin:0 auto;padding:28px 18px 40px}
+h1{font-size:2.3rem;line-height:1.15;text-align:center;color:var(--pink);text-shadow:3px 3px 0 #0006}
+h1.glitch{animation:glitch 3.2s infinite}
+@keyframes glitch{0%,92%,100%{transform:none}94%{transform:translate(-3px,1px) skewX(-6deg)}96%{transform:translate(3px,-1px)}98%{transform:translate(-2px,0) skewX(5deg)}}
+.lead{text-align:center;color:var(--sub);margin:10px 0 22px}
+.card{background:var(--card);border-radius:22px;padding:22px 18px;border:2px solid #4b3290}
+.brain{display:block;width:170px;margin:0 auto 14px}
+button{font:inherit;cursor:pointer;border:0}
+button:focus-visible{outline:3px solid var(--mint);outline-offset:2px}
+.btn{display:block;width:100%;padding:15px;border-radius:16px;background:var(--pink);color:#fff;font-size:1.25rem;box-shadow:0 5px 0 #b3306b;margin-top:12px}
+.btn:active{transform:translateY(4px);box-shadow:0 1px 0 #b3306b}
+.btn.alt{background:var(--yellow);color:#3a2a00;box-shadow:0 5px 0 #b38d00}
+.btn.ghost{background:transparent;border:2px solid #6a4fc0;box-shadow:none;color:var(--sub);font-size:1.05rem}
+.bar{height:12px;background:#140a2b;border-radius:99px;overflow:hidden;margin-bottom:6px}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--mint),var(--yellow),var(--pink));transition:width .4s}
+.cnt{text-align:right;color:var(--sub);font-size:.9rem;margin-bottom:14px}
+.q{font-size:1.4rem;line-height:1.4;margin-bottom:16px;min-height:3.9em}
+.opt{display:block;width:100%;text-align:left;padding:13px 15px;margin-top:9px;border-radius:14px;background:#38236b;color:var(--text);font-size:1.08rem;border:2px solid transparent;transition:transform .12s,border-color .12s}
+.opt:hover,.opt:focus-visible{border-color:var(--mint)}
+.opt:active{transform:scale(.97)}
+.pct{font-size:4.2rem;color:var(--yellow);text-align:center;line-height:1}
+.rt{font-size:1.7rem;text-align:center;margin:6px 0 4px}
+.rd{text-align:center;color:var(--sub);margin-bottom:6px}
+.cap{display:inline-block;background:#fff;color:#111;padding:4px 12px;border-radius:6px;transform:rotate(-2deg);font-size:1.15rem;margin:4px auto 10px}
+.cw{text-align:center}
+.hide{display:none}
+.wob{animation:wob 2.4s ease-in-out infinite;transform-origin:50% 90%}
+@keyframes wob{50%{transform:rotate(4deg) scale(1.04)}}
+.info{margin-top:34px;color:var(--sub);font-size:.95rem}
+.info h2{color:var(--text);font-size:1.25rem;margin:18px 0 6px}
+.info p{margin-bottom:8px}
+.info a{color:var(--mint)}
+footer{text-align:center;margin-top:26px;color:#8a78bd;font-size:.85rem}
+@media (prefers-reduced-motion:reduce){#feed span,h1.glitch,.wob{animation:none}}
+</style>
+</head>
+<body>
+<div id="feed" aria-hidden="true"></div>
+<main>
+<section id="start">
+  <h1 class="glitch">뇌썩음<br>테스트</h1>
+  <p class="lead">릴스·쇼츠·틱톡 보다가 하루 다 간 적 있어?<br>12문항으로 내 뇌가 몇 % 썩었는지 알아보자</p>
+  <div class="card"><div id="startBrain"></div>
+    <button class="btn" id="goBtn">테스트 시작하기</button>
+  </div>
+</section>
+
+<section id="quiz" class="hide">
+  <div class="card">
+    <div class="bar"><i id="pb"></i></div>
+    <div class="cnt" id="cnt"></div>
+    <div class="q" id="qt"></div>
+    <div id="opts"></div>
+  </div>
+</section>
+
+<section id="result" class="hide">
+  <div class="card cw">
+    <div id="resBrain"></div>
+    <div class="pct"><span id="pv">0</span>%</div>
+    <div class="rt" id="rt"></div>
+    <div class="cap" id="rc"></div>
+    <p class="rd" id="rd"></p>
+    <button class="btn alt" id="shareBtn">결과 공유하기</button>
+    <button class="btn ghost" id="again">다시 테스트하기</button>
+  </div>
+</section>
+
+<section class="info">
+  <h2>뇌썩음(Brain Rot)이 뭐야?</h2>
+  <p>뇌썩음은 짧고 자극적인 영상을 끝없이 넘겨 보다가 집중력이 떨어지고 머리가 멍해진 상태를 농담처럼 부르는 말이야. 해외에서는 'brain rot'이라고 부르고, 2024년 옥스퍼드 사전의 올해의 단어로 뽑히기도 했어.</p>
+  <h2>왜 숏폼은 계속 보게 될까?</h2>
+  <p>짧은 영상은 몇 초마다 새로운 자극이 나와서 "다음엔 뭐가 나올까?" 하는 기대감을 계속 만들어. 그래서 멈추는 타이밍을 놓치기 쉬워. 잠들기 전 사용이나 화장실·식사 중 사용이 늘수록 수면과 집중 시간에 영향을 줄 수 있다는 이야기도 많아.</p>
+  <h2>뇌 덜 썩는 작은 습관</h2>
+  <p>잠자기 1시간 전에는 폰을 멀리 두기, 숏폼 앱 사용 시간 제한 걸기, 알림 끄기, 심심할 때 바로 폰 대신 산책이나 책 한 쪽 보기처럼 작은 것부터 시작해봐.</p>
+  <h2>자주 묻는 질문</h2>
+  <p><b>Q. 결과가 정확해?</b><br>A. 재미로 만든 테스트야. 의학적 진단이 아니고, 심하게 힘들다면 전문가 상담을 받아봐.</p>
+  <p><b>Q. 입력한 답은 저장돼?</b><br>A. 아니. 답변은 네 브라우저 안에서만 계산되고 서버로 전송되지 않아.</p>
+  <p><a href="/">다른 무료 계산기·도구 보러가기</a></p>
+</section>
+<footer>이 테스트는 재미를 위한 것이며 의학적 진단이 아닙니다.</footer>
+</main>
+
+<script>
+(function(){
+var Q=[
+["하루에 스마트폰 화면을 보는 시간은?",["2시간 이하","3~4시간","5~6시간","7시간 이상 (화면 시간 보면 눈 돌아감)"]],
+["릴스·쇼츠를 '하나만 더' 보다가 1시간 순삭된 적은?",["거의 없다","가끔","자주 있다","오늘도 그랬다"]],
+["화장실에 폰 없이 들어가면?",["아무렇지 않다","살짝 심심하다","불안하다","폰 가지러 돌아간다"]],
+["영상을 볼 때 배속이나 넘기기를 쓰는 편이야?",["그냥 끝까지 본다","가끔 넘긴다","웬만하면 1.5배속 이상","10초 넘으면 바로 넘긴다"]],
+["책이나 긴 글 한 페이지를 집중해서 읽을 수 있어?",["문제없이 읽는다","가끔 딴생각이 든다","읽다가 폰을 자꾸 본다","한 문단 읽기도 힘들다"]],
+["자기 전 폰을 보다가 잠드는 시간은?",["거의 안 본다","10~20분","1시간 정도","새벽까지 본다"]],
+["밥 먹을 때 영상이나 폰이 없으면?",["대화하며 잘 먹는다","가끔 허전하다","영상 없이는 어색하다","영상 틀어야 밥이 들어간다"]],
+["일상 대화에서 밈이나 유행어가 튀어나오는 빈도는?",["거의 없다","가끔","자주 쓴다","밈으로만 대화 가능"]],
+["방금 본 숏폼의 내용이 기억나?",["대부분 기억난다","몇 개만 기억난다","거의 기억 안 난다","뭘 봤는지 하나도 모르겠다"]],
+["알림이 안 와도 폰을 열어보는 횟수는?",["거의 없다","하루 몇 번","1시간에 몇 번","10분에 한 번은 연다"]],
+["심심한 순간(대기, 이동 중)에 가장 먼저 하는 행동은?",["멍 때리거나 주변 보기","폰을 슬쩍 본다","바로 숏폼 켠다","폰이 없으면 패닉이다"]],
+["하나의 영상을 처음부터 끝까지 본 게 언제야?",["오늘 봤다","이번 주에 봤다","한 달 전쯤","기억이 안 난다"]]
+];
+var L=[
+{max:20,t:"멀쩡한 뇌 상태",c:"이 정도면 뇌 주인 인정!",d:"숏폼에 휘둘리지 않는 건강한 뇌야. 지금 습관 그대로 가자.",col:"#ff9fc2",eye:0,mouth:0,x:""},
+{max:40,t:"살짝 말랑해진 뇌",c:"아직은 괜찮아... 아마도",d:"가끔 숏폼에 빠지지만 금방 돌아오는 편이야. 조금만 신경 쓰면 충분히 좋아져.",col:"#f088ad",eye:1,mouth:1,x:""},
+{max:60,t:"도파민 중독 초기",c:"잠깐만, 방금 뭐 보고 있었더라?",d:"슬슬 집중력이 흔들리고 있어. 자기 전 폰 시간부터 줄여보자.",col:"#d982a8",eye:2,mouth:2,x:"<path d='M60 8 q4 10 0 14' stroke='#7cf0d4' stroke-width='3' fill='none'/>"},
+{max:80,t:"뇌가 흐물흐물",c:"나는 누구? 여긴 어디? 릴스는 어디?",d:"집중하기 꽤 힘든 상태야. 숏폼 앱 시간 제한을 걸어볼 때가 왔어.",col:"#a58bb8",eye:3,mouth:3,x:"<circle cx='95' cy='22' r='3' fill='#7cf0d4'/><circle cx='28' cy='30' r='2.5' fill='#7cf0d4'/>"},
+{max:101,t:"뇌썩음 말기",c:"스킵 스킵 스킵 스킵 스킵",d:"뇌가 완전히 숏폼 모드야. 오늘 밤만이라도 폰을 멀리 두고 푹 자보자.",col:"#7f9b5e",eye:4,mouth:4,x:"<text x='20' y='18' font-size='14'>🪰</text><text x='86' y='28' font-size='12'>🪰</text><path d='M40 40 l6 8 -5 6 M82 70 l-7 6 5 6' stroke='#3d4d2a' stroke-width='2.5' fill='none'/>"}
+];
+var eyes=[
+"<circle cx='45' cy='50' r='8' fill='#fff'/><circle cx='75' cy='50' r='8' fill='#fff'/><circle cx='47' cy='51' r='4' fill='#222'/><circle cx='77' cy='51' r='4' fill='#222'/>",
+"<circle cx='45' cy='50' r='8' fill='#fff'/><circle cx='75' cy='50' r='8' fill='#fff'/><circle cx='45' cy='53' r='4' fill='#222'/><circle cx='75' cy='53' r='4' fill='#222'/>",
+"<circle cx='45' cy='50' r='8' fill='#fff'/><circle cx='75' cy='50' r='8' fill='#fff'/><circle cx='45' cy='54' r='4' fill='#222'/><circle cx='75' cy='54' r='4' fill='#222'/><path d='M36 46h18M66 46h18' stroke='#222' stroke-width='5'/>",
+"<g fill='none' stroke='#222' stroke-width='2.5'><circle cx='45' cy='50' r='9' fill='#fff'/><circle cx='75' cy='50' r='9' fill='#fff'/><path d='M45 50m-2 0a2 2 0 1 1 4 0a5 5 0 1 1-8 0a8 8 0 1 1 12 0M75 50m-2 0a2 2 0 1 1 4 0a5 5 0 1 1-8 0a8 8 0 1 1 12 0'/></g>",
+"<g stroke='#222' stroke-width='4' stroke-linecap='round'><path d='M38 43l14 14M52 43l-14 14M68 43l14 14M82 43l-14 14'/></g>"
+];
+var mouths=[
+"<path d='M48 72q12 12 24 0' stroke='#222' stroke-width='3' fill='none' stroke-linecap='round'/>",
+"<path d='M50 74h20' stroke='#222' stroke-width='3' stroke-linecap='round'/>",
+"<path d='M48 76q12-8 24 0' stroke='#222' stroke-width='3' fill='none' stroke-linecap='round'/>",
+"<ellipse cx='60' cy='76' rx='6' ry='8' fill='#222'/>",
+"<path d='M46 72h28l-4 8h-20z' fill='#222'/><path d='M62 78q4 14 10 10' fill='#ff6b8a' stroke='#ff6b8a' stroke-width='6' stroke-linecap='round'/>"
+];
+function brain(i){var l=L[i];
+return "<svg class='brain wob' viewBox='0 0 120 100' role='img' aria-label='"+l.t+" 캐릭터'><g fill='"+l.col+"' stroke='#00000044' stroke-width='3'><ellipse cx='42' cy='48' rx='34' ry='34'/><ellipse cx='78' cy='48' rx='34' ry='34'/></g><path d='M60 16v64M30 28q10 6 4 16M90 28q-10 6-4 16M24 58q10-4 14 6M96 58q-10-4-14 6' stroke='#00000033' stroke-width='3' fill='none' stroke-linecap='round'/>"+eyes[l.eye]+mouths[l.mouth]+l.x+"</svg>";}
+var $=function(id){return document.getElementById(id)};
+var i=0,s=0,lv=0,pc=0;
+function show(id){["start","quiz","result"].forEach(function(k){$(k).classList.toggle("hide",k!==id)});window.scrollTo(0,0)}
+function ask(){
+ $("pb").style.width=(i/Q.length*100)+"%";
+ $("cnt").textContent=(i+1)+" / "+Q.length;
+ $("qt").textContent=Q[i][0];
+ var o=$("opts");o.innerHTML="";
+ Q[i][1].forEach(function(t,n){var b=document.createElement("button");b.className="opt";b.textContent=t;b.onclick=function(){s+=n;i++;i<Q.length?ask():finish()};o.appendChild(b)});
+}
+function finish(){
+ pc=Math.round(s/(Q.length*3)*100);
+ for(lv=0;lv<L.length-1&&pc>=L[lv].max;lv++);
+ var l=L[lv];
+ $("resBrain").innerHTML=brain(lv);
+ $("rt").textContent=l.t;$("rc").textContent=l.c;$("rd").textContent=l.d;
+ show("result");
+ var n=0,p=$("pv");p.textContent=0;
+ var t=setInterval(function(){n+=Math.max(1,Math.ceil(pc/30));if(n>=pc){n=pc;clearInterval(t)}p.textContent=n},30);
+}
+$("startBrain").innerHTML=brain(2);
+$("goBtn").onclick=function(){i=0;s=0;show("quiz");ask()};
+$("again").onclick=function(){show("start")};
+$("shareBtn").onclick=function(){
+ var url=location.origin+location.pathname;
+ var txt="내 뇌썩음 지수 "+pc+"% - "+L[lv].t+" 🧠 너도 해봐!";
+ if(navigator.share){navigator.share({title:"뇌썩음 테스트",text:txt,url:url}).catch(function(){})}
+ else if(navigator.clipboard){navigator.clipboard.writeText(txt+" "+url).then(function(){$("shareBtn").textContent="복사 완료! 붙여넣어서 공유해봐"},function(){prompt("복사해서 공유해봐",txt+" "+url)})}
+ else{prompt("복사해서 공유해봐",txt+" "+url)}
+};
+var f=$("feed"),em=["📱","🧠","💀","🎬","❤️","👍","🔔","🤪"];
+for(var k=0;k<16;k++){var e=document.createElement("span");e.textContent=em[k%em.length];e.style.left=(k*6.4)+"%";e.style.animationDuration=(9+Math.random()*10)+"s";e.style.animationDelay=(-Math.random()*14)+"s";f.appendChild(e)}
+})();
+</script>
+</body>
+</html>
